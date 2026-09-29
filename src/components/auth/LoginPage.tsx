@@ -21,7 +21,7 @@ import {
 import type { Language, ActiveView } from '../../types';
 import { STATES_DATA } from '../../data/regionsData';
 import { LANGUAGE_OPTIONS } from '../../utils/i18n';
-import { registerUser, authenticateUser } from '../../services/authService';
+import { registerUser, authenticateUser, ROLE_ICONS, type RegisteredUser } from '../../services/authService';
 
 interface LoginPageProps {
   initialMode?: 'login' | 'register';
@@ -46,6 +46,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [availableProfiles, setAvailableProfiles] = useState<RegisteredUser[] | null>(null);
 
   // Form fields (Clean production state, no demo defaults)
   const [name, setName] = useState<string>('');
@@ -132,9 +133,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       // Execute strict sign-in verification
       const authResult = authenticateUser(phone, otpValue || password, authMethod);
 
-      if (!authResult.success || !authResult.user) {
+      if (!authResult.success) {
         setIsLoading(false);
         setErrorMessage(authResult.message);
+        return;
+      }
+
+      // If multiple accounts found on this number, prompt user to select which profile to open
+      if (authResult.accounts && authResult.accounts.length > 1) {
+        setIsLoading(false);
+        setAvailableProfiles(authResult.accounts);
+        setSuccessMessage(`Found ${authResult.accounts.length} profiles for +91 ${phone}. Choose which role to open.`);
+        return;
+      }
+
+      if (!authResult.user) {
+        setIsLoading(false);
+        setErrorMessage('Failed to resolve account. Please try again.');
         return;
       }
 
@@ -151,6 +166,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         onNavigate('dashboard');
       }, 500);
     }
+  };
+
+  const handleSelectProfile = (profile: RegisteredUser) => {
+    setIsLoading(true);
+    authenticateUser(profile.phone, '', 'otp', profile.id);
+    setTimeout(() => {
+      setIsLoading(false);
+      onLoginSuccess({
+        name: profile.name,
+        role: profile.roleLabel,
+        location: profile.location,
+        state: profile.state,
+        district: profile.district,
+        marginCapital: profile.marginCapital
+      });
+      onNavigate('dashboard');
+    }, 400);
   };
 
   return (
@@ -361,7 +393,56 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 </div>
               )}
 
-              {/* Form Body */}
+              {/* Multi-Profile Selector or Standard Form */}
+              {availableProfiles && availableProfiles.length > 0 ? (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Multiple Profiles Detected</span>
+                    <h4 className="text-sm font-bold text-white mt-0.5">Select Role Profile to Open:</h4>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Choose which workspace you would like to enter for mobile +91 {phone}:
+                    </p>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {availableProfiles.map(prof => (
+                      <button
+                        key={prof.id}
+                        type="button"
+                        onClick={() => handleSelectProfile(prof)}
+                        className="w-full p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/90 transition-all flex items-center justify-between group cursor-pointer text-left"
+                      >
+                        <div className="flex items-center gap-3.5">
+                          <span className="text-2xl p-2 rounded-xl bg-slate-950 border border-slate-800">{ROLE_ICONS[prof.role] || '🌾'}</span>
+                          <div>
+                            <div className="text-xs font-black text-emerald-400 uppercase tracking-wider">{prof.roleLabel}</div>
+                            <h4 className="text-sm font-bold text-white group-hover:text-emerald-300">{prof.name}</h4>
+                            <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1">
+                              <MapPin className="w-3 h-3 text-slate-500" />
+                              {prof.location}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="px-3 py-1.5 rounded-xl bg-emerald-600/20 text-emerald-300 text-xs font-bold border border-emerald-500/30 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-1">
+                          <span>Enter</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAvailableProfiles(null);
+                      setSuccessMessage(null);
+                    }}
+                    className="w-full py-2.5 text-xs text-slate-400 hover:text-white font-semibold transition-colors cursor-pointer"
+                  >
+                    ← Sign in with a different mobile number
+                  </button>
+                </div>
+              ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 
                 {/* Role Selector */}
@@ -650,6 +731,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   )}
                 </button>
               </form>
+              )}
 
               {/* Bottom Security Disclosures */}
               <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">

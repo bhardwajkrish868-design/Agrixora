@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { X, Lock, Phone, User, CheckCircle2, AlertCircle, Sparkles, ShieldCheck, UserPlus } from 'lucide-react';
+import { X, Lock, Phone, User, CheckCircle2, AlertCircle, Sparkles, ShieldCheck, UserPlus, ArrowRight, MapPin } from 'lucide-react';
 import type { Language } from '../../types';
 import { STATES_DATA } from '../../data/regionsData';
-import { registerUser, authenticateUser } from '../../services/authService';
+import { registerUser, authenticateUser, ROLE_ICONS, type RegisteredUser } from '../../services/authService';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -23,6 +23,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [selectedState, setSelectedState] = useState('Maharashtra');
   const [selectedDistrict, setSelectedDistrict] = useState('Nashik');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [availableProfiles, setAvailableProfiles] = useState<RegisteredUser[] | null>(null);
 
   if (!isOpen) return null;
 
@@ -34,6 +35,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     if (found && found.districts.length > 0) {
       setSelectedDistrict(found.districts[0].district);
     }
+  };
+
+  const handleSelectProfile = (profile: RegisteredUser) => {
+    authenticateUser(profile.phone, '', 'otp', profile.id);
+    onLoginSuccess({
+      name: profile.name,
+      role: profile.roleLabel,
+      location: profile.location,
+      state: profile.state,
+      district: profile.district,
+      marginCapital: profile.marginCapital
+    });
+    onClose();
   };
 
   const handleStandardSubmit = (e: React.FormEvent) => {
@@ -67,8 +81,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     } else {
       const authResult = authenticateUser(phone, '', 'otp');
 
-      if (!authResult.success || !authResult.user) {
+      if (!authResult.success) {
         setErrorMessage(authResult.message);
+        return;
+      }
+
+      if (authResult.accounts && authResult.accounts.length > 1) {
+        setAvailableProfiles(authResult.accounts);
+        return;
+      }
+
+      if (!authResult.user) {
+        setErrorMessage('Account resolution failed.');
         return;
       }
 
@@ -118,7 +142,53 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         </div>
 
-        {/* Standard Form */}
+        {/* Multi-Profile Selector or Standard Form */}
+        {availableProfiles && availableProfiles.length > 0 ? (
+          <div className="p-6 space-y-4">
+            <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Multiple Profiles</span>
+              <h4 className="text-sm font-bold text-white mt-0.5">Select Profile to Sign In:</h4>
+              <p className="text-xs text-slate-300 mt-1">
+                Multiple role accounts found for mobile +91 {phone}:
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              {availableProfiles.map(prof => (
+                <button
+                  key={prof.id}
+                  type="button"
+                  onClick={() => handleSelectProfile(prof)}
+                  className="w-full p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/80 transition-all flex items-center justify-between group cursor-pointer text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl p-2 rounded-xl bg-slate-900 border border-slate-800">{ROLE_ICONS[prof.role] || '🌾'}</span>
+                    <div>
+                      <div className="text-[10px] font-black text-emerald-400 uppercase tracking-wider">{prof.roleLabel}</div>
+                      <h4 className="text-xs font-bold text-white group-hover:text-emerald-300">{prof.name}</h4>
+                      <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-slate-500" />
+                        {prof.location}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-300 text-xs font-bold border border-emerald-500/30 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-1">
+                    <span>Open</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setAvailableProfiles(null)}
+              className="w-full py-2 text-xs text-slate-400 hover:text-white font-semibold transition-colors cursor-pointer"
+            >
+              ← Sign in with a different number
+            </button>
+          </div>
+        ) : (
         <form onSubmit={handleStandardSubmit} className="p-6 space-y-4">
           
           {/* Sign In / Register Switcher */}
@@ -280,6 +350,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <span>{mode === 'login' ? 'Sign In & Access Dashboard' : 'Complete Registration & Access'}</span>
           </button>
         </form>
+        )}
 
         {/* Footer */}
         <div className="bg-slate-950 p-3 text-center border-t border-slate-800 flex items-center justify-center gap-2 text-[11px] text-slate-400">

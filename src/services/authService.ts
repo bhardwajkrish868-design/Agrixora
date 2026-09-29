@@ -22,9 +22,15 @@ export const ROLE_LABELS: Record<string, string> = {
   bank_officer: 'Lead District Bank Officer'
 };
 
+export const ROLE_ICONS: Record<string, string> = {
+  entrepreneur: '🌾',
+  fpo_manager: '🏢',
+  institutional_buyer: '🏢',
+  bank_officer: '🪙'
+};
+
 /**
  * Retrieve all registered users from local persistent database.
- * Default is an empty array (NO demo accounts).
  */
 export function getRegisteredUsers(): RegisteredUser[] {
   if (typeof window === 'undefined') return [];
@@ -39,7 +45,18 @@ export function getRegisteredUsers(): RegisteredUser[] {
 }
 
 /**
- * Register a new user into the database.
+ * Get all accounts associated with a specific phone number.
+ */
+export function getAccountsByPhone(phone: string): RegisteredUser[] {
+  const cleanPhone = phone.trim().replace(/\D/g, '');
+  if (!cleanPhone) return [];
+  const users = getRegisteredUsers();
+  return users.filter(u => u.phone === cleanPhone);
+}
+
+/**
+ * Register a new user role into the database.
+ * Supports multiple roles on the same phone number.
  */
 export function registerUser(data: {
   name: string;
@@ -62,11 +79,12 @@ export function registerUser(data: {
   }
 
   const users = getRegisteredUsers();
-  const existing = users.find(u => u.phone === cleanPhone);
-  if (existing) {
+  // Check if this specific phone + role already exists
+  const existingRoleAccount = users.find(u => u.phone === cleanPhone && u.role === data.role);
+  if (existingRoleAccount) {
     return { 
       success: false, 
-      message: `An account is already registered with mobile +91 ${cleanPhone}. Please switch to "Sign In" tab.` 
+      message: `You already have an active "${ROLE_LABELS[data.role]}" account with +91 ${cleanPhone}. Please switch to "Sign In".` 
     };
   }
 
@@ -94,48 +112,83 @@ export function registerUser(data: {
 
   return { 
     success: true, 
-    message: `Account registered successfully! Welcome, ${newUser.name}.`,
+    message: `Account registered successfully as ${newUser.roleLabel}! Welcome, ${newUser.name}.`,
     user: newUser
   };
 }
 
 /**
  * Authenticate an existing registered user.
- * Rejects if the user is not found in the database.
+ * If multiple roles exist for the phone number and no specific account is targeted,
+ * returns all matching accounts so the user can choose.
  */
 export function authenticateUser(
   phone: string,
-  _credential: string,
-  _method: 'otp' | 'password' = 'otp'
-): { success: boolean; message: string; user?: RegisteredUser } {
+  _credential: string = '',
+  _method: 'otp' | 'password' = 'otp',
+  targetAccountId?: string
+): { success: boolean; message: string; user?: RegisteredUser; accounts?: RegisteredUser[] } {
   const cleanPhone = phone.trim().replace(/\D/g, '');
 
   if (!cleanPhone || cleanPhone.length !== 10) {
     return { success: false, message: 'Please enter your registered 10-digit mobile number.' };
   }
 
-  const users = getRegisteredUsers();
-  const user = users.find(u => u.phone === cleanPhone);
+  const matchingUsers = getAccountsByPhone(cleanPhone);
 
-  if (!user) {
+  if (matchingUsers.length === 0) {
     return {
       success: false,
       message: `No account found for +91 ${cleanPhone}. You must register first before signing in!`
     };
   }
 
-  // Save session
+  // If targeted account is specified, use that one
+  if (targetAccountId) {
+    const selected = matchingUsers.find(u => u.id === targetAccountId);
+    if (selected) {
+      try {
+        localStorage.setItem(SESSION_KEY, JSON.stringify(selected));
+      } catch (e) {
+        console.error('Failed to persist session', e);
+      }
+      return { success: true, message: `Welcome back, ${selected.name}!`, user: selected };
+    }
+  }
+
+  // If exactly 1 account exists, log in directly
+  if (matchingUsers.length === 1) {
+    const singleUser = matchingUsers[0];
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(singleUser));
+    } catch (e) {
+      console.error('Failed to persist session', e);
+    }
+    return {
+      success: true,
+      message: `Welcome back, ${singleUser.name}!`,
+      user: singleUser
+    };
+  }
+
+  // If multiple accounts exist for this phone number, return accounts for user selection
+  return {
+    success: true,
+    message: `Found ${matchingUsers.length} profiles linked to +91 ${cleanPhone}. Please select which role profile to access:`,
+    accounts: matchingUsers
+  };
+}
+
+/**
+ * Set active session user directly.
+ */
+export function setActiveSessionUser(user: RegisteredUser): void {
+  if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(SESSION_KEY, JSON.stringify(user));
   } catch (e) {
-    console.error('Failed to persist session', e);
+    console.error('Failed to set active session user', e);
   }
-
-  return {
-    success: true,
-    message: `Welcome back, ${user.name}!`,
-    user
-  };
 }
 
 /**
