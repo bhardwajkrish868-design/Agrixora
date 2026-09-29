@@ -42,10 +42,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const [otpValue, setOtpValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Form fields
-  const [name, setName] = useState<string>('Rameshwar Kumar');
-  const [phone, setPhone] = useState<string>('9876543210');
-  const [password, setPassword] = useState<string>('••••••••');
+  // Form fields (clean production state, no demo defaults)
+  const [name, setName] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [role, setRole] = useState<'entrepreneur' | 'fpo_manager' | 'institutional_buyer' | 'bank_officer'>('entrepreneur');
   const [selectedState, setSelectedState] = useState<string>('Maharashtra');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('Nashik');
@@ -63,11 +63,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   };
 
   const handleSendOtp = () => {
+    if (phone.length < 10) return;
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       setOtpSent(true);
-      setOtpValue('4892'); // Pre-fill sample OTP for instant convenience
     }, 600);
   };
 
@@ -84,8 +84,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     setTimeout(() => {
       setIsLoading(false);
+      const displayName = name.trim() || (phone ? `User +91 ${phone}` : 'Registered Entrepreneur');
       onLoginSuccess({
-        name: name || (mode === 'login' ? 'Rameshwar Kumar' : 'New Entrepreneur'),
+        name: displayName,
         role: roleLabels[role] || 'Rural Entrepreneur',
         location: `${selectedDistrict}, ${selectedState}`,
       });
@@ -349,7 +350,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   <div className="space-y-4">
                     <div>
                       <label className="block text-xs font-semibold text-slate-300 mb-1">
-                        Full Name / Entity Name (पूरा नाम)
+                        Full Name / Business Name (पूरा नाम)
                       </label>
                       <div className="relative">
                         <User className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
@@ -358,7 +359,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           required
                           value={name}
                           onChange={(e) => setName(e.target.value)}
-                          placeholder="e.g. Rameshwar Kumar"
+                          placeholder="Enter your full name or enterprise name"
                           className="w-full pl-10 pr-3 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500"
                         />
                       </div>
@@ -464,7 +465,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="9876543210"
+                      placeholder="Enter 10-digit mobile number"
                       maxLength={10}
                       className="w-full pl-20 pr-3 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                     />

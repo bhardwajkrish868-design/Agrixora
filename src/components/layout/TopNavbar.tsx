@@ -9,7 +9,8 @@ import {
   Menu,
   Bot,
   Key,
-  Landmark
+  Landmark,
+  LogOut
 } from 'lucide-react';
 import type { NavigationTab, Language, LocationCatchment } from '../../types';
 
@@ -27,6 +28,7 @@ interface TopNavbarProps {
   onOpenSchemeModal?: () => void;
   onToggleAICoach?: () => void;
   onToggleMobileMenu?: () => void;
+  onLogout?: () => void;
   user?: { name: string; role: string; location: string } | null;
 }
 
@@ -42,6 +44,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   onOpenSchemeModal,
   onToggleAICoach,
   onToggleMobileMenu,
+  onLogout,
   user
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -231,7 +234,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
           {/* User Auth / Sign In & Register Buttons */}
           {user?.name ? (
-            <div className="relative">
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={onOpenAuthModal}
                 className="flex items-center gap-2 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
@@ -241,10 +244,20 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   👤
                 </div>
                 <div className="hidden sm:block text-left">
-                  <div className="leading-tight font-bold">{user.name.split(' ')[0]}</div>
+                  <div className="leading-tight font-bold truncate max-w-[110px]">{user.name.split(' ')[0]}</div>
                   <div className="text-[9px] text-emerald-200 leading-none">{user.location.split(',')[0]}</div>
                 </div>
               </button>
+
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="p-2 rounded-xl text-slate-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
+                  title="Sign Out (लॉग आउट)"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              )}
             </div>
           ) : (
             <div className="flex items-center gap-1.5">

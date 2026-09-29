@@ -16,8 +16,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onLoginSuccess,
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
-  const [phone, setPhone] = useState('9876543210');
-  const [name, setName] = useState('Rameshwar Kumar');
+  const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
   const [role, setRole] = useState<'entrepreneur' | 'fpo_manager' | 'institutional_buyer' | 'bank_officer'>('entrepreneur');
   const [selectedState, setSelectedState] = useState('Maharashtra');
   const [selectedDistrict, setSelectedDistrict] = useState('Nashik');
@@ -43,8 +43,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       bank_officer: 'Lead District Bank Officer'
     };
 
+    const displayName = name.trim() || (phone ? `User +91 ${phone}` : 'Registered Beneficiary');
+
     onLoginSuccess({
-      name: name || (mode === 'login' ? 'Rameshwar Kumar' : 'New Entrepreneur'),
+      name: displayName,
       role: roleLabels[role] || 'Rural Entrepreneur',
       location: `${selectedDistrict}, ${selectedState}`,
     });
@@ -128,7 +130,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Rameshwar Kumar"
+                  placeholder="Enter full name or enterprise name"
                   className="w-full pl-9 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white placeholder-slate-500"
                 />
               </div>
@@ -150,7 +152,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="9876543210"
+                placeholder="Enter 10-digit mobile number"
                 maxLength={10}
                 className="w-full pl-16 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white font-mono"
               />

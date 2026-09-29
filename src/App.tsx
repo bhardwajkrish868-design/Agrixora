@@ -32,18 +32,14 @@ import { ApiKeyModal } from './components/ApiKeyModal';
 import { SchemeRulesModal } from './components/SchemeRulesModal';
 
 export function App() {
-  // Navigation & View State
-  const [activeTab, setActiveTab] = useState<NavigationTab>('landing');
+  // Navigation & View State (Opens Login page first)
+  const [activeTab, setActiveTab] = useState<NavigationTab>('login');
   const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
-  // User & Auth State
-  const [user, setUser] = useState<{ name: string; role: string; location: string } | null>({
-    name: 'Rameshwar Kumar (FPO Member)',
-    role: 'Rural Entrepreneur / Applicant',
-    location: 'Nashik, Maharashtra',
-  });
+  // User & Auth State (No hardcoded demo account, starts unauthenticated)
+  const [user, setUser] = useState<{ name: string; role: string; location: string } | null>(null);
 
   // Global Location Context (Default: Nashik, Maharashtra)
   const [selectedLocation, setSelectedLocation] = useState<LocationCatchment>({
@@ -187,6 +183,11 @@ export function App() {
         onOpenSchemeModal={() => setIsSchemeModalOpen(true)}
         onToggleAICoach={() => setIsAICoachFloatingOpen(!isAICoachFloatingOpen)}
         onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        onLogout={() => {
+          setUser(null);
+          setActiveTab('login');
+          showToast('Signed Out', 'You have been signed out. Welcome to log in or register anytime.', 'info');
+        }}
         user={user}
       />
 
