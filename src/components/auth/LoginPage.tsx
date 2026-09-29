@@ -27,7 +27,7 @@ interface LoginPageProps {
   initialMode?: 'login' | 'register';
   currentLang: Language;
   onLanguageChange: (lang: Language) => void;
-  onLoginSuccess: (user: { name: string; role: string; location: string }) => void;
+  onLoginSuccess: (user: { name: string; role: string; location: string; state?: string; district?: string; marginCapital?: number }) => void;
   onNavigate: (view: ActiveView) => void;
 }
 
@@ -120,7 +120,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         onLoginSuccess({
           name: regResult.user!.name,
           role: regResult.user!.roleLabel,
-          location: regResult.user!.location
+          location: regResult.user!.location,
+          state: regResult.user!.state,
+          district: regResult.user!.district,
+          marginCapital: regResult.user!.marginCapital
         });
         onNavigate('dashboard');
       }, 500);
@@ -140,7 +143,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         onLoginSuccess({
           name: authResult.user!.name,
           role: authResult.user!.roleLabel,
-          location: authResult.user!.location
+          location: authResult.user!.location,
+          state: authResult.user!.state,
+          district: authResult.user!.district,
+          marginCapital: authResult.user!.marginCapital
         });
         onNavigate('dashboard');
       }, 500);

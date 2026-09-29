@@ -7,7 +7,7 @@ import { registerUser, authenticateUser } from '../../services/authService';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (user: { name: string; role: string; location: string }) => void;
+  onLoginSuccess: (user: { name: string; role: string; location: string; state?: string; district?: string; marginCapital?: number }) => void;
   currentLang: Language;
 }
 
@@ -58,6 +58,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         name: regResult.user.name,
         role: regResult.user.roleLabel,
         location: regResult.user.location,
+        state: regResult.user.state,
+        district: regResult.user.district,
+        marginCapital: regResult.user.marginCapital
       });
       onClose();
 
@@ -73,6 +76,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         name: authResult.user.name,
         role: authResult.user.roleLabel,
         location: authResult.user.location,
+        state: authResult.user.state,
+        district: authResult.user.district,
+        marginCapital: authResult.user.marginCapital
       });
       onClose();
     }

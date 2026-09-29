@@ -9,6 +9,7 @@ import type {
 } from './types';
 import { DEMO_PRESETS } from './data/regionsData';
 import { generateFeasibilityReport } from './services/aiAdvisorService';
+import { buildLocationCatchment, buildTailoredFormData } from './services/stateLocationService';
 
 // Layout Components
 import { Sidebar } from './components/layout/Sidebar';
@@ -35,7 +36,7 @@ import { getSessionUser, clearSessionUser } from './services/authService';
 
 export function App() {
   // User & Auth State (Persistent session)
-  const [user, setUser] = useState<{ name: string; role: string; location: string } | null>(() => {
+  const [user, setUser] = useState<{ name: string; role: string; location: string; state?: string; district?: string } | null>(() => {
     return getSessionUser();
   });
 
@@ -60,26 +61,19 @@ export function App() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
-  // Global Location Context (Persistent)
+  // Global Location Context (Persistent & state-synchronized)
   const [selectedLocation, setSelectedLocation] = useState<LocationCatchment>(() => {
+    const sessionUser = getSessionUser();
+    if (sessionUser && sessionUser.state) {
+      return buildLocationCatchment(sessionUser.state, sessionUser.district);
+    }
     if (typeof window !== 'undefined') {
       try {
         const raw = localStorage.getItem('AGRIXORA_SAVED_LOCATION');
         if (raw) return JSON.parse(raw);
       } catch {}
     }
-    return {
-      state: 'Maharashtra',
-      district: 'Nashik',
-      block: 'Dindori',
-      village: 'Janori',
-      panchayat: 'Janori Gram Panchayat',
-      areaType: 'rural',
-      catchmentRadiusKm: 10,
-      estimatedPopulation: 28400,
-      agroClimaticZone: 'Western Plateau & Hills (Zone 9)',
-      keyCrops: ['Grapes', 'Onion', 'Pomegranate', 'Soybean', 'Sugarcane'],
-    };
+    return buildLocationCatchment('Maharashtra', 'Nashik');
   });
 
   // Persist State Changes across refreshes
@@ -128,25 +122,68 @@ export function App() {
     }, 4500);
   };
 
-  // Synchronize Dark Mode Class with document root
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
+  // Synchronize dynamic state & report for any logged in / registering user
+  const syncLocationAndReportForUser = async (userData: {
+    name: string;
+    role: string;
+    location: string;
+    state?: string;
+    district?: string;
+    marginCapital?: number;
+  }) => {
+    setUser(userData);
+    let state = userData.state;
+    let district = userData.district;
 
-  // Preload initial baseline feasibility on mount so every tab is pre-hydrated with real metrics
+    if (!state && userData.location.includes(',')) {
+      const parts = userData.location.split(',').map(s => s.trim());
+      district = parts[0];
+      state = parts[1];
+    }
+    state = state || 'Maharashtra';
+    district = district || 'Nashik';
+
+    const newLoc = buildLocationCatchment(state, district);
+    setSelectedLocation(newLoc);
+    localStorage.setItem('AGRIXORA_SAVED_LOCATION', JSON.stringify(newLoc));
+
+    try {
+      const customForm = buildTailoredFormData(userData.name, state, district, userData.marginCapital || 50000);
+      const result = await generateFeasibilityReport(customForm);
+      setCurrentReport(result.report);
+      setCurrentFinancials(result.financials);
+    } catch (e) {
+      console.error('Failed to generate state-customized baseline', e);
+    }
+  };
+
+  // Preload state-customized feasibility baseline on mount
   useEffect(() => {
     const initBaseline = async () => {
-      try {
-        const defaultPreset = DEMO_PRESETS[0];
-        const result = await generateFeasibilityReport(defaultPreset.formData);
-        setCurrentReport(result.report);
-        setCurrentFinancials(result.financials);
-      } catch (e) {
-        console.error('Failed to initialize baseline report', e);
+      const sessionUser = getSessionUser();
+      if (sessionUser) {
+        const state = sessionUser.state || 'Maharashtra';
+        const district = sessionUser.district || 'Nashik';
+        const userLoc = buildLocationCatchment(state, district);
+        setSelectedLocation(userLoc);
+
+        try {
+          const tailoredForm = buildTailoredFormData(sessionUser.name, state, district, sessionUser.marginCapital || 50000);
+          const result = await generateFeasibilityReport(tailoredForm);
+          setCurrentReport(result.report);
+          setCurrentFinancials(result.financials);
+        } catch (e) {
+          console.error('Failed to initialize state baseline report', e);
+        }
+      } else {
+        try {
+          const defaultPreset = DEMO_PRESETS[0];
+          const result = await generateFeasibilityReport(defaultPreset.formData);
+          setCurrentReport(result.report);
+          setCurrentFinancials(result.financials);
+        } catch (e) {
+          console.error('Failed to initialize baseline report', e);
+        }
       }
     };
     initBaseline();
@@ -192,10 +229,10 @@ export function App() {
           currentLang={currentLanguage}
           onLanguageChange={setCurrentLanguage}
           onLoginSuccess={(userData) => {
-            setUser(userData);
+            syncLocationAndReportForUser(userData);
             showToast(
               'Welcome to AgriXora',
-              `Logged in as ${userData.name} (${userData.role}) for ${userData.location}.`
+              `Logged in as ${userData.name} (${userData.role}) for ${userData.location}. All state data synchronized!`
             );
           }}
           onNavigate={setActiveTab}
@@ -477,8 +514,8 @@ export function App() {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         onLoginSuccess={(userData) => {
-          setUser(userData);
-          showToast('Welcome to AgriXora', `Logged in as ${userData.name} (${userData.role})`);
+          syncLocationAndReportForUser(userData);
+          showToast('Welcome to AgriXora', `Logged in as ${userData.name} (${userData.role}). State data synchronized!`);
         }}
         currentLang={currentLanguage}
       />
