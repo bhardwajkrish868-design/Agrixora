@@ -6,6 +6,7 @@ import {
   ArrowRight,
   ShieldCheck,
   CheckCircle2,
+  AlertCircle,
   Sparkles,
   MapPin,
   Building2,
@@ -14,11 +15,13 @@ import {
   EyeOff,
   Coins,
   Globe2,
-  FileCheck
+  FileCheck,
+  UserPlus
 } from 'lucide-react';
 import type { Language, ActiveView } from '../../types';
 import { STATES_DATA } from '../../data/regionsData';
 import { LANGUAGE_OPTIONS } from '../../utils/i18n';
+import { registerUser, authenticateUser } from '../../services/authService';
 
 interface LoginPageProps {
   initialMode?: 'login' | 'register';
@@ -41,8 +44,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const [otpSent, setOtpSent] = useState<boolean>(false);
   const [otpValue, setOtpValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Form fields (clean production state, no demo defaults)
+  // Form fields (Clean production state, no demo defaults)
   const [name, setName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -63,35 +68,83 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   };
 
   const handleSendOtp = () => {
-    if (phone.length < 10) return;
+    setErrorMessage(null);
+    const cleanPhone = phone.trim().replace(/\D/g, '');
+    if (cleanPhone.length !== 10) {
+      setErrorMessage('Please enter a valid 10-digit mobile number to request an OTP.');
+      return;
+    }
+
+    // Verify if phone is registered first
+    const checkResult = authenticateUser(cleanPhone, '', 'otp');
+    if (!checkResult.success) {
+      setErrorMessage(checkResult.message);
+      return;
+    }
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       setOtpSent(true);
+      setOtpValue('4892'); // Simulation code for instant convenience
+      setSuccessMessage(`OTP sent to +91 ${cleanPhone}. (Verification code: 4892)`);
     }, 600);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
+    setSuccessMessage(null);
     setIsLoading(true);
 
-    const roleLabels = {
-      entrepreneur: 'Rural Entrepreneur / Beneficiary',
-      fpo_manager: 'FPO / SHG Federation Leader',
-      institutional_buyer: 'Institutional Off-taker',
-      bank_officer: 'Lead District Bank Officer'
-    };
-
-    setTimeout(() => {
-      setIsLoading(false);
-      const displayName = name.trim() || (phone ? `User +91 ${phone}` : 'Registered Entrepreneur');
-      onLoginSuccess({
-        name: displayName,
-        role: roleLabels[role] || 'Rural Entrepreneur',
-        location: `${selectedDistrict}, ${selectedState}`,
+    if (mode === 'register') {
+      // Execute strict registration
+      const regResult = registerUser({
+        name,
+        phone,
+        password,
+        role,
+        state: selectedState,
+        district: selectedDistrict,
+        marginCapital
       });
-      onNavigate('dashboard');
-    }, 500);
+
+      if (!regResult.success || !regResult.user) {
+        setIsLoading(false);
+        setErrorMessage(regResult.message);
+        return;
+      }
+
+      setTimeout(() => {
+        setIsLoading(false);
+        onLoginSuccess({
+          name: regResult.user!.name,
+          role: regResult.user!.roleLabel,
+          location: regResult.user!.location
+        });
+        onNavigate('dashboard');
+      }, 500);
+
+    } else {
+      // Execute strict sign-in verification
+      const authResult = authenticateUser(phone, otpValue || password, authMethod);
+
+      if (!authResult.success || !authResult.user) {
+        setIsLoading(false);
+        setErrorMessage(authResult.message);
+        return;
+      }
+
+      setTimeout(() => {
+        setIsLoading(false);
+        onLoginSuccess({
+          name: authResult.user!.name,
+          role: authResult.user!.roleLabel,
+          location: authResult.user!.location
+        });
+        onNavigate('dashboard');
+      }, 500);
+    }
   };
 
   return (
@@ -269,6 +322,38 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     : 'Get started with data-driven enterprise feasibility & 90% loan scheme eligibility.'}
                 </p>
               </div>
+
+              {/* Error Notification Alert */}
+              {errorMessage && (
+                <div className="mb-4 p-3.5 rounded-2xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs flex items-start gap-3 animate-shake">
+                  <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <div className="font-bold text-rose-100">Authentication Required</div>
+                    <div className="mt-0.5">{errorMessage}</div>
+                    {mode === 'login' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMode('register');
+                          setErrorMessage(null);
+                        }}
+                        className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-900/80 hover:bg-rose-800 text-white font-bold text-[11px] cursor-pointer"
+                      >
+                        <UserPlus className="w-3.5 h-3.5" />
+                        <span>Switch to Register Tab (पंजीकरण करें)</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Success Notification */}
+              {successMessage && (
+                <div className="mb-4 p-3 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{successMessage}</span>
+                </div>
+              )}
 
               {/* Form Body */}
               <form onSubmit={handleSubmit} className="space-y-4">

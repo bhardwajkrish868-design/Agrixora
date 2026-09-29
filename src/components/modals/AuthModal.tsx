@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, Lock, Phone, User, CheckCircle2, Sparkles, ShieldCheck } from 'lucide-react';
+import { X, Lock, Phone, User, CheckCircle2, AlertCircle, Sparkles, ShieldCheck, UserPlus } from 'lucide-react';
 import type { Language } from '../../types';
 import { STATES_DATA } from '../../data/regionsData';
+import { registerUser, authenticateUser } from '../../services/authService';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [role, setRole] = useState<'entrepreneur' | 'fpo_manager' | 'institutional_buyer' | 'bank_officer'>('entrepreneur');
   const [selectedState, setSelectedState] = useState('Maharashtra');
   const [selectedDistrict, setSelectedDistrict] = useState('Nashik');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -36,21 +38,44 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleStandardSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const roleLabels = {
-      entrepreneur: 'Rural Entrepreneur / Beneficiary',
-      fpo_manager: 'FPO / SHG Federation Leader',
-      institutional_buyer: 'Institutional Off-taker',
-      bank_officer: 'Lead District Bank Officer'
-    };
+    setErrorMessage(null);
 
-    const displayName = name.trim() || (phone ? `User +91 ${phone}` : 'Registered Beneficiary');
+    if (mode === 'register') {
+      const regResult = registerUser({
+        name,
+        phone,
+        role,
+        state: selectedState,
+        district: selectedDistrict
+      });
 
-    onLoginSuccess({
-      name: displayName,
-      role: roleLabels[role] || 'Rural Entrepreneur',
-      location: `${selectedDistrict}, ${selectedState}`,
-    });
-    onClose();
+      if (!regResult.success || !regResult.user) {
+        setErrorMessage(regResult.message);
+        return;
+      }
+
+      onLoginSuccess({
+        name: regResult.user.name,
+        role: regResult.user.roleLabel,
+        location: regResult.user.location,
+      });
+      onClose();
+
+    } else {
+      const authResult = authenticateUser(phone, '', 'otp');
+
+      if (!authResult.success || !authResult.user) {
+        setErrorMessage(authResult.message);
+        return;
+      }
+
+      onLoginSuccess({
+        name: authResult.user.name,
+        role: authResult.user.roleLabel,
+        location: authResult.user.location,
+      });
+      onClose();
+    }
   };
 
   return (
@@ -94,7 +119,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <div className="flex bg-slate-950 p-1.5 rounded-xl border border-slate-800">
             <button
               type="button"
-              onClick={() => setMode('login')}
+              onClick={() => {
+                setMode('login');
+                setErrorMessage(null);
+              }}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 mode === 'login'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-950'
@@ -106,7 +134,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setMode('register')}
+              onClick={() => {
+                setMode('register');
+                setErrorMessage(null);
+              }}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 mode === 'register'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-950'
@@ -117,6 +148,29 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <span>Register (नया पंजीकरण)</span>
             </button>
           </div>
+
+          {/* Error Alert Box */}
+          {errorMessage && (
+            <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-xs flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div>{errorMessage}</div>
+                {mode === 'login' && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode('register');
+                      setErrorMessage(null);
+                    }}
+                    className="mt-1.5 inline-flex items-center gap-1 px-2.5 py-1 rounded bg-rose-900 hover:bg-rose-800 text-white font-bold text-[10px] cursor-pointer"
+                  >
+                    <UserPlus className="w-3 h-3" />
+                    <span>Register Now (नया पंजीकरण करें)</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
 
           {mode === 'register' && (
             <div>
