@@ -8,12 +8,10 @@ import {
   BarChart3, 
   FileSpreadsheet, 
   Bot, 
-  FolderArchive, 
-  Settings, 
-  Home,
   X,
   PhoneCall,
-  Landmark
+  Landmark,
+  ShieldCheck
 } from 'lucide-react';
 import type { NavigationTab, ActiveView, Language } from '../../types';
 
@@ -27,6 +25,8 @@ interface SidebarProps {
   activeOrdersCount?: number;
   isMobileMenuOpen?: boolean;
   onCloseMobileMenu?: () => void;
+  userRole?: string;
+  userName?: string;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -38,9 +38,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentLanguage,
   activeOrdersCount = 8,
   isMobileMenuOpen = false,
-  onCloseMobileMenu
+  onCloseMobileMenu,
+  userRole,
+  userName
 }) => {
-  const currentActive = activeTab || activeView || 'landing';
+  const currentActive = activeTab || activeView || 'dashboard';
 
   const handleSelect = (tab: NavigationTab) => {
     if (onNavigate) onNavigate(tab);
@@ -48,92 +50,222 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (onCloseMobileMenu) onCloseMobileMenu();
   };
 
-  const NAV_ITEMS: { id: NavigationTab; label: string; labelHi: string; icon: React.ReactNode; badge?: string; badgeColor?: string }[] = [
-    {
-      id: 'landing',
-      label: 'Home Overview',
-      labelHi: 'मुख्य पृष्ठ',
-      icon: <Home className="w-4 h-4" />
-    },
-    {
-      id: 'dashboard',
-      label: 'KPI Dashboard',
-      labelHi: 'डैशबोर्ड',
-      icon: <LayoutDashboard className="w-4 h-4" />
-    },
-    {
-      id: 'feasibility',
-      label: 'Business Feasibility',
-      labelHi: 'व्यवसाय व्यवहार्यता',
-      icon: <MapPin className="w-4 h-4" />,
-      badge: '10km Geo',
-      badgeColor: 'bg-emerald-100 text-emerald-800'
-    },
-    {
-      id: 'financials',
-      label: 'Financial Calculator',
-      labelHi: 'स्मार्ट ऋण कैलकुलेटर',
-      icon: <Calculator className="w-4 h-4" />,
-      badge: '10:90',
-      badgeColor: 'bg-blue-100 text-blue-800'
-    },
-    {
-      id: 'marketplace',
-      label: 'Institutional Demand',
-      labelHi: 'थोक खरीदार मांग',
-      icon: <ShoppingBag className="w-4 h-4" />,
-      badge: `${activeOrdersCount} Orders`,
-      badgeColor: 'bg-amber-100 text-amber-900'
-    },
-    {
-      id: 'opportunities',
-      label: 'Opportunity Radar',
-      labelHi: 'अवसर रडार',
-      icon: <Radar className="w-4 h-4" />
-    },
-    {
-      id: 'intelligence',
-      label: 'Market Intelligence',
-      labelHi: 'बाजार खुफिया विश्लेषण',
-      icon: <BarChart3 className="w-4 h-4" />
-    },
-    {
-      id: 'businessplan',
-      label: 'Business Plan (DPR)',
-      labelHi: 'बिजनेस प्लान व DPR',
-      icon: <FileSpreadsheet className="w-4 h-4" />,
-      badge: 'PDF',
-      badgeColor: 'bg-purple-100 text-purple-800'
-    },
-    {
-      id: 'advisor',
-      label: 'AI Advisor Sathi',
-      labelHi: 'AI सलाहकार साथी',
-      icon: <Bot className="w-4 h-4" />,
-      badge: 'Voice',
-      badgeColor: 'bg-teal-100 text-teal-800'
-    },
-    {
-      id: 'reports',
-      label: 'Reports & Vault',
-      labelHi: 'रिपोर्ट्स वॉल्ट',
-      icon: <FolderArchive className="w-4 h-4" />
-    },
-    {
-      id: 'settings',
-      label: 'Settings',
-      labelHi: 'सेटिंग्स',
-      icon: <Settings className="w-4 h-4" />
-    },
-    {
-      id: 'login',
-      label: 'Sign In / Register',
-      labelHi: 'लॉग इन / पंजीकरण',
-      icon: <Landmark className="w-4 h-4" />,
-      badge: 'Portal',
-      badgeColor: 'bg-emerald-100 text-emerald-800'
+  // Define role-specific navigation items so users only see what is strictly relevant to them
+  const getNavItemsForRole = (role?: string) => {
+    const r = (role || '').toLowerCase();
+
+    // 1. BANK BRANCH OFFICER
+    if (r.includes('bank') || r === 'bank_officer') {
+      return [
+        {
+          id: 'dashboard' as NavigationTab,
+          label: 'Credit Appraisal Desk',
+          labelHi: 'ऋण मूल्यांकन डैशबोर्ड',
+          icon: <LayoutDashboard className="w-4 h-4" />,
+          badge: 'Live',
+          badgeColor: 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+        },
+        {
+          id: 'financials' as NavigationTab,
+          label: 'DSCR & Stress Testing',
+          labelHi: 'DSCR व ऋण व्यवहार्यता',
+          icon: <Calculator className="w-4 h-4" />,
+          badge: '10:90',
+          badgeColor: 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+        },
+        {
+          id: 'businessplan' as NavigationTab,
+          label: 'Applicant DPR Audit',
+          labelHi: 'DPR सत्यापन व ऑडिट',
+          icon: <FileSpreadsheet className="w-4 h-4" />,
+          badge: 'Audit',
+          badgeColor: 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+        },
+        {
+          id: 'feasibility' as NavigationTab,
+          label: 'Catchment Viability Check',
+          labelHi: 'क्षेत्र व्यवहार्यता सत्यापन',
+          icon: <MapPin className="w-4 h-4" />,
+          badge: '10km',
+          badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+        },
+        {
+          id: 'intelligence' as NavigationTab,
+          label: 'Mandi & Asset Valuation',
+          labelHi: 'मंडी दर व मूल्यांकन',
+          icon: <BarChart3 className="w-4 h-4" />
+        },
+        {
+          id: 'advisor' as NavigationTab,
+          label: 'Credit Policy AI Sathi',
+          labelHi: 'ऋण नीति AI सलाहकार',
+          icon: <Bot className="w-4 h-4" />,
+          badge: 'AI',
+          badgeColor: 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+        }
+      ];
     }
-  ];
+
+    // 2. AGRI-BUYER / INSTITUTIONAL OFF-TAKER
+    if (r.includes('buyer') || r.includes('trader') || r === 'institutional_buyer') {
+      return [
+        {
+          id: 'marketplace' as NavigationTab,
+          label: 'Off-taker Demand Desk',
+          labelHi: 'खरीदार मांग व अनुबंध',
+          icon: <ShoppingBag className="w-4 h-4" />,
+          badge: `${activeOrdersCount} Orders`,
+          badgeColor: 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+        },
+        {
+          id: 'intelligence' as NavigationTab,
+          label: 'Live Mandi Price Trends',
+          labelHi: 'लाइव मंडी दर रुझान',
+          icon: <BarChart3 className="w-4 h-4" />,
+          badge: 'eNAM',
+          badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+        },
+        {
+          id: 'opportunities' as NavigationTab,
+          label: 'Regional Supply Clusters',
+          labelHi: 'क्षेत्रीय आपूर्ति क्लस्टर',
+          icon: <Radar className="w-4 h-4" />
+        },
+        {
+          id: 'dashboard' as NavigationTab,
+          label: 'Procurement Dashboard',
+          labelHi: 'खरीद डैशबोर्ड',
+          icon: <LayoutDashboard className="w-4 h-4" />
+        },
+        {
+          id: 'advisor' as NavigationTab,
+          label: 'Procurement AI Advisor',
+          labelHi: 'खरीद AI सलाहकार',
+          icon: <Bot className="w-4 h-4" />,
+          badge: 'AI',
+          badgeColor: 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+        }
+      ];
+    }
+
+    // 3. FPO / SHG FEDERATION LEADER
+    if (r.includes('fpo') || r.includes('shg') || r === 'fpo_manager') {
+      return [
+        {
+          id: 'dashboard' as NavigationTab,
+          label: 'FPO Cluster Dashboard',
+          labelHi: 'FPO क्लस्टर डैशबोर्ड',
+          icon: <LayoutDashboard className="w-4 h-4" />,
+          badge: 'Cluster',
+          badgeColor: 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+        },
+        {
+          id: 'marketplace' as NavigationTab,
+          label: 'Bulk Buyer Demand (50-500T)',
+          labelHi: 'थोक खरीदार मांग (50-500T)',
+          icon: <ShoppingBag className="w-4 h-4" />,
+          badge: `${activeOrdersCount} Orders`,
+          badgeColor: 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+        },
+        {
+          id: 'feasibility' as NavigationTab,
+          label: 'Processing Units & Cold Chain',
+          labelHi: 'प्रोसेसिंग यूनिट व कोल्ड चेन',
+          icon: <MapPin className="w-4 h-4" />,
+          badge: 'FPO',
+          badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+        },
+        {
+          id: 'intelligence' as NavigationTab,
+          label: 'Mandi Price Intelligence',
+          labelHi: 'मंडी खुफिया विश्लेषण',
+          icon: <BarChart3 className="w-4 h-4" />
+        },
+        {
+          id: 'opportunities' as NavigationTab,
+          label: 'Opportunity Radar',
+          labelHi: 'अवसर रडार',
+          icon: <Radar className="w-4 h-4" />
+        },
+        {
+          id: 'businessplan' as NavigationTab,
+          label: 'FPO DPR & Equity Grants',
+          labelHi: 'FPO DPR व इक्विटी ग्रांट',
+          icon: <FileSpreadsheet className="w-4 h-4" />,
+          badge: 'PDF',
+          badgeColor: 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+        },
+        {
+          id: 'advisor' as NavigationTab,
+          label: 'FPO Advisor Sathi',
+          labelHi: 'FPO सलाहकार साथी',
+          icon: <Bot className="w-4 h-4" />
+        }
+      ];
+    }
+
+    // 4. RURAL ENTREPRENEUR / DEFAULT
+    return [
+      {
+        id: 'dashboard' as NavigationTab,
+        label: 'My Business Dashboard',
+        labelHi: 'मेरा बिजनेस डैशबोर्ड',
+        icon: <LayoutDashboard className="w-4 h-4" />,
+        badge: 'Active',
+        badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+      },
+      {
+        id: 'feasibility' as NavigationTab,
+        label: 'Business Feasibility',
+        labelHi: 'व्यवसाय व्यवहार्यता',
+        icon: <MapPin className="w-4 h-4" />,
+        badge: '10km Geo',
+        badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+      },
+      {
+        id: 'financials' as NavigationTab,
+        label: '10:90 Loan Calculator',
+        labelHi: '10:90 स्मार्ट ऋण कैलकुलेटर',
+        icon: <Calculator className="w-4 h-4" />,
+        badge: '10:90',
+        badgeColor: 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+      },
+      {
+        id: 'businessplan' as NavigationTab,
+        label: 'Bank DPR Project Report',
+        labelHi: 'बैंक DPR प्रोजेक्ट रिपोर्ट',
+        icon: <FileSpreadsheet className="w-4 h-4" />,
+        badge: 'Bank PDF',
+        badgeColor: 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+      },
+      {
+        id: 'marketplace' as NavigationTab,
+        label: 'Buyer Demands (Pledge Supply)',
+        labelHi: 'खरीदार मांग (सप्लाई कमिट)',
+        icon: <ShoppingBag className="w-4 h-4" />,
+        badge: `${activeOrdersCount} Orders`,
+        badgeColor: 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+      },
+      {
+        id: 'advisor' as NavigationTab,
+        label: 'AI Advisor Sathi',
+        labelHi: 'AI सलाहकार साथी',
+        icon: <Bot className="w-4 h-4" />,
+        badge: 'Live',
+        badgeColor: 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+      }
+    ];
+  };
+
+  const navItems = getNavItemsForRole(userRole);
+
+  const getRoleIcon = (role?: string) => {
+    const r = (role || '').toLowerCase();
+    if (r.includes('bank')) return '🪙';
+    if (r.includes('buyer') || r.includes('trader')) return '🏢';
+    if (r.includes('fpo') || r.includes('shg')) return '🏢';
+    return '🌾';
+  };
 
   const sidebarContent = (
     <div className="flex flex-col justify-between h-full">
@@ -142,7 +274,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-5 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-emerald-500/20">
-              🌾
+              {getRoleIcon(userRole)}
             </div>
             <div>
               <div className="flex items-center gap-1.5">
@@ -153,28 +285,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   PRO
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-mono tracking-wide">
-                KisanBiz Intelligence AI
+              <p className="text-[10px] text-slate-400 font-mono tracking-wide truncate max-w-[130px]">
+                {userName || 'Enterprise OS'}
               </p>
             </div>
           </div>
           {isMobileMenuOpen && onCloseMobileMenu && (
             <button
               onClick={onCloseMobileMenu}
-              className="md:hidden text-slate-400 hover:text-white p-1"
+              className="md:hidden text-slate-400 hover:text-white p-1 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           )}
         </div>
 
+        {/* Role Badge Indicator */}
+        <div className="px-5 py-2.5 bg-slate-950/60 border-b border-slate-800/80 flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-[11px] font-bold text-slate-300 truncate max-w-[170px]">
+              {userRole || 'Rural Entrepreneur'}
+            </span>
+          </div>
+        </div>
+
         {/* Navigation List */}
         <div className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-280px)]">
           <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-            Ecosystem Modules
+            Dedicated Role Workspace
           </div>
 
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const isActive = currentActive === item.id;
             return (
               <button
@@ -212,7 +354,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <span>Kisan & Udyami Support</span>
           </div>
           <p className="text-[10px] text-slate-400 mb-2 leading-relaxed">
-            National Micro-Enterprise & Farmer Toll-Free Helpline: <strong>1800-180-1551</strong>
+            National Helpline: <strong>1800-180-1551</strong>
           </p>
           {onOpenSchemeModal && (
             <button
@@ -229,7 +371,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         <div className="text-[10px] text-center text-slate-500">
-          AgriXora v2.5 • Unified Rural Enterprise OS
+          AgriXora • Unified Rural Enterprise OS
         </div>
       </div>
     </div>

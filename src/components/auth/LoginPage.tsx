@@ -445,77 +445,79 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 
-                {/* Role Selector */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Select Your Role / Category
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setRole('entrepreneur')}
-                      className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                        role === 'entrepreneur'
-                          ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="font-bold flex items-center gap-1.5">
-                        <Wheat className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Rural Entrepreneur</span>
-                      </div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">Individual Beneficiary</div>
-                    </button>
+                {/* Role Selector (Registration Only) */}
+                {mode === 'register' && (
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      Select Your Role / Category (अपनी भूमिका चुनें)
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setRole('entrepreneur')}
+                        className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                          role === 'entrepreneur'
+                            ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
+                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="font-bold flex items-center gap-1.5">
+                          <Wheat className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Rural Entrepreneur</span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">Individual Beneficiary</div>
+                      </button>
 
-                    <button
-                      type="button"
-                      onClick={() => setRole('fpo_manager')}
-                      className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                        role === 'fpo_manager'
-                          ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="font-bold flex items-center gap-1.5">
-                        <Building2 className="w-3.5 h-3.5 text-teal-400" />
-                        <span>FPO / SHG Leader</span>
-                      </div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">Farmer Collective Unit</div>
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setRole('fpo_manager')}
+                        className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                          role === 'fpo_manager'
+                            ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
+                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="font-bold flex items-center gap-1.5">
+                          <Building2 className="w-3.5 h-3.5 text-teal-400" />
+                          <span>FPO / SHG Leader</span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">Farmer Collective Unit</div>
+                      </button>
 
-                    <button
-                      type="button"
-                      onClick={() => setRole('bank_officer')}
-                      className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                        role === 'bank_officer'
-                          ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="font-bold flex items-center gap-1.5">
-                        <Coins className="w-3.5 h-3.5 text-amber-400" />
-                        <span>Bank Branch Officer</span>
-                      </div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">Loan Credit Appraisal</div>
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setRole('bank_officer')}
+                        className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                          role === 'bank_officer'
+                            ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
+                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="font-bold flex items-center gap-1.5">
+                          <Coins className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Bank Branch Officer</span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">Loan Credit Appraisal</div>
+                      </button>
 
-                    <button
-                      type="button"
-                      onClick={() => setRole('institutional_buyer')}
-                      className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                        role === 'institutional_buyer'
-                          ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="font-bold flex items-center gap-1.5">
-                        <Building2 className="w-3.5 h-3.5 text-blue-400" />
-                        <span>Agri-Buyer / Trader</span>
-                      </div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">Off-taker Contract Desk</div>
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setRole('institutional_buyer')}
+                        className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                          role === 'institutional_buyer'
+                            ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
+                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="font-bold flex items-center gap-1.5">
+                          <Building2 className="w-3.5 h-3.5 text-blue-400" />
+                          <span>Agri-Buyer / Trader</span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">Off-taker Contract Desk</div>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Registration Only Fields */}
                 {mode === 'register' && (
@@ -737,14 +739,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
                 <div className="flex items-center gap-1.5 text-emerald-400">
                   <ShieldCheck className="w-4 h-4" />
-                  <span>Aadhaar e-KYC Compliant</span>
+                  <span>Aadhaar e-KYC & MSME Compliant</span>
                 </div>
-                <button
-                  onClick={() => onNavigate('landing')}
-                  className="hover:text-emerald-300 transition-colors cursor-pointer"
-                >
-                  Explore as Guest &rarr;
-                </button>
+                <div className="text-slate-500 font-mono text-[10px]">
+                  256-Bit SSL Encrypted
+                </div>
               </div>
 
             </div>

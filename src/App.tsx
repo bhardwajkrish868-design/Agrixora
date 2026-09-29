@@ -295,6 +295,8 @@ export function App() {
           onOpenSchemeModal={() => setIsSchemeModalOpen(true)}
           isMobileMenuOpen={isMobileMenuOpen}
           onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
+          userRole={user?.role}
+          userName={user?.name}
         />
 
         {/* Main Content Area */}
@@ -313,6 +315,8 @@ export function App() {
               location={selectedLocation}
               latestReport={currentReport}
               latestFinancials={currentFinancials}
+              userRole={user?.role}
+              userName={user?.name}
             />
           )}
 
