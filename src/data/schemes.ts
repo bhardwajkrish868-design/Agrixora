@@ -9,7 +9,9 @@ export const SCHEMES: Record<SchemeType, SchemeRule> = {
     maxProjectCost: 140000, // Up to Rs 1.40 Lakh
     maxLoanAmount: 125000, // Max Rs 1.25 Lakh (up to 90%)
     interestRateAnnual: 6.5, // 6.5% p.a. concessional
+    interestRate: 6.5,
     tenureYears: 3,
+    repaymentTenureYears: 3,
     tenureQuarters: 12,
     tenureMonths: 36,
     moratoriumMonths: 3,
@@ -28,7 +30,9 @@ export const SCHEMES: Record<SchemeType, SchemeRule> = {
     maxProjectCost: 5000000, // Up to Rs 50.00 Lakh
     maxLoanAmount: 4500000, // Max Rs 45.00 Lakh (90%)
     interestRateAnnual: 8.0, // 8.0% p.a.
+    interestRate: 8.0,
     tenureYears: 7,
+    repaymentTenureYears: 7,
     tenureQuarters: 28,
     tenureMonths: 84,
     moratoriumMonths: 6,
@@ -47,7 +51,9 @@ export const SCHEMES: Record<SchemeType, SchemeRule> = {
     maxProjectCost: 100000000,
     maxLoanAmount: 4500000,
     interestRateAnnual: 8.5,
+    interestRate: 8.5,
     tenureYears: 7,
+    repaymentTenureYears: 7,
     tenureQuarters: 28,
     tenureMonths: 84,
     moratoriumMonths: 6,
@@ -60,7 +66,7 @@ export const SCHEMES: Record<SchemeType, SchemeRule> = {
   }
 };
 
-export function determineScheme(projectCost: number): SchemeRule {
+export function selectSchemeForProjectCost(projectCost: number): SchemeRule {
   if (projectCost <= 140000) {
     return SCHEMES.MICRO_FINANCE;
   } else if (projectCost <= 5000000) {
@@ -70,78 +76,98 @@ export function determineScheme(projectCost: number): SchemeRule {
   }
 }
 
-export function calculateFinancialRoadmap(
-  marginCapital: number,
-  categoryCapexRatio: number = 0.65
-): FinancialRoadmap {
-  const safeMargin = Math.max(1000, marginCapital);
-  const projectCost = Math.round(safeMargin / 0.10);
+export function calculateFinancialRoadmap(marginCapital: number): FinancialRoadmap {
+  const safeMargin = Math.max(1000, marginCapital || 10000);
+  const rawProjectCost = safeMargin * 10;
+  const projectCost = Math.min(rawProjectCost, 5000000);
+  const scheme = selectSchemeForProjectCost(projectCost);
 
-  const scheme = determineScheme(projectCost);
-  const theoreticalLoan = Math.round(projectCost * (scheme.loanPercent / 100));
-  const loanAmount = Math.min(theoreticalLoan, scheme.maxLoanAmount);
+  let loanAmount = Math.round(projectCost * 0.90);
+  if (scheme.id === 'MICRO_FINANCE' && loanAmount > 125000) {
+    loanAmount = 125000;
+  } else if (scheme.id === 'TERM_LOAN' && loanAmount > 4500000) {
+    loanAmount = 4500000;
+  }
 
-  const capexAmount = Math.round(projectCost * categoryCapexRatio);
+  const capexPercent = scheme.id === 'MICRO_FINANCE' ? 0.60 : 0.70;
+  const capexAmount = Math.round(projectCost * capexPercent);
   const workingCapitalAmount = projectCost - capexAmount;
 
-  const annualRate = scheme.interestRateAnnual / 100;
-  const quarterlyRate = annualRate / 4;
   const totalQuarters = scheme.tenureQuarters;
   const moratoriumQuarters = scheme.moratoriumQuarters;
   const activeRepaymentQuarters = totalQuarters - moratoriumQuarters;
+  const quarterlyRate = (scheme.interestRateAnnual / 100) / 4;
 
-  const quarterlyEMI = Math.round(
-    (loanAmount * (quarterlyRate * Math.pow(1 + quarterlyRate, activeRepaymentQuarters))) /
-    (Math.pow(1 + quarterlyRate, activeRepaymentQuarters) - 1)
-  );
+  let quarterlyEMI = 0;
+  if (quarterlyRate > 0 && activeRepaymentQuarters > 0) {
+    quarterlyEMI = Math.round(
+      (loanAmount * quarterlyRate * Math.pow(1 + quarterlyRate, activeRepaymentQuarters)) /
+      (Math.pow(1 + quarterlyRate, activeRepaymentQuarters) - 1)
+    );
+  } else {
+    quarterlyEMI = Math.round(loanAmount / (activeRepaymentQuarters || 1));
+  }
 
   const monthlyEMIEquivalent = Math.round(quarterlyEMI / 3);
 
-  let currentBalance = loanAmount;
-  let totalInterestPayable = 0;
   const quarterlyRepaymentSchedule: RepaymentPeriod[] = [];
+  let balance = loanAmount;
+  let totalInterestPayable = 0;
 
   for (let q = 1; q <= totalQuarters; q++) {
     const isMoratorium = q <= moratoriumQuarters;
-    const interest = Math.round(currentBalance * quarterlyRate);
+    const interest = Math.round(balance * quarterlyRate);
     totalInterestPayable += interest;
 
     let principal = 0;
     let payment = 0;
 
     if (isMoratorium) {
-      principal = 0;
       payment = interest;
     } else {
-      payment = (q === totalQuarters) ? currentBalance + interest : quarterlyEMI;
-      principal = Math.min(currentBalance, payment - interest);
-      currentBalance = Math.max(0, currentBalance - principal);
+      payment = (q === totalQuarters) ? balance + interest : quarterlyEMI;
+      principal = Math.min(balance, payment - interest);
+      balance = Math.max(0, balance - principal);
     }
 
+    const begBal = balance + principal;
     quarterlyRepaymentSchedule.push({
       periodNumber: q,
       periodLabel: isMoratorium ? `Quarter ${q} (Moratorium)` : `Quarter ${q}`,
       isMoratorium,
-      beginningBalance: currentBalance + principal,
+      beginningBalance: begBal,
       principalPayment: principal,
       interestPayment: interest,
       totalPayment: payment,
-      endingBalance: currentBalance
+      endingBalance: balance,
+      label: isMoratorium ? `Q${q} (Grace Period)` : `Quarter ${q}`,
+      openingBalance: begBal,
+      installment: payment,
+      principalComponent: principal,
+      interestComponent: interest,
+      closingBalance: balance
     });
   }
 
-  const monthlyRepaymentSchedule: RepaymentPeriod[] = [];
-  const monthlyRate = annualRate / 12;
   const totalMonths = scheme.tenureMonths;
   const moratoriumMonths = scheme.moratoriumMonths;
   const activeMonths = totalMonths - moratoriumMonths;
-  const monthlyEMI = Math.round(
-    (loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, activeMonths))) /
-    (Math.pow(1 + monthlyRate, activeMonths) - 1)
-  );
+  const monthlyRate = (scheme.interestRateAnnual / 100) / 12;
 
+  let monthlyEMI = 0;
+  if (monthlyRate > 0 && activeMonths > 0) {
+    monthlyEMI = Math.round(
+      (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, activeMonths)) /
+      (Math.pow(1 + monthlyRate, activeMonths) - 1)
+    );
+  } else {
+    monthlyEMI = Math.round(loanAmount / (activeMonths || 1));
+  }
+
+  const monthlyRepaymentSchedule: RepaymentPeriod[] = [];
   let mBalance = loanAmount;
-  for (let m = 1; m <= Math.min(totalMonths, 36); m++) {
+
+  for (let m = 1; m <= totalMonths; m++) {
     const isMoratorium = m <= moratoriumMonths;
     const interest = Math.round(mBalance * monthlyRate);
     let principal = 0;
@@ -155,15 +181,22 @@ export function calculateFinancialRoadmap(
       mBalance = Math.max(0, mBalance - principal);
     }
 
+    const begBal = mBalance + principal;
     monthlyRepaymentSchedule.push({
       periodNumber: m,
       periodLabel: isMoratorium ? `Month ${m} (Moratorium)` : `Month ${m}`,
       isMoratorium,
-      beginningBalance: mBalance + principal,
+      beginningBalance: begBal,
       principalPayment: principal,
       interestPayment: interest,
       totalPayment: payment,
-      endingBalance: mBalance
+      endingBalance: mBalance,
+      label: isMoratorium ? `Month ${m} (Grace)` : `Month ${m}`,
+      openingBalance: begBal,
+      installment: payment,
+      principalComponent: principal,
+      interestComponent: interest,
+      closingBalance: mBalance
     });
   }
 
@@ -205,6 +238,7 @@ export function calculateFinancialRoadmap(
     scheme,
     quarterlyEMI,
     monthlyEMIEquivalent,
+    monthlyEquivalentEMI: monthlyEMIEquivalent,
     totalInterestPayable,
     totalRepaymentAmount,
     capexAmount,

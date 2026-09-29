@@ -119,6 +119,45 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     viableVerdict: 'परियोजना वित्तीय व्यवहार्यता निष्कर्ष',
     dscrLabel: 'ऋण सेवा कवरेज अनुपात (DSCR)'
   },
+  hinglish: {
+    appName: 'AgriXora AI',
+    tagline: 'Hyper-Local Business Feasibility aur Smart Loan Scheme Router',
+    heroBadge: 'Rural & Semi-Urban Udyami Platform',
+    heroTitle: '₹10,000 Margin Capital se shuru karein ₹1,00,000 ka Viable Rural Business',
+    heroDesc: 'First-time rural entrepreneurs ke liye 90% loan assistance, catchment market validation aur bank-ready DPR.',
+    marginCapital: 'Available Margin Capital (10% Share)',
+    marginCapitalDesc: 'Aapka cash investment. Baki 90% loan scheme provide karti hai.',
+    projectCost: 'Total Project Cost (100%)',
+    loanAmount: 'Eligible Loan Amount (90%)',
+    interestRate: 'Subsidized Interest Rate',
+    moratorium: 'Moratorium Grace Period',
+    tenure: 'Repayment Tenure',
+    schemeTitle: 'Recommended Government Scheme',
+    microFinanceBadge: 'Micro Finance Scheme (Up to ₹1.40 Lakh)',
+    termLoanBadge: 'Term Loan Scheme (₹1.40 Lakh to ₹50.00 Lakh)',
+    quarterlyEmi: 'Estimated Quarterly Repayment (EMI)',
+    monthlyEmi: 'Monthly Equivalent Burden',
+    generateReportBtn: 'Catchment Feasibility aur Bank DPR Generate Karein',
+    step1: '1. Location Catchment',
+    step2: '2. Margin Capital',
+    step3: '3. Business Sector',
+    geoTitle: 'Aapka Business kahan setup hoga?',
+    bizTitle: 'Business Category Select Karein',
+    financeTitle: 'Margin Capital aur Scheme Eligibility',
+    marketReachTitle: '5-10 km Catchment Population & Demand',
+    opportunityTitle: 'Local Untapped Value Addition Opportunities',
+    swotTitle: 'SWOT Analysis (Strength, Weakness, Opportunity, Threat)',
+    threatsTitle: 'Hyper-Local Threats aur Mitigation Plan',
+    competitorTitle: 'Competitor Density & Saturation Index',
+    pricingTitle: 'Product Pricing & Gross Profit Margin',
+    dprDownloadBtn: 'Bank-Ready Business Plan (DPR PDF) Download Karein',
+    aiCoachTitle: 'AgriXora AI Coach se Consult Karein',
+    askCoachPlaceholder: 'Hinglish mein poochein (jaise: subsidy, license, machinery vendor)...',
+    voiceReadout: 'Report Summary Suniye (Voice)',
+    demoPresetsTitle: 'Demo Presets (Quick Autofill)',
+    viableVerdict: 'Project Financial Viability Verdict',
+    dscrLabel: 'Debt Service Coverage Ratio (DSCR)'
+  },
   mr: {
     appName: 'ग्राम उद्योग AI',
     tagline: 'स्थानिक व्यवसाय सल्लागार व स्मार्ट योजना पात्रता इंजिन',
@@ -369,3 +408,5 @@ export const LANGUAGE_OPTIONS: { code: Language; label: string; native: string }
 export function useTranslation(lang: Language = 'en'): TranslationDict {
   return TRANSLATIONS[lang] || TRANSLATIONS.en;
 }
+
+export const getTranslation = useTranslation;

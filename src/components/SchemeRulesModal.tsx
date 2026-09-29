@@ -2,9 +2,12 @@ import React from 'react';
 import { X, Percent, Clock } from 'lucide-react';
 import { SCHEMES } from '../data/schemes';
 
+import type { Language } from '../types';
+
 interface SchemeRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
+  currentLanguage?: Language;
 }
 
 export const SchemeRulesModal: React.FC<SchemeRulesModalProps> = ({ isOpen, onClose }) => {

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { X, Key, Check, Sparkles, ExternalLink } from 'lucide-react';
 
+import type { Language } from '../types';
+
 interface ApiKeyModalProps {
   isOpen: boolean;
   onClose: () => void;
+  currentLanguage?: Language;
 }
 
 export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => {

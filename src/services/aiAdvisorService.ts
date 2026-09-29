@@ -10,8 +10,7 @@ export async function generateFeasibilityReport(
 ): Promise<FullFeasibilityDPR> {
   const category = getCategoryById(formData.businessCategoryId);
   const financials = calculateFinancialRoadmap(
-    formData.availableMarginCapital,
-    category.typicalCapexPercent
+    formData.availableMarginCapital
   );
 
   const radiusKm = formData.location.catchmentRadiusKm || (financials.projectCost > 500000 ? 10 : 5);
