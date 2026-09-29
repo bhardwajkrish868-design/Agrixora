@@ -4,7 +4,6 @@ import {
   MapPin, 
   Globe, 
   Bell, 
-  User, 
   Sun, 
   Moon, 
   Menu,
@@ -230,15 +229,38 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             )}
           </div>
 
-          {/* User Auth / Profile Button */}
-          {onOpenAuthModal && (
-            <button
-              onClick={onOpenAuthModal}
-              className="flex items-center gap-2 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-slate-900 dark:bg-emerald-600 text-white text-xs font-bold shadow-xs hover:opacity-90 transition-all cursor-pointer"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{user?.name ? user.name.split(' ')[0] : 'Sign In'}</span>
-            </button>
+          {/* User Auth / Sign In & Register Buttons */}
+          {user?.name ? (
+            <div className="relative">
+              <button
+                onClick={onOpenAuthModal}
+                className="flex items-center gap-2 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
+                title={`${user.name} (${user.role})`}
+              >
+                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
+                  👤
+                </div>
+                <div className="hidden sm:block text-left">
+                  <div className="leading-tight font-bold">{user.name.split(' ')[0]}</div>
+                  <div className="text-[9px] text-emerald-200 leading-none">{user.location.split(',')[0]}</div>
+                </div>
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => onNavigate ? onNavigate('login') : onOpenAuthModal?.()}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => onNavigate ? onNavigate('register') : onOpenAuthModal?.()}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-sm shadow-emerald-950/40 transition-all cursor-pointer"
+              >
+                Register
+              </button>
+            </div>
           )}
 
         </div>

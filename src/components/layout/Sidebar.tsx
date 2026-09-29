@@ -124,6 +124,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Settings',
       labelHi: 'सेटिंग्स',
       icon: <Settings className="w-4 h-4" />
+    },
+    {
+      id: 'login',
+      label: 'Sign In / Register',
+      labelHi: 'लॉग इन / पंजीकरण',
+      icon: <Landmark className="w-4 h-4" />,
+      badge: 'Portal',
+      badgeColor: 'bg-emerald-100 text-emerald-800'
     }
   ];
 

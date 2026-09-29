@@ -12,7 +12,9 @@ export type ActiveView =
   | 'advisor'
   | 'reports'
   | 'profile'
-  | 'settings';
+  | 'settings'
+  | 'login'
+  | 'register';
 
 export type NavigationTab = ActiveView;
 

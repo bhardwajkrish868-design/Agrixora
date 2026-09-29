@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { X, Lock, Mail, User, CheckCircle2 } from 'lucide-react';
+import { X, Lock, Phone, User, CheckCircle2, Sparkles, ShieldCheck } from 'lucide-react';
 import type { Language } from '../../types';
-import { getTranslation } from '../../utils/i18n';
+import { STATES_DATA } from '../../data/regionsData';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -14,17 +14,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
-  currentLang,
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
-  const [email, setEmail] = useState('entrepreneur@agrixora.in');
+  const [phone, setPhone] = useState('9876543210');
   const [name, setName] = useState('Rameshwar Kumar');
   const [role, setRole] = useState<'entrepreneur' | 'fpo_manager' | 'institutional_buyer' | 'bank_officer'>('entrepreneur');
-  const [stateDistrict, setStateDistrict] = useState('Nashik, Maharashtra');
+  const [selectedState, setSelectedState] = useState('Maharashtra');
+  const [selectedDistrict, setSelectedDistrict] = useState('Nashik');
 
   if (!isOpen) return null;
 
-  const t = getTranslation(currentLang);
+  const stateObj = STATES_DATA.find(s => s.state === selectedState) || STATES_DATA[0];
+
+  const handleStateChange = (st: string) => {
+    setSelectedState(st);
+    const found = STATES_DATA.find(s => s.state === st);
+    if (found && found.districts.length > 0) {
+      setSelectedDistrict(found.districts[0].district);
+    }
+  };
 
   const handleStandardSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,155 +44,185 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     };
 
     onLoginSuccess({
-      name: name || 'Rameshwar Kumar',
+      name: name || (mode === 'login' ? 'Rameshwar Kumar' : 'New Entrepreneur'),
       role: roleLabels[role] || 'Rural Entrepreneur',
-      location: stateDistrict,
+      location: `${selectedDistrict}, ${selectedState}`,
     });
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 max-w-md w-full overflow-hidden transition-all">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-600 to-teal-700 p-6 text-white relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+      <div className="bg-slate-900 rounded-3xl shadow-2xl border border-emerald-500/30 max-w-lg w-full overflow-hidden transition-all text-slate-100">
+        
+        {/* Visual Brand Header with Image Banner */}
+        <div className="relative h-36 overflow-hidden bg-slate-950">
+          <img
+            src="/assets/agrixora_hero.jpg"
+            alt="Agrixora"
+            className="w-full h-full object-cover object-center brightness-75"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
+          
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-emerald-100 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
+            className="absolute top-3 right-3 text-slate-300 hover:text-white bg-black/40 hover:bg-black/60 p-2 rounded-full transition-colors z-10"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm text-2xl">
-              🌾
-            </div>
+
+          <div className="absolute bottom-3 left-5 right-5 flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold tracking-tight">
-                {mode === 'login' ? 'AgriXora Enterprise Sign In' : 'Join AgriXora Network'}
+              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-500/40 w-fit mb-1">
+                <Sparkles className="w-3 h-3 text-amber-300" />
+                <span>AGRIXORA PORTAL</span>
+              </div>
+              <h2 className="text-lg font-extrabold text-white tracking-tight">
+                {mode === 'login' ? 'Sign In to Your Account' : 'Register New Enterprise'}
               </h2>
-              <p className="text-emerald-100 text-xs">
-                {t.tagline}
-              </p>
             </div>
+            <div className="text-2xl">🌾</div>
           </div>
         </div>
 
         {/* Standard Form */}
         <form onSubmit={handleStandardSubmit} className="p-6 space-y-4">
-          <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+          
+          {/* Sign In / Register Switcher */}
+          <div className="flex bg-slate-950 p-1.5 rounded-xl border border-slate-800">
             <button
               type="button"
               onClick={() => setMode('login')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 mode === 'login'
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-950'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              Sign In
+              <Lock className="w-3.5 h-3.5" />
+              <span>Sign In (लॉग इन)</span>
             </button>
             <button
               type="button"
               onClick={() => setMode('register')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 mode === 'register'
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-950'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              New Beneficiary
+              <User className="w-3.5 h-3.5" />
+              <span>Register (नया पंजीकरण)</span>
             </button>
           </div>
 
+          {mode === 'register' && (
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
+                Full Name / Business Name
+              </label>
+              <div className="relative">
+                <User className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Rameshwar Kumar"
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white placeholder-slate-500"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Mobile Number */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Full Name / Entity Name
+            <label className="block text-xs font-semibold text-slate-300 mb-1">
+              Mobile Number (Aadhaar Linked / OTP)
             </label>
             <div className="relative">
-              <User className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <div className="absolute left-3 top-2.5 text-xs font-bold text-slate-400 flex items-center gap-1 border-r border-slate-700 pr-2">
+                <Phone className="w-3 h-3 text-emerald-400" />
+                <span>+91</span>
+              </div>
               <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Rameshwar Kumar"
-                className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 dark:text-white"
+                type="tel"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="9876543210"
+                maxLength={10}
+                className="w-full pl-16 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white font-mono"
               />
             </div>
           </div>
 
+          {/* Role Selection */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Email or Mobile Number (Aadhaar / e-KYC Linked)
-            </label>
-            <div className="relative">
-              <Mail className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@domain.com or 10-digit mobile"
-                className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 dark:text-white"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Password / OTP PIN
-            </label>
-            <div className="relative">
-              <Lock className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-              <input
-                type="password"
-                defaultValue="••••••••"
-                className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 dark:text-white"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              User Role / Account Category
+            <label className="block text-xs font-semibold text-slate-300 mb-1">
+              Account Role
             </label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value as any)}
-              className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white"
+              className="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white cursor-pointer"
             >
-              <option value="entrepreneur">Rural / Semi-Urban Entrepreneur (Applicant)</option>
+              <option value="entrepreneur">Rural Entrepreneur / Micro Unit Applicant</option>
               <option value="fpo_manager">FPO / SHG Federation Leader</option>
-              <option value="institutional_buyer">Institutional Pre-Bulk Buyer / Offtaker</option>
-              <option value="bank_officer">Bank Branch Manager / Lead Field Officer</option>
+              <option value="bank_officer">Bank Branch Manager / Field Officer</option>
+              <option value="institutional_buyer">Institutional Buyer / Offtaker</option>
             </select>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Registered Block / District
-            </label>
-            <input
-              type="text"
-              value={stateDistrict}
-              onChange={(e) => setStateDistrict(e.target.value)}
-              placeholder="e.g. Nashik, Maharashtra"
-              className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white"
-            />
+          {/* Location Selection */}
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
+                State (राज्य)
+              </label>
+              <select
+                value={selectedState}
+                onChange={(e) => handleStateChange(e.target.value)}
+                className="w-full px-2.5 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white cursor-pointer"
+              >
+                {STATES_DATA.map(s => (
+                  <option key={s.state} value={s.state} className="bg-slate-900 text-white">
+                    {s.state}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
+                District (ज़िला)
+              </label>
+              <select
+                value={selectedDistrict}
+                onChange={(e) => setSelectedDistrict(e.target.value)}
+                className="w-full px-2.5 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white cursor-pointer"
+              >
+                {stateObj.districts.map(d => (
+                  <option key={d.district} value={d.district} className="bg-slate-900 text-white">
+                    {d.district}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <button
             type="submit"
-            className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm shadow-md shadow-emerald-600/30 transition-all active:scale-95 flex items-center justify-center gap-2 mt-2"
+            className="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold rounded-xl text-xs sm:text-sm shadow-lg shadow-emerald-950 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
           >
             <CheckCircle2 className="w-4 h-4" />
-            {mode === 'login' ? 'Continue to AgriXora' : 'Register & Verify'}
+            <span>{mode === 'login' ? 'Sign In & Access Dashboard' : 'Complete Registration & Access'}</span>
           </button>
         </form>
 
         {/* Footer */}
-        <div className="bg-slate-50 dark:bg-slate-950 p-3 text-center border-t border-slate-200 dark:border-slate-800">
-          <p className="text-[11px] text-slate-500 dark:text-slate-400">
-            Protected by Aadhaar e-KYC integration sandbox & 256-bit encryption.
-          </p>
+        <div className="bg-slate-950 p-3 text-center border-t border-slate-800 flex items-center justify-center gap-2 text-[11px] text-slate-400">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Aadhaar e-KYC & Ministry of MSME Compliant Portal</span>
         </div>
       </div>
     </div>

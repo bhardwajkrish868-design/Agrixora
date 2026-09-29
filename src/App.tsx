@@ -24,6 +24,7 @@ import { OpportunityRadarView } from './components/opportunities/OpportunityRada
 import { MarketIntelligenceView } from './components/intelligence/MarketIntelligenceView';
 import { BusinessPlanGeneratorView } from './components/businessplan/BusinessPlanGeneratorView';
 import { AgriXoraAIAdvisor } from './components/advisor/AgriXoraAIAdvisor';
+import { LoginPage } from './components/auth/LoginPage';
 
 // Modals
 import { AuthModal } from './components/modals/AuthModal';
@@ -122,6 +123,38 @@ export function App() {
       'info'
     );
   };
+
+  // Dedicated Full-Screen Login / Register View
+  if (activeTab === 'login' || activeTab === 'register') {
+    return (
+      <>
+        {toastMessage && (
+          <div className="fixed top-6 right-6 z-50 animate-bounce max-w-sm bg-slate-900 text-white dark:bg-emerald-950 dark:text-emerald-100 border border-emerald-500/30 rounded-2xl p-4 shadow-2xl flex items-start gap-3 backdrop-blur-md">
+            <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 font-bold">
+              ✓
+            </div>
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400">{toastMessage.title}</h4>
+              <p className="text-xs text-slate-300 dark:text-emerald-200/90 mt-0.5">{toastMessage.desc}</p>
+            </div>
+          </div>
+        )}
+        <LoginPage
+          initialMode={activeTab === 'register' ? 'register' : 'login'}
+          currentLang={currentLanguage}
+          onLanguageChange={setCurrentLanguage}
+          onLoginSuccess={(userData) => {
+            setUser(userData);
+            showToast(
+              'Welcome to AgriXora',
+              `Logged in as ${userData.name} (${userData.role}) for ${userData.location}.`
+            );
+          }}
+          onNavigate={setActiveTab}
+        />
+      </>
+    );
+  }
 
   return (
     <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 ${isDarkMode ? 'dark' : ''}`}>
