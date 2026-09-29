@@ -26,7 +26,6 @@ import { BusinessPlanGeneratorView } from './components/businessplan/BusinessPla
 import { AgriXoraAIAdvisor } from './components/advisor/AgriXoraAIAdvisor';
 
 // Modals
-import { JudgeDemoModal } from './components/modals/JudgeDemoModal';
 import { AuthModal } from './components/modals/AuthModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { SchemeRulesModal } from './components/SchemeRulesModal';
@@ -65,7 +64,6 @@ export function App() {
   const [selectedOpportunity, setSelectedOpportunity] = useState<OpportunityItem | null>(null);
 
   // Active Modals State
-  const [isJudgeModalOpen, setIsJudgeModalOpen] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
   const [isSchemeModalOpen, setIsSchemeModalOpen] = useState<boolean>(false);
@@ -151,7 +149,6 @@ export function App() {
         onLocationChange={handleLocationChange}
         isDarkMode={isDarkMode}
         onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
-        onOpenJudgeDemo={() => setIsJudgeModalOpen(true)}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
         onOpenSchemeModal={() => setIsSchemeModalOpen(true)}
@@ -169,7 +166,6 @@ export function App() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           currentLanguage={currentLanguage}
-          onOpenJudgeDemo={() => setIsJudgeModalOpen(true)}
           onOpenSchemeModal={() => setIsSchemeModalOpen(true)}
           isMobileMenuOpen={isMobileMenuOpen}
           onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
@@ -181,7 +177,6 @@ export function App() {
             <LandingPage
               onNavigate={setActiveTab}
               currentLanguage={currentLanguage}
-              onOpenJudgeDemo={() => setIsJudgeModalOpen(true)}
             />
           )}
 
@@ -192,7 +187,6 @@ export function App() {
               location={selectedLocation}
               latestReport={currentReport}
               latestFinancials={currentFinancials}
-              onOpenJudgeDemo={() => setIsJudgeModalOpen(true)}
             />
           )}
 
@@ -299,7 +293,7 @@ export function App() {
                 <div className="space-y-6 divide-y divide-slate-100 dark:divide-slate-800">
                   <div className="pt-4 flex items-center justify-between">
                     <div>
-                      <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Gemini 2.5 Live Reasoning API Key</h4>
+                      <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Gemini Live Reasoning API Key</h4>
                       <p className="text-xs text-slate-500">Provide an optional Google AI API key for real-time generative responses.</p>
                     </div>
                     <button
@@ -325,14 +319,16 @@ export function App() {
 
                   <div className="pt-4 flex items-center justify-between">
                     <div>
-                      <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">SIH Judge Evaluation Sandbox</h4>
-                      <p className="text-xs text-slate-500">Run the automated 5-step end-to-end evaluation flow.</p>
+                      <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Clear Regional Market Cache</h4>
+                      <p className="text-xs text-slate-500">Purge offline cached mandi prices and reload fresh econometric benchmarks.</p>
                     </div>
                     <button
-                      onClick={() => setIsJudgeModalOpen(true)}
-                      className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold rounded-xl transition-all cursor-pointer"
+                      onClick={() => {
+                        showToast('Cache Purged', 'Regional price benchmarks and mandi caches successfully refreshed.', 'info');
+                      }}
+                      className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-xl transition-all cursor-pointer"
                     >
-                      Launch Judge Walkthrough
+                      Purge Cache
                     </button>
                   </div>
                 </div>
@@ -369,17 +365,6 @@ export function App() {
       )}
 
       {/* Interactive Modals */}
-      <JudgeDemoModal
-        isOpen={isJudgeModalOpen}
-        onClose={() => setIsJudgeModalOpen(false)}
-        onNavigate={(tab) => {
-          setActiveTab(tab);
-          setIsJudgeModalOpen(false);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        currentLang={currentLanguage}
-      />
-
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}

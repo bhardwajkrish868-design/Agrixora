@@ -10,10 +10,10 @@ import {
   Bot, 
   FolderArchive, 
   Settings, 
-  Sparkles, 
-  Award,
   Home,
-  X
+  X,
+  PhoneCall,
+  Landmark
 } from 'lucide-react';
 import type { NavigationTab, ActiveView, Language } from '../../types';
 
@@ -22,7 +22,6 @@ interface SidebarProps {
   activeView?: ActiveView;
   onNavigate?: (tab: NavigationTab) => void;
   onSelectView?: (view: ActiveView) => void;
-  onOpenJudgeDemo: () => void;
   onOpenSchemeModal?: () => void;
   currentLanguage: Language;
   activeOrdersCount?: number;
@@ -35,7 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeView,
   onNavigate,
   onSelectView,
-  onOpenJudgeDemo,
+  onOpenSchemeModal,
   currentLanguage,
   activeOrdersCount = 8,
   isMobileMenuOpen = false,
@@ -67,7 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Business Feasibility',
       labelHi: 'व्यवसाय व्यवहार्यता',
       icon: <MapPin className="w-4 h-4" />,
-      badge: 'PS 26091',
+      badge: '10km Geo',
       badgeColor: 'bg-emerald-100 text-emerald-800'
     },
     {
@@ -197,30 +196,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Bottom SIH Judge Demo Launcher Card */}
+      {/* Bottom Production Assistance & Helpline Card */}
       <div className="p-3 border-t border-slate-800 space-y-2">
-        <div className="p-3 rounded-xl bg-gradient-to-br from-amber-500/10 via-emerald-500/10 to-transparent border border-amber-500/30 text-xs">
-          <div className="flex items-center gap-1.5 font-bold text-amber-300 text-[11px] mb-1">
-            <Award className="w-3.5 h-3.5" />
-            <span>SIH Evaluation Mode</span>
+        <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-950/80 to-slate-900 border border-emerald-800/40 text-xs">
+          <div className="flex items-center gap-1.5 font-bold text-emerald-300 text-[11px] mb-1">
+            <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Kisan & Udyami Support</span>
           </div>
           <p className="text-[10px] text-slate-400 mb-2 leading-relaxed">
-            Run automated end-to-end journey: Feasibility → 10:90 Loan → Buyer Orders → PDF DPR.
+            National Micro-Enterprise & Farmer Toll-Free Helpline: <strong>1800-180-1551</strong>
           </p>
-          <button
-            onClick={() => {
-              onOpenJudgeDemo();
-              if (onCloseMobileMenu) onCloseMobileMenu();
-            }}
-            className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-500 to-emerald-600 hover:from-amber-600 hover:to-emerald-700 text-slate-950 font-black text-[11px] transition-all flex items-center justify-center gap-1.5 shadow-md cursor-pointer"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Run Full SIH Demo Flow</span>
-          </button>
+          {onOpenSchemeModal && (
+            <button
+              onClick={() => {
+                onOpenSchemeModal();
+                if (onCloseMobileMenu) onCloseMobileMenu();
+              }}
+              className="w-full py-1.5 px-3 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-[11px] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Landmark className="w-3.5 h-3.5" />
+              <span>Scheme Policy Rules</span>
+            </button>
+          )}
         </div>
 
         <div className="text-[10px] text-center text-slate-500">
-          AgriXora v2.5 • Unified PS 26091 & 26033
+          AgriXora v2.5 • Unified Rural Enterprise OS
         </div>
       </div>
     </div>

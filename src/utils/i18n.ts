@@ -76,7 +76,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     aiCoachTitle: 'Ask GramUdyog AI Coach',
     askCoachPlaceholder: 'Ask in Hindi or English (e.g., license requirements, machinery tips, subsidies)...',
     voiceReadout: 'Listen to Feasibility Summary (Voice)',
-    demoPresetsTitle: 'Instant Demo Scenarios (Select to Autofill)',
+    demoPresetsTitle: 'Regional Case Studies & Archetypes (Click to Inspect)',
     viableVerdict: 'Project Viability Assessment',
     dscrLabel: 'Debt Service Coverage Ratio (DSCR)'
   },
@@ -115,7 +115,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     aiCoachTitle: 'ग्राम उद्योग एआई साथी से पूछें',
     askCoachPlaceholder: 'हिन्दी या अंग्रेजी में पूछें (जैसे: लाइसेंस, मशीनरी, सरकारी सब्सिडी)...',
     voiceReadout: 'रिपोर्ट का सार सुनें (आवाज़)',
-    demoPresetsTitle: 'त्वरित डेमो परिदृश्य (ऑटोफिल के लिए चुनें)',
+    demoPresetsTitle: 'क्षेत्रीय केस स्टडीज एवं आदर्श व्यवसाय प्रोफाइल',
     viableVerdict: 'परियोजना वित्तीय व्यवहार्यता निष्कर्ष',
     dscrLabel: 'ऋण सेवा कवरेज अनुपात (DSCR)'
   },
@@ -154,7 +154,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     aiCoachTitle: 'AgriXora AI Coach se Consult Karein',
     askCoachPlaceholder: 'Hinglish mein poochein (jaise: subsidy, license, machinery vendor)...',
     voiceReadout: 'Report Summary Suniye (Voice)',
-    demoPresetsTitle: 'Demo Presets (Quick Autofill)',
+    demoPresetsTitle: 'Regional Case Studies & Field Profiles (Select to Autofill)',
     viableVerdict: 'Project Financial Viability Verdict',
     dscrLabel: 'Debt Service Coverage Ratio (DSCR)'
   },
@@ -193,7 +193,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     aiCoachTitle: 'ग्राम उद्योग सल्लागार',
     askCoachPlaceholder: 'मराठी किंवा इंग्रजीत प्रश्न विचारा...',
     voiceReadout: 'अहवाल ऐका (व्हॉइस)',
-    demoPresetsTitle: 'डेमो उदाहरणे',
+    demoPresetsTitle: 'प्रादेशिक केस स्टडीज व व्यवसाय मॉडेल्स',
     viableVerdict: 'प्रकल्प व्यवहार्यता निष्कर्ष',
     dscrLabel: 'कर्ज फेड क्षमता (DSCR)'
   },
@@ -232,7 +232,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     aiCoachTitle: 'গ্রাম উদ্যোগ এআই কোচ',
     askCoachPlaceholder: 'বাংলা বা ইংরেজিতে প্রশ্ন করুন...',
     voiceReadout: 'রিপোর্টের সারসংক্ষেপ শুনুন',
-    demoPresetsTitle: 'ডেমো উদাহরণ',
+    demoPresetsTitle: 'আঞ্চলিক কেস স্টাডি ও ব্যবসায়িক মডেল',
     viableVerdict: 'প্রকল্পের সম্ভাব্যতা মূল্যায়ন',
     dscrLabel: 'ঋণ সেবা কভারেজ অনুপাত (DSCR)'
   },
@@ -271,7 +271,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     aiCoachTitle: 'AI வணிக வழிகாட்டி',
     askCoachPlaceholder: 'கேள்விகளைக் கேளுங்கள்...',
     voiceReadout: 'அறிக்கையைக் கேளுங்கள்',
-    demoPresetsTitle: 'டெமோ மாதிரிகள்',
+    demoPresetsTitle: 'பிராந்திய கள மாதிரிகள் (Regional Archetypes)',
     viableVerdict: 'நிதி சாத்தியக்கூறு',
     dscrLabel: 'கடன் பாதுகாப்பு விகிதம் (DSCR)'
   },
@@ -310,7 +310,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     aiCoachTitle: 'AI సలహాదారు',
     askCoachPlaceholder: 'ప్రశ్నలు అడగండి...',
     voiceReadout: 'వాయిస్ సారాంశం వినండి',
-    demoPresetsTitle: 'డెమో నమూనాలు',
+    demoPresetsTitle: 'ప్రాంతీయ వ్యాపార నమూనాలు (Regional Archetypes)',
     viableVerdict: 'ఆర్థిక సాధ్యత',
     dscrLabel: 'రుణ చెల్లింపు నిష్పత్తి (DSCR)'
   },
@@ -349,7 +349,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     aiCoachTitle: 'AI ಉದ್ಯಮ ಸಲಹೆಗಾರ',
     askCoachPlaceholder: 'ಪ್ರಶ್ನೆ ಕೇಳಿ...',
     voiceReadout: 'ವರದಿ ಆಲಿಸಿ',
-    demoPresetsTitle: 'ಡೆಮೊ ಮಾದರಿಗಳು',
+    demoPresetsTitle: 'ಪ್ರಾದೇಶಿಕ ಉದ್ಯಮ ಮಾದರಿಗಳು (Regional Archetypes)',
     viableVerdict: 'ಯೋಜನೆಯ ಕಾರ್ಯಸಾಧ್ಯತೆ',
     dscrLabel: 'ಸಾಲ ಮರುಪಾವತಿ ಅನುಪಾತ (DSCR)'
   },
@@ -388,7 +388,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     aiCoachTitle: 'ગ્રામ ઉદ્યોગ એઆઈ કોચ',
     askCoachPlaceholder: 'ગુજરાતી અથવા અંગ્રેજીમાં પૂછો...',
     voiceReadout: 'રિપોર્ટ સારાંશ સાંભળો',
-    demoPresetsTitle: 'ડેમો પરિસ્થિતિઓ',
+    demoPresetsTitle: 'પ્રાદેશિક વ્યવસાય મોડેલ્સ (Regional Archetypes)',
     viableVerdict: 'પ્રોજેક્ટ વ્યવહારિકતા',
     dscrLabel: 'ડેટ સર્વિસ કવરેજ રેશિયો (DSCR)'
   }

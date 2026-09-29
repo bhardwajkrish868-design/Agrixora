@@ -11,7 +11,7 @@ import {
   Clock, 
   CheckCircle2,
   Activity,
-  Award
+  PhoneCall
 } from 'lucide-react';
 import type { 
   NavigationTab, 
@@ -27,7 +27,6 @@ import { INITIAL_PRE_BULK_ORDERS } from '../../data/buyerDemands';
 interface DashboardViewProps {
   onNavigate?: (tab: NavigationTab) => void;
   onSelectView?: (view: ActiveView) => void;
-  onOpenJudgeDemo?: () => void;
   report?: FeasibilityReport | null;
   latestReport?: FeasibilityReport | null;
   financials?: FinancialRoadmap | null;
@@ -40,7 +39,6 @@ interface DashboardViewProps {
 export const DashboardView: React.FC<DashboardViewProps> = ({
   onNavigate,
   onSelectView,
-  onOpenJudgeDemo,
   report: propReport,
   latestReport,
   financials: propFinancials,
@@ -199,7 +197,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="p-2 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs">
-                PS 26091
+                Catchment
               </span>
               <h3 className="font-bold text-slate-900 dark:text-white text-base">
                 Hyper-Local Catchment Intelligence
@@ -252,7 +250,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="p-2 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs">
-                PS 26033
+                Marketplace
               </span>
               <h3 className="font-bold text-slate-900 dark:text-white text-base">
                 Pre-Bulk Buyer Orders
@@ -305,28 +303,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       </div>
 
-      {/* SIH Judge Demo Evaluation Banner */}
-      {onOpenJudgeDemo && (
-        <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-transparent border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
-              <Award className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">SIH Judge Automated Walkthrough</h4>
-              <p className="text-xs text-slate-500">
-                Experience the unified 5-step journey across Catchment Feasibility, 10:90 Leverage, and Buyer Demand.
-              </p>
-            </div>
+      {/* Direct Financing Guidance Helpline Banner */}
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-900/30 via-slate-900 to-slate-900 border border-emerald-800/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold">
+            <PhoneCall className="w-5 h-5" />
           </div>
-          <button
-            onClick={onOpenJudgeDemo}
-            className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-emerald-600 hover:from-amber-600 hover:to-emerald-700 text-slate-950 font-black text-xs rounded-xl shadow-md cursor-pointer shrink-0 transition-all active:scale-95"
-          >
-            Launch Judge Demo →
-          </button>
+          <div>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white">Need Direct Financing Guidance?</h4>
+            <p className="text-xs text-slate-500">
+              Connect with your District Lead Bank Nodal Officer or DIC Cell for application verification.
+            </p>
+          </div>
         </div>
-      )}
+        <button
+          onClick={() => navigateTo('financials')}
+          className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md cursor-pointer shrink-0 transition-all active:scale-95"
+        >
+          Check 10:90 Loan Terms →
+        </button>
+      </div>
 
     </div>
   );

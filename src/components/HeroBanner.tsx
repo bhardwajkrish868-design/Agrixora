@@ -1,12 +1,12 @@
 import React from 'react';
 import { Sparkles, TrendingUp, ShieldCheck, Landmark, Zap } from 'lucide-react';
 import type { Language } from '../types';
-import { DEMO_PRESETS, type DemoPreset } from '../data/regionsData';
+import { REGIONAL_ARCHETYPES, type RegionalArchetype } from '../data/regionsData';
 import { useTranslation } from '../utils/i18n';
 
 interface HeroBannerProps {
   currentLanguage: Language;
-  onSelectPreset: (preset: DemoPreset) => void;
+  onSelectPreset: (preset: RegionalArchetype) => void;
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({ currentLanguage, onSelectPreset }) => {
@@ -70,14 +70,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ currentLanguage, onSelec
           </div>
         </div>
 
-        {/* Instant Demo Presets Selector */}
+        {/* Regional Archetypes Selector */}
         <div>
           <div className="text-xs font-bold uppercase tracking-wider text-emerald-400/90 mb-2 flex items-center gap-1.5">
             <Zap className="w-3.5 h-3.5 text-amber-400" />
             <span>{t.demoPresetsTitle}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-            {DEMO_PRESETS.map(preset => (
+            {REGIONAL_ARCHETYPES.map(preset => (
               <button
                 key={preset.id}
                 onClick={() => onSelectPreset(preset)}

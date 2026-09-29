@@ -3,9 +3,9 @@ import {
   ArrowRight, 
   Sparkles, 
   CheckCircle2, 
-  Award,
   ChevronRight,
-  Play
+  ShoppingBag,
+  TrendingUp
 } from 'lucide-react';
 import type { NavigationTab, Language } from '../../types';
 import { calculateFinancialRoadmap } from '../../data/schemes';
@@ -14,7 +14,6 @@ interface LandingPageProps {
   onNavigate?: (tab: NavigationTab) => void;
   onStartAnalysis?: () => void;
   onExploreOpportunities?: () => void;
-  onOpenJudgeDemo: () => void;
   onSelectView?: (view: NavigationTab) => void;
   currentLanguage?: Language;
 }
@@ -23,12 +22,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onNavigate,
   onStartAnalysis,
   onExploreOpportunities,
-  onOpenJudgeDemo,
   onSelectView
 }) => {
   // Live Interactive Scheme Calculator Widget State on Landing Page
-  const [demoMargin, setDemoMargin] = useState<number>(100000); // 1 Lakh
-  const demoFinancials = calculateFinancialRoadmap(demoMargin);
+  const [simulatorMargin, setSimulatorMargin] = useState<number>(100000); // 1 Lakh
+  const simulatorFinancials = calculateFinancialRoadmap(simulatorMargin);
 
   const handleGoToFeasibility = () => {
     if (onNavigate) onNavigate('feasibility');
@@ -63,7 +61,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Tagline Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-300 border border-emerald-500/30">
             <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>Smart India Hackathon • Unified Ecosystem (PS 26091 + PS 26033)</span>
+            <span>Unified Rural Enterprise Platform • PS 26091 + PS 26033</span>
           </div>
 
           {/* Master Headline */}
@@ -91,11 +89,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </button>
 
             <button
-              onClick={onOpenJudgeDemo}
+              onClick={handleGoToMarketplace}
               className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm transition-all flex items-center gap-2 cursor-pointer"
             >
-              <Play className="w-4 h-4 text-amber-400 fill-amber-400" />
-              <span>Run Full SIH Judge Demo</span>
+              <ShoppingBag className="w-4 h-4 text-amber-400" />
+              <span>Browse Active Buyer Demands</span>
             </button>
           </div>
 
@@ -209,7 +207,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               Live Scheme Eligibility Simulator
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-2">
-              See What ₹{demoMargin.toLocaleString('en-IN')} Unlocks
+              See What ₹{simulatorMargin.toLocaleString('en-IN')} Unlocks
             </h2>
             <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
               Move the slider to see how 10% own equity translates into 10x total project capacity.
@@ -236,7 +234,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </span>
 
             <div className="text-2xl sm:text-3xl font-black text-emerald-700 dark:text-emerald-400 font-mono bg-emerald-50 dark:bg-slate-900 px-5 py-2 rounded-xl border border-emerald-200 dark:border-emerald-800">
-              ₹{demoMargin.toLocaleString('en-IN')}
+              ₹{simulatorMargin.toLocaleString('en-IN')}
             </div>
           </div>
 
@@ -245,8 +243,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             min="5000"
             max="500000"
             step="5000"
-            value={demoMargin}
-            onChange={(e) => setDemoMargin(Number(e.target.value))}
+            value={simulatorMargin}
+            onChange={(e) => setSimulatorMargin(Number(e.target.value))}
             className="w-full h-3 bg-emerald-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-600"
           />
 
@@ -264,7 +262,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="p-4 rounded-2xl bg-slate-900 text-white">
             <div className="text-[11px] text-slate-400 font-semibold uppercase">Total Project Cost</div>
             <div className="text-2xl font-black text-emerald-400 mt-1">
-              ₹{demoFinancials.projectCost.toLocaleString('en-IN')}
+              ₹{simulatorFinancials.projectCost.toLocaleString('en-IN')}
             </div>
             <div className="text-[10px] text-slate-400 mt-0.5">Available Margin / 10% (10x)</div>
           </div>
@@ -272,41 +270,41 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
             <div className="text-[11px] text-emerald-800 dark:text-emerald-300 font-semibold uppercase">Maximum Loan (90%)</div>
             <div className="text-2xl font-black text-emerald-700 dark:text-emerald-400 mt-1">
-              ₹{demoFinancials.loanAmount.toLocaleString('en-IN')}
+              ₹{simulatorFinancials.loanAmount.toLocaleString('en-IN')}
             </div>
-            <div className="text-[10px] text-emerald-600 dark:text-emerald-400 mt-0.5">{demoFinancials.scheme.interestRate}% Concessional Rate</div>
+            <div className="text-[10px] text-emerald-600 dark:text-emerald-400 mt-0.5">{simulatorFinancials.scheme.interestRate}% Concessional Rate</div>
           </div>
 
           <div className="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800">
             <div className="text-[11px] text-blue-800 dark:text-blue-300 font-semibold uppercase">Routed Scheme</div>
             <div className="text-base font-extrabold text-blue-900 dark:text-blue-200 mt-1 line-clamp-1">
-              {demoFinancials.scheme.name}
+              {simulatorFinancials.scheme.name}
             </div>
-            <div className="text-[10px] text-blue-700 dark:text-blue-400 mt-0.5">{demoFinancials.scheme.repaymentTenureYears} Years • {demoFinancials.scheme.moratoriumMonths}M Moratorium</div>
+            <div className="text-[10px] text-blue-700 dark:text-blue-400 mt-0.5">{simulatorFinancials.scheme.repaymentTenureYears} Years • {simulatorFinancials.scheme.moratoriumMonths}M Moratorium</div>
           </div>
 
           <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800">
             <div className="text-[11px] text-amber-800 dark:text-amber-300 font-semibold uppercase">Estimated Quarterly EMI</div>
             <div className="text-2xl font-black text-amber-900 dark:text-amber-300 mt-1">
-              ₹{demoFinancials.quarterlyEMI.toLocaleString('en-IN')}
+              ₹{simulatorFinancials.quarterlyEMI.toLocaleString('en-IN')}
             </div>
-            <div className="text-[10px] text-amber-700 dark:text-amber-400 mt-0.5">≈ ₹{demoFinancials.monthlyEquivalentEMI.toLocaleString('en-IN')}/month post grace</div>
+            <div className="text-[10px] text-amber-700 dark:text-amber-400 mt-0.5">≈ ₹{simulatorFinancials.monthlyEquivalentEMI.toLocaleString('en-IN')}/month post grace</div>
           </div>
 
         </div>
       </section>
 
-      {/* 4. DUAL-PROBLEM SOLVING COMPARISON (PS 26091 + PS 26033) */}
+      {/* 4. DUAL-MODULE HIGHLIGHT (Feasibility + Market Demand) */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        {/* PS 26091 Module Card */}
+        {/* Feasibility Module Card */}
         <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-md space-y-4">
           <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold text-lg">
             📊
           </div>
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2.5 py-0.5 rounded-full">
-              Problem Statement 26091
+              Feasibility Intelligence
             </span>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1">
               Hyper-Local Business Feasibility & Scheme Router
@@ -338,14 +336,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </button>
         </div>
 
-        {/* PS 26033 Module Card */}
+        {/* Demand & Marketplace Card */}
         <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-md space-y-4">
           <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold text-lg">
             🛒
           </div>
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950 px-2.5 py-0.5 rounded-full">
-              Problem Statement 26033
+              Pre-Bulk Off-Take
             </span>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1">
               Institutional Demand & Pre-Bulk Buyer Marketplace
@@ -404,11 +402,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <span>Start Free Feasibility Study</span>
           </button>
           <button
-            onClick={onOpenJudgeDemo}
+            onClick={handleGoToMarketplace}
             className="px-6 py-3.5 rounded-2xl bg-emerald-950/60 hover:bg-emerald-950/80 border border-white/20 text-white font-bold text-sm transition-all flex items-center gap-2 cursor-pointer"
           >
-            <Award className="w-4 h-4 text-amber-300" />
-            <span>Interactive SIH Judge Demo</span>
+            <TrendingUp className="w-4 h-4 text-amber-300" />
+            <span>Explore Buyer Contracts</span>
           </button>
         </div>
       </section>

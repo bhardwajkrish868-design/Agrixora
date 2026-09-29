@@ -113,7 +113,7 @@ export const STATES_DATA: StateData[] = [
   }
 ];
 
-export interface DemoPreset {
+export interface RegionalArchetype {
   id: string;
   title: string;
   subtitle: string;
@@ -121,7 +121,9 @@ export interface DemoPreset {
   formData: UserInputForm;
 }
 
-export const DEMO_PRESETS: DemoPreset[] = [
+export type DemoPreset = RegionalArchetype;
+
+export const REGIONAL_ARCHETYPES: RegionalArchetype[] = [
   {
     id: 'preset_oil_mill',
     title: 'Ramesh Patel • Mustard Oil Expeller',
@@ -219,3 +221,5 @@ export const DEMO_PRESETS: DemoPreset[] = [
     }
   }
 ];
+
+export const DEMO_PRESETS = REGIONAL_ARCHETYPES;

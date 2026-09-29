@@ -5,7 +5,6 @@ import {
   Globe, 
   Bell, 
   User, 
-  Sparkles, 
   Sun, 
   Moon, 
   Menu,
@@ -24,7 +23,6 @@ interface TopNavbarProps {
   onLocationChange?: (loc: LocationCatchment) => void;
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
-  onOpenJudgeDemo: () => void;
   onOpenAuthModal?: () => void;
   onOpenApiKeyModal?: () => void;
   onOpenSchemeModal?: () => void;
@@ -40,7 +38,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   selectedLocation,
   isDarkMode,
   onToggleDarkMode,
-  onOpenJudgeDemo,
   onOpenAuthModal,
   onOpenApiKeyModal,
   onOpenSchemeModal,
@@ -126,15 +123,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             </button>
           )}
 
-          {/* Quick SIH Judge Demo Button */}
-          <button
-            onClick={onOpenJudgeDemo}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs transition-all cursor-pointer active:scale-95"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">SIH Judge Demo</span>
-          </button>
-
           {/* Scheme Modal Trigger */}
           {onOpenSchemeModal && (
             <button
@@ -151,7 +139,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             <button
               onClick={onOpenApiKeyModal}
               className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              title="Configure Gemini 2.5 API Key"
+              title="Configure Gemini API Key"
             >
               <Key className="w-4 h-4 text-amber-500" />
             </button>
@@ -249,7 +237,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               className="flex items-center gap-2 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-slate-900 dark:bg-emerald-600 text-white text-xs font-bold shadow-xs hover:opacity-90 transition-all cursor-pointer"
             >
               <User className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{user?.name ? user.name.split(' ')[0] : 'Judge / Sign In'}</span>
+              <span className="hidden sm:inline">{user?.name ? user.name.split(' ')[0] : 'Sign In'}</span>
             </button>
           )}
 

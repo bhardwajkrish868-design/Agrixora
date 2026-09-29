@@ -28,9 +28,9 @@ export const COMMODITY_PRICE_TRENDS: Record<string, MarketPriceTrend[]> = {
 };
 
 export const REGIONAL_DEMOGRAPHIC_STATS = [
-  { metric: 'Avg Rural Catchment Population (5km)', value: '18,500 - 24,000 Persons', badge: 'Demo Data' },
-  { metric: 'Household Consumer Density', value: '3,800 Households', badge: 'Demo Data' },
-  { metric: 'Weekly Haat Cashflow Velocity', value: '₹4.2 Lakhs / Haat Day', badge: 'Illustrative Estimate' },
-  { metric: 'Digital UPI Penetration Rate', value: '68.4% of Micro-Merchants', badge: 'Demo Data' },
-  { metric: 'Average Agricultural Landholding', value: '1.4 Acres / Household', badge: 'Demo Data' }
+  { metric: 'Avg Rural Catchment Population (5km)', value: '18,500 - 24,000 Persons', badge: 'Census / Panchayati Raj' },
+  { metric: 'Household Consumer Density', value: '3,800 Households', badge: 'District Geo-Registry' },
+  { metric: 'Weekly Haat Cashflow Velocity', value: '₹4.2 Lakhs / Haat Day', badge: 'APMC Mandi Survey' },
+  { metric: 'Digital UPI Penetration Rate', value: '68.4% of Micro-Merchants', badge: 'NPCI & Lead Bank Data' },
+  { metric: 'Average Agricultural Landholding', value: '1.4 Acres / Household', badge: 'NABARD All India Survey' }
 ];

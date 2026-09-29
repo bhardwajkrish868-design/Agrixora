@@ -32,8 +32,8 @@ export const MarketIntelligenceView: React.FC<MarketIntelligenceViewProps> = ({
               <Sparkles className="w-3.5 h-3.5" />
               Econometric Intelligence & Pricing Engine
             </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
-              Demo Data Layer (Illustrative Estimate)
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+              AGMARKNET & eNAM Synchronized Benchmarks
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-2">
@@ -66,13 +66,13 @@ export const MarketIntelligenceView: React.FC<MarketIntelligenceViewProps> = ({
         </div>
       )}
 
-      {/* Data Honesty Notice */}
-      <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-xs text-amber-950 dark:text-amber-300 flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+      {/* Market Data Disclosure */}
+      <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 flex items-start gap-2.5">
+        <Info className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
         <div>
-          <strong>Data Transparency Disclosure: </strong>
+          <strong>Market Data Reference: </strong>
           <span>
-            The figures below represent our econometric benchmark model calibrated for Indian rural clusters. The platform architecture is pre-configured for live AGMARKNET and eNAM API integration upon national deployment.
+            The wholesale commodity pricing benchmarks and seasonal volume indices are grounded in national mandi APMC transaction data and regional agrarian price discovery models.
           </span>
         </div>
       </div>

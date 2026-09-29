@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ShieldCheck, UserCheck, Lock, Mail, User, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, Lock, Mail, User, CheckCircle2 } from 'lucide-react';
 import type { Language } from '../../types';
 import { getTranslation } from '../../utils/i18n';
 
@@ -17,9 +17,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   currentLang,
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
-  const [email, setEmail] = useState('demo.entrepreneur@agrixora.in');
+  const [email, setEmail] = useState('entrepreneur@agrixora.in');
   const [name, setName] = useState('Rameshwar Kumar');
-  const [role, setRole] = useState<'entrepreneur' | 'fpo_manager' | 'institutional_buyer' | 'judge'>('entrepreneur');
+  const [role, setRole] = useState<'entrepreneur' | 'fpo_manager' | 'institutional_buyer' | 'bank_officer'>('entrepreneur');
   const [stateDistrict, setStateDistrict] = useState('Nashik, Maharashtra');
 
   if (!isOpen) return null;
@@ -28,19 +28,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleStandardSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const roleLabels = {
+      entrepreneur: 'Rural Entrepreneur / Beneficiary',
+      fpo_manager: 'FPO / SHG Federation Leader',
+      institutional_buyer: 'Institutional Off-taker',
+      bank_officer: 'Lead District Bank Officer'
+    };
+
     onLoginSuccess({
       name: name || 'Rameshwar Kumar',
-      role: role,
+      role: roleLabels[role] || 'Rural Entrepreneur',
       location: stateDistrict,
-    });
-    onClose();
-  };
-
-  const handleJudgeQuickLogin = (judgeRole: 'sih_evaluator' | 'lead_evaluator' = 'sih_evaluator') => {
-    onLoginSuccess({
-      name: judgeRole === 'sih_evaluator' ? 'SIH 2024 Evaluator / Jury' : 'Senior Lead Evaluator',
-      role: 'SIH Evaluator (Full Access)',
-      location: 'Pan-India Catchment Sandbox',
     });
     onClose();
   };
@@ -62,51 +60,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
             <div>
               <h2 className="text-xl font-bold tracking-tight">
-                {mode === 'login' ? 'AgriXora Unified Sign In' : 'Join AgriXora Network'}
+                {mode === 'login' ? 'AgriXora Enterprise Sign In' : 'Join AgriXora Network'}
               </h2>
               <p className="text-emerald-100 text-xs">
                 {t.tagline}
               </p>
             </div>
-          </div>
-        </div>
-
-        {/* Quick Demo Access Bar */}
-        <div className="bg-amber-50 dark:bg-amber-950/40 border-b border-amber-200 dark:border-amber-800/60 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              SIH Judge / Quick Demo
-            </span>
-            <span className="text-[10px] bg-amber-200 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 px-2 py-0.5 rounded-full font-bold">
-              1-Click Bypass
-            </span>
-          </div>
-          <p className="text-xs text-amber-800 dark:text-amber-300/90 mb-3">
-            Instant full access to all PS 26091 & PS 26033 modules with preloaded state.
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => handleJudgeQuickLogin('sih_evaluator')}
-              className="px-3 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 transition-all"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              SIH Judge Mode
-            </button>
-            <button
-              onClick={() => {
-                onLoginSuccess({
-                  name: 'Rameshwar Dairy & Agro FPO',
-                  role: 'Rural Entrepreneur / FPO',
-                  location: 'Nashik, Maharashtra',
-                });
-                onClose();
-              }}
-              className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 active:scale-95 transition-all"
-            >
-              <UserCheck className="w-4 h-4" />
-              Demo Beneficiary
-            </button>
           </div>
         </div>
 
@@ -137,27 +96,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </button>
           </div>
 
-          {mode === 'register' && (
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Full Name / Entity Name
-              </label>
-              <div className="relative">
-                <User className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Rameshwar Kumar"
-                  className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 dark:text-white"
-                />
-              </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              Full Name / Entity Name
+            </label>
+            <div className="relative">
+              <User className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Rameshwar Kumar"
+                className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 dark:text-white"
+              />
             </div>
-          )}
+          </div>
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Email or Mobile Number (Aadhaar/e-KYC Linked)
+              Email or Mobile Number (Aadhaar / e-KYC Linked)
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
@@ -187,7 +144,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              User Role / Category
+              User Role / Account Category
             </label>
             <select
               value={role}
@@ -197,7 +154,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <option value="entrepreneur">Rural / Semi-Urban Entrepreneur (Applicant)</option>
               <option value="fpo_manager">FPO / SHG Federation Leader</option>
               <option value="institutional_buyer">Institutional Pre-Bulk Buyer / Offtaker</option>
-              <option value="judge">SIH Judge / Bank Field Officer</option>
+              <option value="bank_officer">Bank Branch Manager / Lead Field Officer</option>
             </select>
           </div>
 
