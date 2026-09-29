@@ -28,6 +28,7 @@ import { LoginPage } from './components/auth/LoginPage';
 
 // Modals
 import { AuthModal } from './components/modals/AuthModal';
+import { UserProfileModal } from './components/modals/UserProfileModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { SchemeRulesModal } from './components/SchemeRulesModal';
 
@@ -62,6 +63,7 @@ export function App() {
 
   // Active Modals State
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState<boolean>(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
   const [isSchemeModalOpen, setIsSchemeModalOpen] = useState<boolean>(false);
   const [isAICoachFloatingOpen, setIsAICoachFloatingOpen] = useState<boolean>(false);
@@ -179,6 +181,7 @@ export function App() {
         isDarkMode={isDarkMode}
         onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onOpenUserProfile={() => setIsUserProfileModalOpen(true)}
         onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
         onOpenSchemeModal={() => setIsSchemeModalOpen(true)}
         onToggleAICoach={() => setIsAICoachFloatingOpen(!isAICoachFloatingOpen)}
@@ -399,6 +402,23 @@ export function App() {
       )}
 
       {/* Interactive Modals */}
+      <UserProfileModal
+        isOpen={isUserProfileModalOpen}
+        onClose={() => setIsUserProfileModalOpen(false)}
+        user={user}
+        selectedLocation={selectedLocation}
+        onLogout={() => {
+          setIsUserProfileModalOpen(false);
+          setUser(null);
+          setActiveTab('login');
+          showToast('Signed Out', 'You have been signed out. Welcome to log in or register anytime.', 'info');
+        }}
+        onSwitchAccount={() => {
+          setIsUserProfileModalOpen(false);
+          setIsAuthModalOpen(true);
+        }}
+      />
+
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}

@@ -29,6 +29,7 @@ interface TopNavbarProps {
   onToggleAICoach?: () => void;
   onToggleMobileMenu?: () => void;
   onLogout?: () => void;
+  onOpenUserProfile?: () => void;
   user?: { name: string; role: string; location: string } | null;
 }
 
@@ -45,6 +46,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   onToggleAICoach,
   onToggleMobileMenu,
   onLogout,
+  onOpenUserProfile,
   user
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -236,9 +238,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           {user?.name ? (
             <div className="flex items-center gap-1.5">
               <button
-                onClick={onOpenAuthModal}
+                onClick={onOpenUserProfile || onOpenAuthModal}
                 className="flex items-center gap-2 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
-                title={`${user.name} (${user.role})`}
+                title={`${user.name} (${user.role}) - Click to view details`}
               >
                 <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
                   👤
