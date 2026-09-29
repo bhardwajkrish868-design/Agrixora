@@ -31,30 +31,80 @@ import { AuthModal } from './components/modals/AuthModal';
 import { UserProfileModal } from './components/modals/UserProfileModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { SchemeRulesModal } from './components/SchemeRulesModal';
+import { getSessionUser, clearSessionUser } from './services/authService';
 
 export function App() {
-  // Navigation & View State (Opens Login page first)
-  const [activeTab, setActiveTab] = useState<NavigationTab>('login');
-  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  // User & Auth State (Persistent session)
+  const [user, setUser] = useState<{ name: string; role: string; location: string } | null>(() => {
+    return getSessionUser();
+  });
+
+  // Navigation & View State (Keeps active tab on refresh if logged in; opens login if not)
+  const [activeTab, setActiveTab] = useState<NavigationTab>(() => {
+    const sessionUser = getSessionUser();
+    if (!sessionUser) return 'login';
+    const savedTab = (typeof window !== 'undefined' ? localStorage.getItem('AGRIXORA_ACTIVE_TAB') : null) as NavigationTab;
+    if (savedTab && savedTab !== 'login') return savedTab;
+    return 'dashboard';
+  });
+
+  const [currentLanguage, setCurrentLanguage] = useState<Language>(() => {
+    if (typeof window === 'undefined') return 'en';
+    return (localStorage.getItem('AGRIXORA_LANG') as Language) || 'en';
+  });
+
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('AGRIXORA_DARK_MODE') === 'true';
+  });
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
-  // User & Auth State (No hardcoded demo account, starts unauthenticated)
-  const [user, setUser] = useState<{ name: string; role: string; location: string } | null>(null);
-
-  // Global Location Context (Default: Nashik, Maharashtra)
-  const [selectedLocation, setSelectedLocation] = useState<LocationCatchment>({
-    state: 'Maharashtra',
-    district: 'Nashik',
-    block: 'Dindori',
-    village: 'Janori',
-    panchayat: 'Janori Gram Panchayat',
-    areaType: 'rural',
-    catchmentRadiusKm: 10,
-    estimatedPopulation: 28400,
-    agroClimaticZone: 'Western Plateau & Hills (Zone 9)',
-    keyCrops: ['Grapes', 'Onion', 'Pomegranate', 'Soybean', 'Sugarcane'],
+  // Global Location Context (Persistent)
+  const [selectedLocation, setSelectedLocation] = useState<LocationCatchment>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = localStorage.getItem('AGRIXORA_SAVED_LOCATION');
+        if (raw) return JSON.parse(raw);
+      } catch {}
+    }
+    return {
+      state: 'Maharashtra',
+      district: 'Nashik',
+      block: 'Dindori',
+      village: 'Janori',
+      panchayat: 'Janori Gram Panchayat',
+      areaType: 'rural',
+      catchmentRadiusKm: 10,
+      estimatedPopulation: 28400,
+      agroClimaticZone: 'Western Plateau & Hills (Zone 9)',
+      keyCrops: ['Grapes', 'Onion', 'Pomegranate', 'Soybean', 'Sugarcane'],
+    };
   });
+
+  // Persist State Changes across refreshes
+  useEffect(() => {
+    if (activeTab && activeTab !== 'login' && activeTab !== 'register') {
+      localStorage.setItem('AGRIXORA_ACTIVE_TAB', activeTab);
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    localStorage.setItem('AGRIXORA_LANG', currentLanguage);
+  }, [currentLanguage]);
+
+  useEffect(() => {
+    localStorage.setItem('AGRIXORA_DARK_MODE', String(isDarkMode));
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    localStorage.setItem('AGRIXORA_SAVED_LOCATION', JSON.stringify(selectedLocation));
+  }, [selectedLocation]);
 
   // Feasibility & Financial Data State
   const [currentReport, setCurrentReport] = useState<FeasibilityReport | null>(null);
@@ -187,6 +237,8 @@ export function App() {
         onToggleAICoach={() => setIsAICoachFloatingOpen(!isAICoachFloatingOpen)}
         onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         onLogout={() => {
+          clearSessionUser();
+          localStorage.removeItem('AGRIXORA_ACTIVE_TAB');
           setUser(null);
           setActiveTab('login');
           showToast('Signed Out', 'You have been signed out. Welcome to log in or register anytime.', 'info');
@@ -409,6 +461,8 @@ export function App() {
         selectedLocation={selectedLocation}
         onLogout={() => {
           setIsUserProfileModalOpen(false);
+          clearSessionUser();
+          localStorage.removeItem('AGRIXORA_ACTIVE_TAB');
           setUser(null);
           setActiveTab('login');
           showToast('Signed Out', 'You have been signed out. Welcome to log in or register anytime.', 'info');
