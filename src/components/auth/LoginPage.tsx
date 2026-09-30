@@ -23,7 +23,7 @@ import type { Language, ActiveView } from '../../types';
 import { STATES_DATA } from '../../data/regionsData';
 import { LANGUAGE_OPTIONS, useLoginTranslation } from '../../utils/i18n';
 import { applyPageLanguage } from '../../services/translatorService';
-import { registerUser, authenticateUser, ROLE_ICONS, type RegisteredUser } from '../../services/authService';
+import { registerUser, authenticateUser, getAccountsByPhone, ROLE_ICONS, type RegisteredUser } from '../../services/authService';
 
 interface LoginPageProps {
   initialMode?: 'login' | 'register';
@@ -410,76 +410,226 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 {/* Mode: REGISTER */}
                 {mode === 'register' && (
                   <>
+                    {/* Real-time Multi-Profile Detection Banner */}
+                    {(() => {
+                      const cleanP = phone.trim().replace(/\D/g, '');
+                      const accounts: RegisteredUser[] = cleanP.length === 10 ? getAccountsByPhone(cleanP) : [];
+                      if (accounts.length === 0) return null;
+                      return (
+                        <div className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-r from-emerald-950/90 via-slate-900 to-emerald-950/90 border border-emerald-500/40 text-xs shadow-lg shadow-emerald-950/40 animate-fadeIn">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                              <Sparkles className="w-3 h-3 text-amber-300 animate-pulse" />
+                              <span>{accounts.length} Existing Role(s) on +91 {cleanP}</span>
+                            </span>
+                            <span className="text-[9px] text-slate-400">Click to Open or Register New</span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                            {accounts.map((acc: RegisteredUser) => (
+                              <button
+                                key={acc.id}
+                                type="button"
+                                onClick={() => handleSelectProfile(acc)}
+                                className="p-1.5 rounded-lg bg-slate-950/90 border border-emerald-500/30 hover:border-emerald-400 hover:bg-emerald-900/40 transition-all text-left flex items-center justify-between group cursor-pointer shadow-xs"
+                                title={`1-Click Sign In as ${acc.roleLabel}`}
+                              >
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  <span className="text-xs">{ROLE_ICONS[acc.role]}</span>
+                                  <div className="min-w-0">
+                                    <div className="text-[10px] font-bold text-white group-hover:text-emerald-300 truncate">
+                                      {acc.name}
+                                    </div>
+                                    <div className="text-[8.5px] font-semibold text-emerald-400 truncate">
+                                      {acc.roleLabel.replace(' / Beneficiary', '').replace(' Federation', '').replace('Lead District ', '')}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="px-1.5 py-0.5 rounded bg-emerald-600/30 text-emerald-300 text-[8.5px] font-bold flex items-center gap-0.5 shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-all ml-1">
+                                  <span>Log In</span>
+                                  <ArrowRight className="w-2 h-2" />
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     {/* Role Selector */}
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                        Select Your Role / Category (अपनी भूमिका चुनें)
-                      </label>
-                      <div className="grid grid-cols-2 gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => setRole('entrepreneur')}
-                          className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                            role === 'entrepreneur'
-                              ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
-                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                          }`}
-                        >
-                          <div className="font-bold flex items-center gap-1.5 text-xs">
-                            <Wheat className="w-3 h-3 text-emerald-400 shrink-0" />
-                            <span className="truncate">Rural Entrepreneur</span>
-                          </div>
-                          <div className="text-[9px] text-slate-400 mt-0.5">Individual Beneficiary</div>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setRole('fpo_manager')}
-                          className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                            role === 'fpo_manager'
-                              ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
-                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                          }`}
-                        >
-                          <div className="font-bold flex items-center gap-1.5 text-xs">
-                            <Building2 className="w-3 h-3 text-teal-400 shrink-0" />
-                            <span className="truncate">FPO / SHG Leader</span>
-                          </div>
-                          <div className="text-[9px] text-slate-400 mt-0.5">Farmer Collective Unit</div>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setRole('bank_officer')}
-                          className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                            role === 'bank_officer'
-                              ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
-                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                          }`}
-                        >
-                          <div className="font-bold flex items-center gap-1.5 text-xs">
-                            <Coins className="w-3 h-3 text-amber-400 shrink-0" />
-                            <span className="truncate">Bank Branch Officer</span>
-                          </div>
-                          <div className="text-[9px] text-slate-400 mt-0.5">Loan Credit Appraisal</div>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setRole('institutional_buyer')}
-                          className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                            role === 'institutional_buyer'
-                              ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
-                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                          }`}
-                        >
-                          <div className="font-bold flex items-center gap-1.5 text-xs">
-                            <Building2 className="w-3 h-3 text-blue-400 shrink-0" />
-                            <span className="truncate">Agri-Buyer / Trader</span>
-                          </div>
-                          <div className="text-[9px] text-slate-400 mt-0.5">Off-taker Contract Desk</div>
-                        </button>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-[11px] font-semibold text-slate-300">
+                          Select Your Role / Category (अपनी भूमिका चुनें)
+                        </label>
+                        {(() => {
+                          const cleanP = phone.trim().replace(/\D/g, '');
+                          const accounts: RegisteredUser[] = cleanP.length === 10 ? getAccountsByPhone(cleanP) : [];
+                          if (accounts.length === 0) return null;
+                          return (
+                            <span className="text-[9px] text-emerald-400 font-medium">
+                              Roles with ✓ already created
+                            </span>
+                          );
+                        })()}
                       </div>
+
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {/* Rural Entrepreneur */}
+                        {(() => {
+                          const cleanP = phone.trim().replace(/\D/g, '');
+                          const accounts: RegisteredUser[] = cleanP.length === 10 ? getAccountsByPhone(cleanP) : [];
+                          const existing = accounts.find((a: RegisteredUser) => a.role === 'entrepreneur');
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => setRole('entrepreneur')}
+                              className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer relative ${
+                                role === 'entrepreneur'
+                                  ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
+                                  : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                              }`}
+                            >
+                              <div className="font-bold flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-1.5 truncate">
+                                  <Wheat className="w-3 h-3 text-emerald-400 shrink-0" />
+                                  <span className="truncate">Rural Entrepreneur</span>
+                                </div>
+                                {existing && (
+                                  <span className="text-[8px] font-bold px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                                    ✓ Registered
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[9px] text-slate-400 mt-0.5">
+                                {existing ? `Active: ${existing.name}` : 'Individual Beneficiary'}
+                              </div>
+                            </button>
+                          );
+                        })()}
+
+                        {/* FPO / SHG Leader */}
+                        {(() => {
+                          const cleanP = phone.trim().replace(/\D/g, '');
+                          const accounts: RegisteredUser[] = cleanP.length === 10 ? getAccountsByPhone(cleanP) : [];
+                          const existing = accounts.find((a: RegisteredUser) => a.role === 'fpo_manager');
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => setRole('fpo_manager')}
+                              className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer relative ${
+                                role === 'fpo_manager'
+                                  ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
+                                  : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                              }`}
+                            >
+                              <div className="font-bold flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-1.5 truncate">
+                                  <Building2 className="w-3 h-3 text-teal-400 shrink-0" />
+                                  <span className="truncate">FPO / SHG Leader</span>
+                                </div>
+                                {existing && (
+                                  <span className="text-[8px] font-bold px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                                    ✓ Registered
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[9px] text-slate-400 mt-0.5">
+                                {existing ? `Active: ${existing.name}` : 'Farmer Collective Unit'}
+                              </div>
+                            </button>
+                          );
+                        })()}
+
+                        {/* Bank Branch Officer */}
+                        {(() => {
+                          const cleanP = phone.trim().replace(/\D/g, '');
+                          const accounts: RegisteredUser[] = cleanP.length === 10 ? getAccountsByPhone(cleanP) : [];
+                          const existing = accounts.find((a: RegisteredUser) => a.role === 'bank_officer');
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => setRole('bank_officer')}
+                              className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer relative ${
+                                role === 'bank_officer'
+                                  ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
+                                  : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                              }`}
+                            >
+                              <div className="font-bold flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-1.5 truncate">
+                                  <Coins className="w-3 h-3 text-amber-400 shrink-0" />
+                                  <span className="truncate">Bank Branch Officer</span>
+                                </div>
+                                {existing && (
+                                  <span className="text-[8px] font-bold px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                                    ✓ Registered
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[9px] text-slate-400 mt-0.5">
+                                {existing ? `Active: ${existing.name}` : 'Loan Credit Appraisal'}
+                              </div>
+                            </button>
+                          );
+                        })()}
+
+                        {/* Agri-Buyer / Trader */}
+                        {(() => {
+                          const cleanP = phone.trim().replace(/\D/g, '');
+                          const accounts: RegisteredUser[] = cleanP.length === 10 ? getAccountsByPhone(cleanP) : [];
+                          const existing = accounts.find((a: RegisteredUser) => a.role === 'institutional_buyer');
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => setRole('institutional_buyer')}
+                              className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer relative ${
+                                role === 'institutional_buyer'
+                                  ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
+                                  : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                              }`}
+                            >
+                              <div className="font-bold flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-1.5 truncate">
+                                  <Building2 className="w-3 h-3 text-blue-400 shrink-0" />
+                                  <span className="truncate">Agri-Buyer / Trader</span>
+                                </div>
+                                {existing && (
+                                  <span className="text-[8px] font-bold px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                                    ✓ Registered
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[9px] text-slate-400 mt-0.5">
+                                {existing ? `Active: ${existing.name}` : 'Off-taker Contract Desk'}
+                              </div>
+                            </button>
+                          );
+                        })()}
+                      </div>
+
+                      {/* If selected role is already registered, provide instant 1-click shortcut */}
+                      {(() => {
+                        const cleanP = phone.trim().replace(/\D/g, '');
+                        const accounts: RegisteredUser[] = cleanP.length === 10 ? getAccountsByPhone(cleanP) : [];
+                        const existingForSelected = accounts.find((a: RegisteredUser) => a.role === role);
+                        if (!existingForSelected) return null;
+                        return (
+                          <div className="mt-1.5 p-2 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-xs flex items-center justify-between gap-2 animate-fadeIn">
+                            <div className="text-[10px] text-emerald-200">
+                              <span className="font-bold">{existingForSelected.name}</span> is already registered as this role!
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleSelectProfile(existingForSelected)}
+                              className="px-2 py-0.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[9px] flex items-center gap-0.5 cursor-pointer shrink-0"
+                            >
+                              <span>Log In Now</span>
+                              <ArrowRight className="w-2 h-2" />
+                            </button>
+                          </div>
+                        );
+                      })()}
                     </div>
 
                     {/* Name & Phone */}
