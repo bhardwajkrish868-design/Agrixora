@@ -340,45 +340,54 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
               {/* Success Notification */}
               {successMessage && (
-                <div className="mb-4 p-2.5 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>{successMessage}</span>
+                <div className="mb-2 p-2 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span className="text-[11px] truncate">{successMessage}</span>
                 </div>
               )}
 
               {/* Multi-Profile Selector or Standard Form */}
               {availableProfiles && availableProfiles.length > 0 ? (
-                <div className="space-y-3.5">
-                  <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Multiple Profiles Detected</span>
-                    <h4 className="text-xs sm:text-sm font-bold text-white mt-0.5">Select Role Profile to Open:</h4>
-                    <p className="text-xs text-slate-300 mt-0.5">
-                      Choose which workspace you would like to enter for mobile +91 {phone}:
-                    </p>
+                <div className="space-y-2.5">
+                  <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
+                    <div>
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Multiple Profiles Detected</div>
+                      <h4 className="text-xs font-bold text-white">Select Role Profile for +91 {phone}:</h4>
+                    </div>
+                    <span className="text-xs bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
+                      {availableProfiles.length} Accounts
+                    </span>
                   </div>
 
-                  <div className="space-y-2">
+                  {/* 2x2 Compact Grid of Profiles */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {availableProfiles.map(prof => (
                       <button
                         key={prof.id}
                         type="button"
                         onClick={() => handleSelectProfile(prof)}
-                        className="w-full p-3.5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/90 transition-all flex items-center justify-between group cursor-pointer text-left"
+                        className="p-2 sm:p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/90 transition-all flex items-center justify-between group cursor-pointer text-left shadow-sm"
                       >
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl p-2 rounded-xl bg-slate-950 border border-slate-800">{ROLE_ICONS[prof.role] || '🌾'}</span>
-                          <div>
-                            <div className="text-[10px] font-black text-emerald-400 uppercase tracking-wider">{prof.roleLabel}</div>
-                            <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300">{prof.name}</h4>
-                            <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1">
-                              <MapPin className="w-3 h-3 text-slate-500" />
-                              {prof.location}
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="text-base p-1 rounded-lg bg-slate-950 border border-slate-800 shrink-0">
+                            {ROLE_ICONS[prof.role] || '🌾'}
+                          </span>
+                          <div className="min-w-0">
+                            <div className="text-[9px] font-extrabold text-emerald-400 uppercase tracking-wider truncate">
+                              {prof.roleLabel.replace(' / Beneficiary', '').replace(' Federation', '')}
+                            </div>
+                            <h4 className="text-xs font-bold text-white group-hover:text-emerald-300 truncate">
+                              {prof.name}
+                            </h4>
+                            <p className="text-[10px] text-slate-400 truncate flex items-center gap-1">
+                              <MapPin className="w-2.5 h-2.5 text-slate-500 shrink-0" />
+                              <span className="truncate">{prof.location}</span>
                             </p>
                           </div>
                         </div>
-                        <div className="px-2.5 py-1 rounded-xl bg-emerald-600/20 text-emerald-300 text-xs font-bold border border-emerald-500/30 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-1">
+                        <div className="px-2 py-0.5 rounded-lg bg-emerald-600/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-0.5 shrink-0 ml-1.5">
                           <span>Enter</span>
-                          <ArrowRight className="w-3 h-3" />
+                          <ArrowRight className="w-2.5 h-2.5" />
                         </div>
                       </button>
                     ))}
@@ -390,7 +399,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                       setAvailableProfiles(null);
                       setSuccessMessage(null);
                     }}
-                    className="w-full py-2 text-xs text-slate-400 hover:text-white font-semibold transition-colors cursor-pointer"
+                    className="w-full py-1 text-[11px] text-slate-400 hover:text-white font-semibold transition-colors cursor-pointer"
                   >
                     ← Sign in with a different mobile number
                   </button>
