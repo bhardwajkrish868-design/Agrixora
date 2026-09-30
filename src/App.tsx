@@ -83,7 +83,7 @@ export function App() {
 
   // Persist State Changes across refreshes
   useEffect(() => {
-    if (activeTab && activeTab !== 'login' && activeTab !== 'register') {
+    if (activeTab && activeTab !== 'login' && activeTab !== 'register' && activeTab !== 'admin') {
       localStorage.setItem('AGRIXORA_ACTIVE_TAB', activeTab);
     }
   }, [activeTab]);
@@ -288,11 +288,14 @@ export function App() {
               showToast('Admin Impersonation Active', `Switched session to ${targetUser.name} (${targetUser.role}).`);
             }}
             onExit={() => {
-              // Clear admin query param from url if present
-              if (typeof window !== 'undefined' && window.location.search.includes('admin')) {
-                window.history.replaceState({}, document.title, window.location.pathname);
+              // Clear admin query param and hash from url if present
+              if (typeof window !== 'undefined') {
+                if (window.location.search.includes('admin') || window.location.hash.includes('admin')) {
+                  window.history.replaceState({}, document.title, window.location.pathname);
+                }
               }
-              setActiveTab('dashboard');
+              localStorage.removeItem('AGRIXORA_ACTIVE_TAB');
+              setActiveTab('login');
             }}
             onToast={showToast}
           />
