@@ -33,6 +33,7 @@ import { UserProfileModal } from './components/modals/UserProfileModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { SchemeRulesModal } from './components/SchemeRulesModal';
 import { getSessionUser, clearSessionUser, type RegisteredUser } from './services/authService';
+import { initGoogleTranslator, applyPageLanguage } from './services/translatorService';
 
 export function App() {
   // User & Auth State (Persistent session)
@@ -88,8 +89,17 @@ export function App() {
     }
   }, [activeTab]);
 
+  // Initialize Google Translator on Mount
+  useEffect(() => {
+    initGoogleTranslator();
+    if (currentLanguage && currentLanguage !== 'en') {
+      applyPageLanguage(currentLanguage);
+    }
+  }, []);
+
   useEffect(() => {
     localStorage.setItem('AGRIXORA_LANG', currentLanguage);
+    applyPageLanguage(currentLanguage);
   }, [currentLanguage]);
 
   useEffect(() => {

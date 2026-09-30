@@ -9,6 +9,7 @@ import {
   LogOut
 } from 'lucide-react';
 import type { NavigationTab, Language, LocationCatchment } from '../../types';
+import { LANGUAGE_OPTIONS } from '../../utils/i18n';
 
 interface TopNavbarProps {
   activeTab?: NavigationTab;
@@ -105,30 +106,27 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
             >
               <Globe className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="capitalize">{currentLanguage === 'hi' ? 'हिन्दी' : currentLanguage === 'hinglish' ? 'Hinglish' : 'English'}</span>
+              <span>{LANGUAGE_OPTIONS.find(l => l.code === currentLanguage)?.native || 'English'}</span>
             </button>
 
             {showLangMenu && (
               <div 
-                className="absolute right-0 mt-2 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100"
+                className="absolute right-0 mt-2 w-44 max-h-60 overflow-y-auto bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100"
                 onClick={() => setShowLangMenu(false)}
               >
-                {[
-                  { code: 'en', label: 'English' },
-                  { code: 'hi', label: 'हिन्दी (Hindi)' },
-                  { code: 'hinglish', label: 'Hinglish (Mix)' }
-                ].map(l => (
+                {LANGUAGE_OPTIONS.map(l => (
                   <button
                     key={l.code}
                     onClick={() => onLanguageChange(l.code as Language)}
-                    className={`w-full text-left px-3 py-2 text-xs hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors ${
+                    className={`w-full text-left px-3 py-2 text-xs hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors cursor-pointer flex items-center justify-between ${
                       currentLanguage === l.code ? 'font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50/50' : 'text-slate-700 dark:text-slate-300'
                     }`}
                   >
-                    {l.label}
+                    <span>{l.native}</span>
+                    <span className="text-[10px] text-slate-400">{l.label}</span>
                   </button>
                 ))}
               </div>

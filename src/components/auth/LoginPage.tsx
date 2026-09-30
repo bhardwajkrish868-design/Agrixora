@@ -21,7 +21,8 @@ import {
 } from 'lucide-react';
 import type { Language, ActiveView } from '../../types';
 import { STATES_DATA } from '../../data/regionsData';
-import { LANGUAGE_OPTIONS } from '../../utils/i18n';
+import { LANGUAGE_OPTIONS, useLoginTranslation } from '../../utils/i18n';
+import { applyPageLanguage } from '../../services/translatorService';
 import { registerUser, authenticateUser, ROLE_ICONS, type RegisteredUser } from '../../services/authService';
 
 interface LoginPageProps {
@@ -39,12 +40,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   onLoginSuccess,
   onNavigate
 }) => {
+  const t = useLoginTranslation(currentLang);
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [availableProfiles, setAvailableProfiles] = useState<RegisteredUser[] | null>(null);
+
+  const handleLanguageSelect = (newLang: Language) => {
+    onLanguageChange(newLang);
+    applyPageLanguage(newLang);
+  };
 
   // Form fields (Clean production state, no demo defaults)
   const [name, setName] = useState<string>('');
@@ -177,10 +184,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             <div className="font-extrabold text-base sm:text-lg text-white tracking-tight flex items-center gap-1.5">
               <span>AGRIXORA</span>
               <span className="text-[10px] uppercase font-bold bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                Official Portal
+                {t.portalBadge}
               </span>
             </div>
-            <div className="text-[10px] sm:text-[11px] text-slate-400">Rural Enterprise & 90% Loan Feasibility Engine</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400">{t.portalTagline}</div>
           </div>
         </div>
 
@@ -202,7 +209,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             <Globe2 className="w-3.5 h-3.5 text-emerald-400" />
             <select
               value={currentLang}
-              onChange={(e) => onLanguageChange(e.target.value as Language)}
+              onChange={(e) => handleLanguageSelect(e.target.value as Language)}
               className="bg-transparent text-xs text-slate-200 outline-hidden cursor-pointer"
             >
               {LANGUAGE_OPTIONS.map((lang) => (
@@ -234,23 +241,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3 sm:p-3.5 backdrop-blur-md space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                <span>National Rural Enterprise Ecosystem</span>
+                <span>{t.heroBadge}</span>
               </div>
               <h3 className="text-xs sm:text-sm font-bold text-white leading-snug">
-                Transforming Local Agriculture into Profitable Rural Enterprises
+                {t.heroTitle}
               </h3>
               <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-2">
-                Unlock up to 90% concessional credit with bank-ready DPR blueprints and 6.5% - 8% p.a. interest rates.
+                {t.heroDesc}
               </p>
 
               <div className="grid grid-cols-2 gap-2 pt-0.5 text-xs">
                 <div className="p-2 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
-                  <div className="font-extrabold text-emerald-400 text-xs sm:text-sm">Up to 90%</div>
-                  <div className="text-[9px] text-slate-400 mt-0.5">Concessional Credit</div>
+                  <div className="font-extrabold text-emerald-400 text-xs sm:text-sm">{t.statCreditVal}</div>
+                  <div className="text-[9px] text-slate-400 mt-0.5">{t.statCreditLabel}</div>
                 </div>
                 <div className="p-2 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
-                  <div className="font-extrabold text-teal-400 text-xs sm:text-sm">6.5% - 8% p.a.</div>
-                  <div className="text-[9px] text-slate-400 mt-0.5">Subsidized Interest</div>
+                  <div className="font-extrabold text-teal-400 text-xs sm:text-sm">{t.statInterestVal}</div>
+                  <div className="text-[9px] text-slate-400 mt-0.5">{t.statInterestLabel}</div>
                 </div>
               </div>
             </div>
@@ -276,7 +283,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   }`}
                 >
                   <Lock className="w-3.5 h-3.5" />
-                  <span>Sign In (लॉग इन)</span>
+                  <span>{t.signInTab}</span>
                 </button>
                 <button
                   type="button"
@@ -292,20 +299,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   }`}
                 >
                   <User className="w-3.5 h-3.5" />
-                  <span>Register (नया पंजीकरण)</span>
+                  <span>{t.registerTab}</span>
                 </button>
               </div>
 
               {/* Form Title */}
               <div className="mb-3">
                 <h3 className="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
-                  <span>{mode === 'login' ? 'Welcome Back to AgriXora' : 'Register New Enterprise'}</span>
+                  <span>{mode === 'login' ? t.welcomeLoginTitle : t.welcomeRegisterTitle}</span>
                   <span className="text-sm">🌾</span>
                 </h3>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  {mode === 'login'
-                    ? 'Enter your registered mobile number to access your workspace.'
-                    : 'Select your role and location to create your verified account.'}
+                  {mode === 'login' ? t.welcomeLoginDesc : t.welcomeRegisterDesc}
                 </p>
               </div>
 
@@ -603,7 +608,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     {/* Mobile Number Field */}
                     <div>
                       <label htmlFor="loginPhone" className="block text-[11px] font-semibold text-slate-300 mb-1">
-                        Mobile Number (पंजीकृत मोबाइल नंबर)
+                        {t.mobileLabel}
                       </label>
                       <div className="relative flex items-center">
                         <div className="absolute left-3 text-slate-400 font-bold text-xs flex items-center gap-1 pointer-events-none">
@@ -619,7 +624,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           required
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          placeholder="Enter 10-digit mobile number"
+                          placeholder={t.mobilePlaceholder}
                           className="w-full pl-14 pr-4 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                         />
                       </div>
@@ -629,7 +634,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     <div>
                       <div className="flex items-center justify-between mb-1">
                         <label htmlFor="loginPassword" className="text-[11px] font-semibold text-slate-300">
-                          Password / PIN (पासवर्ड / सुरक्षा पिन)
+                          {t.passwordLabel}
                         </label>
                       </div>
 
@@ -643,7 +648,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           required
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Enter your 6-digit PIN or password"
+                          placeholder={t.passwordPlaceholder}
                           className="w-full pl-10 pr-10 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                         />
                         <button
@@ -669,7 +674,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   ) : (
                     <>
                       <span>
-                        {mode === 'login' ? 'Sign In & Enter Dashboard' : 'Complete Registration & Enter'}
+                        {mode === 'login' ? t.submitLogin : t.submitRegister}
                       </span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </>
@@ -682,7 +687,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               <div className="mt-3 pt-2.5 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
                 <div className="flex items-center gap-1.5 text-emerald-400">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Aadhaar e-KYC & MSME Compliant</span>
+                  <span>{t.compliance}</span>
                 </div>
                 <div className="text-slate-500 font-mono text-[10px]">
                   256-Bit SSL Encrypted
@@ -697,12 +702,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   </div>
                   <div>
                     <div className="text-[11px] sm:text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                      <span>Administrator Console</span>
+                      <span>{t.adminTitle}</span>
                       <span className="text-[8px] font-bold px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 uppercase">
                         Turso Cloud
                       </span>
                     </div>
-                    <div className="text-[9px] sm:text-[10px] text-slate-400">Live User Ops, Buyer Demands & libSQL Studio</div>
+                    <div className="text-[9px] sm:text-[10px] text-slate-400">{t.adminDesc}</div>
                   </div>
                 </div>
                 <button
@@ -710,7 +715,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   onClick={() => onNavigate('admin')}
                   className="px-2.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] sm:text-xs shadow-md shadow-indigo-950 flex items-center gap-1 transition-all cursor-pointer shrink-0"
                 >
-                  <span>Open Admin</span>
+                  <span>{t.openAdmin}</span>
                   <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
@@ -723,7 +728,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
       {/* Footer Bar */}
       <footer className="relative z-10 border-t border-slate-800/80 bg-slate-900/60 backdrop-blur-md px-4 py-1.5 text-center text-[10px] sm:text-[11px] text-slate-400 max-w-7xl mx-auto w-full shrink-0">
-        &copy; 2026 AGRIXORA — Ministry of Rural Development & MSME Aligned Framework
+        {t.footerText}
       </footer>
 
     </div>

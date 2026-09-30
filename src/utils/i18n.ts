@@ -405,8 +405,297 @@ export const LANGUAGE_OPTIONS: { code: Language; label: string; native: string }
   { code: 'gu', label: 'Gujarati', native: 'ગુજરાતી' }
 ];
 
+export interface LoginTranslationDict {
+  portalBadge: string;
+  portalTagline: string;
+  heroBadge: string;
+  heroTitle: string;
+  heroDesc: string;
+  statCreditVal: string;
+  statCreditLabel: string;
+  statInterestVal: string;
+  statInterestLabel: string;
+  signInTab: string;
+  registerTab: string;
+  welcomeLoginTitle: string;
+  welcomeRegisterTitle: string;
+  welcomeLoginDesc: string;
+  welcomeRegisterDesc: string;
+  mobileLabel: string;
+  mobilePlaceholder: string;
+  passwordLabel: string;
+  passwordPlaceholder: string;
+  submitLogin: string;
+  submitRegister: string;
+  compliance: string;
+  adminTitle: string;
+  adminDesc: string;
+  openAdmin: string;
+  footerText: string;
+}
+
+export const LOGIN_TRANSLATIONS: Record<Language, LoginTranslationDict> = {
+  en: {
+    portalBadge: 'Official Portal',
+    portalTagline: 'Rural Enterprise & 90% Loan Feasibility Engine',
+    heroBadge: 'National Rural Enterprise Ecosystem',
+    heroTitle: 'Transforming Local Agriculture into Profitable Rural Enterprises',
+    heroDesc: 'Unlock up to 90% concessional credit with bank-ready DPR blueprints and 6.5% - 8% p.a. interest rates.',
+    statCreditVal: 'Up to 90%',
+    statCreditLabel: 'Concessional Credit',
+    statInterestVal: '6.5% - 8% p.a.',
+    statInterestLabel: 'Subsidized Interest',
+    signInTab: 'Sign In',
+    registerTab: 'Register',
+    welcomeLoginTitle: 'Welcome Back to AgriXora',
+    welcomeRegisterTitle: 'Register New Enterprise',
+    welcomeLoginDesc: 'Enter your registered mobile number to access your workspace.',
+    welcomeRegisterDesc: 'Select your role and location to create your verified account.',
+    mobileLabel: 'Mobile Number',
+    mobilePlaceholder: 'Enter 10-digit mobile number',
+    passwordLabel: 'Password / PIN',
+    passwordPlaceholder: 'Enter your 6-digit PIN or password',
+    submitLogin: 'Sign In & Enter Dashboard',
+    submitRegister: 'Complete Registration & Enter',
+    compliance: 'Aadhaar e-KYC & MSME Compliant',
+    adminTitle: 'Administrator Console',
+    adminDesc: 'Live User Ops, Buyer Demands & libSQL Studio',
+    openAdmin: 'Open Admin',
+    footerText: '© 2026 AGRIXORA — Ministry of Rural Development & MSME Aligned Framework'
+  },
+  hi: {
+    portalBadge: 'आधिकारिक पोर्टल',
+    portalTagline: 'ग्रामीण उद्यम एवं 90% ऋण व्यवहार्यता इंजन',
+    heroBadge: 'राष्ट्रीय ग्रामीण उद्यम पारिस्थितिकी तंत्र',
+    heroTitle: 'स्थानीय कृषि को लाभदायक ग्रामीण उद्यमों में बदलें',
+    heroDesc: 'बैंक-तैयार DPR ब्लूप्रिंट और 6.5% - 8% ब्याज दर के साथ 90% तक रियायती ऋण प्राप्त करें।',
+    statCreditVal: '90% तक',
+    statCreditLabel: 'रियायती ऋण',
+    statInterestVal: '6.5% - 8% प्रति वर्ष',
+    statInterestLabel: 'सब्सिडीयुक्त ब्याज',
+    signInTab: 'लॉग इन करें',
+    registerTab: 'नया पंजीकरण',
+    welcomeLoginTitle: 'AgriXora में आपका स्वागत है',
+    welcomeRegisterTitle: 'नया उद्यम पंजीकरण',
+    welcomeLoginDesc: 'अपने कार्यक्षेत्र तक पहुँचने के लिए पंजीकृत मोबाइल नंबर दर्ज करें।',
+    welcomeRegisterDesc: 'अपना सत्यापित खाता बनाने के लिए भूमिका और स्थान चुनें।',
+    mobileLabel: 'पंजीकृत मोबाइल नंबर',
+    mobilePlaceholder: '10 अंकों का मोबाइल नंबर दर्ज करें',
+    passwordLabel: 'पासवर्ड / सुरक्षा पिन',
+    passwordPlaceholder: 'अपना 6-अंकीय पिन या पासवर्ड दर्ज करें',
+    submitLogin: 'लॉग इन करें एवं डैशबोर्ड में प्रवेश करें',
+    submitRegister: 'पंजीकरण पूरा करें एवं प्रवेश करें',
+    compliance: 'आधार e-KYC एवं MSME अनुपालन',
+    adminTitle: 'प्रशासक कंसोल',
+    adminDesc: 'लाइव यूजर ऑप्स, खरीदार मांग एवं libSQL स्टूडियो',
+    openAdmin: 'एडमिन खोलें',
+    footerText: '© 2026 AGRIXORA — ग्रामीण विकास मंत्रालय एवं MSME समर्थित ढांचा'
+  },
+  hinglish: {
+    portalBadge: 'Official Portal',
+    portalTagline: 'Rural Enterprise & 90% Loan Feasibility Engine',
+    heroBadge: 'National Rural Enterprise Ecosystem',
+    heroTitle: 'Local Kheti ko Profitable Rural Enterprise me Badlein',
+    heroDesc: 'Bank-ready DPR blueprints aur 6.5% - 8% interest rate ke saath 90% tak concessional loan unlock karein.',
+    statCreditVal: 'Up to 90%',
+    statCreditLabel: 'Concessional Credit',
+    statInterestVal: '6.5% - 8% p.a.',
+    statInterestLabel: 'Subsidized Interest',
+    signInTab: 'Sign In (लॉग इन)',
+    registerTab: 'Register (नया खाता)',
+    welcomeLoginTitle: 'Welcome Back to AgriXora',
+    welcomeRegisterTitle: 'Naya Enterprise Register Karein',
+    welcomeLoginDesc: 'Workspace access karne ke liye registered mobile number daalein.',
+    welcomeRegisterDesc: 'Verified account banane ke liye role aur location chunein.',
+    mobileLabel: 'Registered Mobile Number',
+    mobilePlaceholder: '10-digit mobile number enter karein',
+    passwordLabel: 'Password / Security PIN',
+    passwordPlaceholder: '6-digit PIN ya password enter karein',
+    submitLogin: 'Sign In & Enter Dashboard',
+    submitRegister: 'Registration Complete Karein',
+    compliance: 'Aadhaar e-KYC & MSME Compliant',
+    adminTitle: 'Administrator Console',
+    adminDesc: 'Live User Ops, Buyer Demands & libSQL Studio',
+    openAdmin: 'Open Admin',
+    footerText: '© 2026 AGRIXORA — Ministry of Rural Development & MSME Aligned Framework'
+  },
+  mr: {
+    portalBadge: 'अधिकृत पोर्टल',
+    portalTagline: 'ग्रामीण उद्योग आणि ९०% कर्ज व्यवहार्यता इंजिन',
+    heroBadge: 'राष्ट्रीय ग्रामीण उद्योग परिसंस्था',
+    heroTitle: 'स्थानिक शेतीचे रूपांतर फायदेशीर ग्रामीण उद्योगांमध्ये करा',
+    heroDesc: 'बँक-मान्य डीपीआर ब्लूप्रिंट्स आणि ६.५% - ८% व्याजदरासह ९०% पर्यंत सवलतीचे कर्ज मिळवा.',
+    statCreditVal: '९०% पर्यंत',
+    statCreditLabel: 'सवलतीचे कर्ज',
+    statInterestVal: '६.५% - ८% दरसाल',
+    statInterestLabel: 'अनुदानित व्याज',
+    signInTab: 'लॉग इन करा',
+    registerTab: 'नवीन नोंदणी',
+    welcomeLoginTitle: 'AgriXora मध्ये आपले स्वागत आहे',
+    welcomeRegisterTitle: 'नवीन उद्योगाची नोंदणी करा',
+    welcomeLoginDesc: 'आपल्या कार्यक्षेत्रात प्रवेश करण्यासाठी नोंदणीकृत मोबाईल नंबर टाका.',
+    welcomeRegisterDesc: 'आपले खाते तयार करण्यासाठी भूमिका आणि स्थान निवडा.',
+    mobileLabel: 'नोंदणीकृत मोबाईल नंबर',
+    mobilePlaceholder: '१० अंकी मोबाईल नंबर प्रविष्ट करा',
+    passwordLabel: 'पासवर्ड / सुरक्षा पिन',
+    passwordPlaceholder: 'आपला ६ अंकी पिन किंवा पासवर्ड टाका',
+    submitLogin: 'लॉग इन करा आणि डॅशबोर्ड उघडा',
+    submitRegister: 'नोंदणी पूर्ण करा आणि प्रवेश करा',
+    compliance: 'आधार ई-केवायसी आणि एमएसएमई सुसंगत',
+    adminTitle: 'प्रशासक कन्सोल',
+    adminDesc: 'थेट वापरकर्ते, खरेदीदार मागणी आणि libSQL स्टुडिओ',
+    openAdmin: 'ॲडमिन उघडा',
+    footerText: '© २०२६ AGRIXORA — ग्रामीण विकास मंत्रालय आणि MSME संलग्न'
+  },
+  bn: {
+    portalBadge: 'অফিসিয়াল পোর্টাল',
+    portalTagline: 'গ্রামীণ উদ্যোগ ও ৯০% ঋণ সম্ভাব্যতা ইঞ্জিন',
+    heroBadge: 'জাতীয় গ্রামীণ উদ্যোগ ইকোসিস্টেম',
+    heroTitle: 'স্থানীয় কৃষিকে লাভজনক গ্রামীণ উদ্যোগে রূপান্তর করুন',
+    heroDesc: 'ব্যাংক-অনুমোদিত ডিপিআর ব্লুপ্রিন্ট এবং ৬.৫% - ৮% সুদের হারে ৯০% পর্যন্ত রেয়াতি ঋণ পান।',
+    statCreditVal: '৯০% পর্যন্ত',
+    statCreditLabel: 'রেয়াতি ঋণ সহায়তা',
+    statInterestVal: '৬.৫% - ৮% বার্ষিক',
+    statInterestLabel: 'ভর্তুকিযুক্ত সুদ',
+    signInTab: 'লগ ইন করুন',
+    registerTab: 'নতুন নিবন্ধন',
+    welcomeLoginTitle: 'AgriXora-তে স্বাগতম',
+    welcomeRegisterTitle: 'নতুন উদ্যোগ নিবন্ধন করুন',
+    welcomeLoginDesc: 'আপনার ওয়ার্কস্পেসে প্রবেশ করতে নিবন্ধিত মোবাইল নম্বর দিন।',
+    welcomeRegisterDesc: 'অ্যাকাউন্ট তৈরি করতে আপনার ভূমিকা এবং অবস্থান নির্বাচন করুন।',
+    mobileLabel: 'নিবন্ধিত মোবাইল নম্বর',
+    mobilePlaceholder: '১০ সংখ্যার মোবাইল নম্বর লিখুন',
+    passwordLabel: 'পাসওয়ার্ড / পিন',
+    passwordPlaceholder: 'আপনার ৬ সংখ্যার পিন বা পাসওয়ার্ড দিন',
+    submitLogin: 'লগ ইন করে ড্যাশবোর্ডে প্রবেশ করুন',
+    submitRegister: 'নিবন্ধন সম্পন্ন করে প্রবেশ করুন',
+    compliance: 'আধার e-KYC এবং MSME অনুসারী',
+    adminTitle: 'প্রশাসক কনসোল',
+    adminDesc: 'লাইভ ব্যবহারকারী ও ক্রেতার চাহিদা স্টুডিও',
+    openAdmin: 'অ্যাডমিন খুলুন',
+    footerText: '© ২০২৬ AGRIXORA — পল্লী উন্নয়ন মন্ত্রক ও MSME সমর্থিত'
+  },
+  ta: {
+    portalBadge: 'அதிகாரப்பூர்வ போர்டல்',
+    portalTagline: 'கிராமப்புற தொழில் & 90% கடன் சாத்தியக்கூறு தளம்',
+    heroBadge: 'தேசிய கிராமப்புற தொழில் சூழல்',
+    heroTitle: 'உள்ளூர் விவசாயத்தை லாபகரமான தொழில்களாக மாற்றுங்கள்',
+    heroDesc: 'வங்கி அங்கீகரிக்கப்பட்ட DPR திட்டங்கள் மற்றும் 6.5% - 8% வட்டி விகிதத்தில் 90% வரை சலுகைக் கடன் பெறுங்கள்.',
+    statCreditVal: '90% வரை',
+    statCreditLabel: 'சலுகைக் கடன்',
+    statInterestVal: '6.5% - 8% ஆண்டுக்கு',
+    statInterestLabel: 'மானிய வட்டி',
+    signInTab: 'உள்நுழைக',
+    registerTab: 'புதிய பதிவு',
+    welcomeLoginTitle: 'AgriXora-விற்கு நல்வரவு',
+    welcomeRegisterTitle: 'புதிய தொழில் பதிவு',
+    welcomeLoginDesc: 'உங்கள் பக்கத்தை அணுக பதிவு செய்த மொபைல் எண்ணை உள்ளிடவும்.',
+    welcomeRegisterDesc: 'கணக்கை உருவாக்க உங்கள் பணி மற்றும் இடத்தை தேர்வு செய்யவும்.',
+    mobileLabel: 'பதிவு செய்த மொபைல் எண்',
+    mobilePlaceholder: '10 இலக்க மொபைல் எண்ணை உள்ளிடவும்',
+    passwordLabel: 'கடவுச்சொல் / பின்',
+    passwordPlaceholder: '6 இலக்க பின் அல்லது கடவுச்சொல்லை உள்ளிடவும்',
+    submitLogin: 'உள்நுழைந்து டாஷ்போர்டிற்குச் செல்க',
+    submitRegister: 'பதிவை முடித்து நுழைக',
+    compliance: 'ஆதார் e-KYC மற்றும் MSME அங்கீகாரம்',
+    adminTitle: 'நிர்வாக கன்சோல்',
+    adminDesc: 'நேரடி பயனர் மற்றும் வாங்குபவர் தேவை மையம்',
+    openAdmin: 'நிர்வாகத்தைத் திறக்க',
+    footerText: '© 2026 AGRIXORA — கிராமப்புற மேம்பாட்டு அமைச்சகம் & MSME அங்கீகாரம்'
+  },
+  te: {
+    portalBadge: 'అధికారిక పోర్టల్',
+    portalTagline: 'గ్రామీణ పరిశ్రమ & 90% రుణ సాధ్యత ఇంజిన్',
+    heroBadge: 'జాతీయ గ్రామీణ పరిశ్రమ ఎకోసిస్టమ్',
+    heroTitle: 'స్థానిక వ్యవసాయాన్ని లాభదాయకమైన గ్రామీణ పరిశ్రమలుగా మార్చండి',
+    heroDesc: 'బ్యాంక్-ఆమోదిత DPR బ్లూప్రింట్లు మరియు 6.5% - 8% వడ్డీతో 90% వరకు రాయితీ రుణం పొందండి.',
+    statCreditVal: '90% వరకు',
+    statCreditLabel: 'రాయితీ రుణం',
+    statInterestVal: '6.5% - 8% వార్షికం',
+    statInterestLabel: 'సబ్సిడీ వడ్డీ',
+    signInTab: 'లాగిన్ చేయండి',
+    registerTab: 'కొత్త నమోదు',
+    welcomeLoginTitle: 'AgriXora కు స్వాగతం',
+    welcomeRegisterTitle: 'కొత్త పరిశ్రమ నమోదు',
+    welcomeLoginDesc: 'మీ వర్క్‌స్పేస్‌ను యాక్సెస్ చేయడానికి మొబైల్ నంబర్ నమోదు చేయండి.',
+    welcomeRegisterDesc: 'ఖాతాను సృష్టించడానికి మీ పాత్ర మరియు స్థానాన్ని ఎంచుకోండి.',
+    mobileLabel: 'నమోదిత మొబైల్ నంబర్',
+    mobilePlaceholder: '10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి',
+    passwordLabel: 'పాస్‌వర్డ్ / పిన్',
+    passwordPlaceholder: 'మీ 6 అంకెల పిన్ లేదా పాస్‌వర్డ్ నమోదు చేయండి',
+    submitLogin: 'లాగిన్ చేసి డ్యాష్‌బోర్డ్‌లోకి ప్రవేశించండి',
+    submitRegister: 'నమోదు పూర్తి చేసి ప్రవేశించండి',
+    compliance: 'ఆధార్ e-KYC & MSME అనుకూలం',
+    adminTitle: 'అడ్మినిస్ట్రేటర్ కన్సోల్',
+    adminDesc: 'ప్రత్యక్ష వినియోగదారు మరియు కొనుగోలుదారు డిమాండ్ స్టూడియో',
+    openAdmin: 'అడ్మిన్ తెరవండి',
+    footerText: '© 2026 AGRIXORA — గ్రామీణాభివృద్ధి మంత్రిత్వ శాఖ & MSME గుర్తింపు'
+  },
+  kn: {
+    portalBadge: 'ಅಧಿಕೃತ ಪೋರ್ಟಲ್',
+    portalTagline: 'ಗ್ರಾಮೀಣ ಉದ್ಯಮ ಮತ್ತು 90% ಸಾಲ ಕಾರ್ಯಸಾಧ್ಯತೆ ಎಂಜಿನ್',
+    heroBadge: 'ರಾಷ್ಟ್ರೀಯ ಗ್ರಾಮೀಣ ಉದ್ಯಮ ವ್ಯವಸ್ಥೆ',
+    heroTitle: 'ಸ್ಥಳೀಯ ಕೃಷಿಯನ್ನು ಲಾಭದಾಯಕ ಗ್ರಾಮೀಣ ಉದ್ಯಮಗಳಾಗಿ ಪರಿವರ್ತಿಸಿ',
+    heroDesc: 'ಬ್ಯಾಂಕ್ ಅನುಮೋದಿತ DPR ಬ್ಲೂಪ್ರಿಂಟ್‌ಗಳೊಂದಿಗೆ ಮತ್ತು 6.5% - 8% ಬಡ್ಡಿದರದಲ್ಲಿ 90% ವರೆಗೆ ರಿಯಾಯಿತಿ ಸಾಲ ಪಡೆಯಿರಿ.',
+    statCreditVal: '90% ವರೆಗೆ',
+    statCreditLabel: 'ರಿಯಾಯಿತಿ ಸಾಲ',
+    statInterestVal: '6.5% - 8% ವಾರ್ಷಿಕ',
+    statInterestLabel: 'ಸಬ್ಸಿಡಿ ಬಡ್ಡಿ',
+    signInTab: 'ಸೈನ್ ಇನ್',
+    registerTab: 'ಹೊಸ ನೋಂದಣಿ',
+    welcomeLoginTitle: 'AgriXora ಗೆ ಸುಸ್ವಾಗತ',
+    welcomeRegisterTitle: 'ಹೊಸ ಉದ್ಯಮ ನೋಂದಣಿ',
+    welcomeLoginDesc: 'ನಿಮ್ಮ ಕಾರ್ಯಸ್ಥಳವನ್ನು ಪ್ರವೇಶಿಸಲು ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.',
+    welcomeRegisterDesc: 'ಖಾತೆಯನ್ನು ರಚಿಸಲು ನಿಮ್ಮ ಪಾತ್ರ ಮತ್ತು ಸ್ಥಳವನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
+    mobileLabel: 'ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ',
+    mobilePlaceholder: '10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ',
+    passwordLabel: 'ಪಾಸ್‌ವರ್ಡ್ / ಪಿನ್',
+    passwordPlaceholder: 'ನಿಮ್ಮ 6 ಅಂಕಿಯ ಪಿನ್ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ',
+    submitLogin: 'ಸೈನ್ ಇನ್ ಮಾಡಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಪ್ರವೇಶಿಸಿ',
+    submitRegister: 'ನೋಂದಣಿ ಪೂರ್ಣಗೊಳಿಸಿ ಪ್ರವೇಶಿಸಿ',
+    compliance: 'ಆಧಾರ್ e-KYC ಮತ್ತು MSME ಅನುಸರಣೆ',
+    adminTitle: 'ನಿರ್ವಾಹಕ ಕನ್ಸೋಲ್',
+    adminDesc: 'ಲೈವ್ ಬಳಕೆದಾರ ಮತ್ತು ಖರೀದಿದಾರರ ಬೇಡಿಕೆ ಸ್ಟುಡಿಯೋ',
+    openAdmin: 'ಅಡ್ಮಿನ್ ತೆರೆಯಿರಿ',
+    footerText: '© 2026 AGRIXORA — ಗ್ರಾಮೀಣಾಭಿವೃದ್ಧಿ ಸಚಿವಾಲಯ ಮತ್ತು MSME ಸಂಯೋಜಿತ'
+  },
+  gu: {
+    portalBadge: 'સત્તાવાર પોર્ટલ',
+    portalTagline: 'ગ્રામીણ ઉદ્યોગ અને 90% લોન સંભાવના એન્જિન',
+    heroBadge: 'રાષ્ટ્રીય ગ્રામીણ ઉદ્યોગ ઇકોસિસ્ટમ',
+    heroTitle: 'સ્થાનિક કૃષિને નફાકારક ગ્રામીણ ઉદ્યોગોમાં રૂપાંતરિત કરો',
+    heroDesc: 'બેંક-માન્ય DPR બ્લૂપ્રિન્ટ્સ અને 6.5% - 8% વ્યાજ દરે 90% સુધીની રાહત લોન મેળવો.',
+    statCreditVal: '90% સુધી',
+    statCreditLabel: 'રાહત લોન સહાય',
+    statInterestVal: '6.5% - 8% વાર્ષિક',
+    statInterestLabel: 'સબસિડીવાળું વ્યાજ',
+    signInTab: 'સાઇન ઇન',
+    registerTab: 'નવી નોંધણી',
+    welcomeLoginTitle: 'AgriXora માં આપનું સ્વાગત છે',
+    welcomeRegisterTitle: 'નવા ઉદ્યોગની નોંધણી કરો',
+    welcomeLoginDesc: 'તમારા કાર્યક્ષેત્રમાં પ્રવેશવા માટે નોંધાયેલ મોબાઇલ નંબર દાખલ કરો.',
+    welcomeRegisterDesc: 'ખાતું બનાવવા માટે તમારી ભૂમિકા અને સ્થળ પસંદ કરો.',
+    mobileLabel: 'નોંધાયેલ મોબાઇલ નંબર',
+    mobilePlaceholder: '10 અંકનો મોબાઇલ નંબર દાખલ કરો',
+    passwordLabel: 'પાસવર્ડ / સુરક્ષા પિન',
+    passwordPlaceholder: 'તમારો 6 અંકનો પિન અથવા પાસવર્ડ દાખલ કરો',
+    submitLogin: 'સાઇન ઇન કરો અને ડેશબોર્ડમાં પ્રવેશ કરો',
+    submitRegister: 'નોંધણી પૂર્ણ કરો અને પ્રવેશ કરો',
+    compliance: 'આધાર e-KYC અને MSME અનુપાલન',
+    adminTitle: 'એડમિનિસ્ટ્રેટર કન્સોલ',
+    adminDesc: 'લાઇવ વપરાશકર્તાઓ અને ખરીદદાર માંગ સ્ટુડિયો',
+    openAdmin: 'એડમિન ખોલો',
+    footerText: '© 2026 AGRIXORA — ગ્રામીણ વિકાસ મંત્રાલય અને MSME સંલગ્ન'
+  }
+};
+
+export function useLoginTranslation(lang: Language = 'en'): LoginTranslationDict {
+  return LOGIN_TRANSLATIONS[lang] || LOGIN_TRANSLATIONS.en;
+}
+
 export function useTranslation(lang: Language = 'en'): TranslationDict {
   return TRANSLATIONS[lang] || TRANSLATIONS.en;
 }
 
 export const getTranslation = useTranslation;
+
