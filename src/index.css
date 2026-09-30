@@ -29,25 +29,114 @@
   background: #94a3b8;
 }
 
-/* Print Styles for Bank-Ready Detailed Project Report (DPR) */
+/* ==========================================
+   AGRIXORA HIGH-FIDELITY PRINT STYLESHEET
+   Supports Bank DPR, Feasibility, and LOIs
+   ========================================== */
 @media print {
-  body {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  /* Force Clean White Background & High Contrast Typography */
+  html, body, #root {
     background-color: #ffffff !important;
-    color: #000000 !important;
-    font-size: 11pt;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 10.5pt !important;
+    line-height: 1.5 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
   }
-  .no-print {
+
+  /* Hide All UI Navigation, Sidebars, Drawers, Floating Controls */
+  .no-print, 
+  nav, 
+  aside, 
+  header.no-print,
+  button:not(.print-allow), 
+  .toast-container,
+  .floating-coach-btn,
+  .drawer-overlay,
+  footer {
     display: none !important;
+    visibility: hidden !important;
   }
+
+  /* Display print-only elements */
   .print-only {
     display: block !important;
   }
-  .page-break {
-    page-break-before: always;
+
+  /* Flatten modal containers so full multi-page content flows smoothly */
+  .fixed, .absolute {
+    position: static !important;
+    inset: auto !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
   }
-  .card-print {
+
+  /* Container and Layout Unlocking */
+  main, .max-w-4xl, .max-w-5xl, .max-w-6xl, .max-w-7xl {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Prevent Section Splitting Across Pages */
+  .page-break {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  section, .printable-section, .card-print, tr, table {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  h1, h2, h3, h4 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    color: #0f172a !important;
+  }
+
+  /* Crisp Border and Table Formatting */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th, td {
+    border: 1px solid #cbd5e1 !important;
+    padding: 6px 10px !important;
+    color: #0f172a !important;
+  }
+
+  th {
+    background-color: #f1f5f9 !important;
+    font-weight: 700 !important;
+  }
+
+  /* Reset Dark Background Elements to Printable Paper Format */
+  .bg-slate-900, .bg-slate-950, .bg-emerald-950, .dark\:bg-slate-900, .dark\:bg-slate-800 {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
     box-shadow: none !important;
-    border: 1px solid #d1d5db !important;
-    break-inside: avoid;
+  }
+
+  .text-white, .text-slate-100, .text-slate-200, .text-slate-300, .text-slate-400 {
+    color: #334155 !important;
+  }
+
+  .text-emerald-400, .text-teal-400, .text-amber-400 {
+    color: #047857 !important;
+    font-weight: 700 !important;
   }
 }

@@ -5,6 +5,7 @@ import {
   Phone,
   ArrowRight,
   ShieldCheck,
+  ShieldAlert,
   CheckCircle2,
   AlertCircle,
   Sparkles,
@@ -13,7 +14,10 @@ import {
   Wheat,
   Coins,
   Globe2,
-  UserPlus
+  UserPlus,
+  Eye,
+  EyeOff,
+  Database
 } from 'lucide-react';
 import type { Language, ActiveView } from '../../types';
 import { STATES_DATA } from '../../data/regionsData';
@@ -36,8 +40,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   onNavigate
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
-  const [otpSent, setOtpSent] = useState<boolean>(false);
-  const [otpValue, setOtpValue] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -61,30 +64,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     if (found && found.districts.length > 0) {
       setSelectedDistrict(found.districts[0].district);
     }
-  };
-
-  const handleSendOtp = () => {
-    setErrorMessage(null);
-    const cleanPhone = phone.trim().replace(/\D/g, '');
-    if (cleanPhone.length !== 10) {
-      setErrorMessage('Please enter a valid 10-digit mobile number to request an OTP.');
-      return;
-    }
-
-    // Verify if phone is registered first
-    const checkResult = authenticateUser(cleanPhone, '', 'otp');
-    if (!checkResult.success) {
-      setErrorMessage(checkResult.message);
-      return;
-    }
-
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setOtpSent(true);
-      setOtpValue('4892'); // Simulation code for instant access
-      setSuccessMessage(`OTP sent to +91 ${cleanPhone}. (Verification code: 4892)`);
-    }, 500);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -125,8 +104,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       }, 500);
 
     } else {
-      // Execute strict sign-in verification
-      const authResult = authenticateUser(phone, otpValue || '4892', 'otp');
+      // Execute sign-in verification with mobile & password
+      const authResult = authenticateUser(phone, password, 'password');
 
       if (!authResult.success) {
         setIsLoading(false);
@@ -205,56 +184,84 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
-        {/* Language Selector */}
-        <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs text-slate-300">
-          <Globe2 className="w-3.5 h-3.5 text-emerald-400" />
-          <select
-            value={currentLang}
-            onChange={(e) => onLanguageChange(e.target.value as Language)}
-            className="bg-transparent text-xs text-slate-200 outline-hidden cursor-pointer"
+        <div className="flex items-center gap-3">
+          {/* Admin Console Entry Button */}
+          <button
+            type="button"
+            onClick={() => onNavigate('admin')}
+            className="flex items-center gap-1.5 bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 hover:border-indigo-400 text-indigo-200 hover:text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-950/50 cursor-pointer group"
+            title="Open Admin Console & Turso Cloud Database Studio"
           >
-            {LANGUAGE_OPTIONS.map((lang) => (
-              <option key={lang.code} value={lang.code} className="bg-slate-900 text-white">
-                {lang.native} ({lang.label})
-              </option>
-            ))}
-          </select>
+            <ShieldAlert className="w-3.5 h-3.5 text-indigo-400 group-hover:scale-110 transition-transform" />
+            <span>Admin Console</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
+          </button>
+
+          {/* Language Selector */}
+          <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs text-slate-300">
+            <Globe2 className="w-3.5 h-3.5 text-emerald-400" />
+            <select
+              value={currentLang}
+              onChange={(e) => onLanguageChange(e.target.value as Language)}
+              className="bg-transparent text-xs text-slate-200 outline-hidden cursor-pointer"
+            >
+              {LANGUAGE_OPTIONS.map((lang) => (
+                <option key={lang.code} value={lang.code} className="bg-slate-900 text-white">
+                  {lang.native} ({lang.label})
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </header>
 
       {/* Main Container */}
-      <main className="relative z-10 flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-12 flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 w-full items-center">
+      <main className="relative z-10 flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 w-full items-start">
 
           {/* LEFT COLUMN: Clean Branded Hero */}
-          <div className="lg:col-span-6">
-            <div className="relative rounded-3xl overflow-hidden border border-emerald-500/30 shadow-2xl shadow-emerald-950/50 group bg-slate-900">
+          <div className="lg:col-span-5 lg:sticky lg:top-6 space-y-4">
+            {/* Normal Clean Image */}
+            <div className="rounded-3xl overflow-hidden border border-emerald-500/30 shadow-2xl shadow-emerald-950/40 bg-slate-900">
               <img
                 src="/assets/agrixora_hero.jpg"
                 alt="Agrixora - Cultivating a Brighter Tomorrow"
-                className="w-full h-80 sm:h-96 md:h-[450px] object-cover object-center group-hover:scale-102 transition-transform duration-700"
+                className="w-full aspect-[16/9] object-cover object-center transition-transform duration-500 hover:scale-[1.02]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6 sm:p-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/30 backdrop-blur-md text-emerald-200 border border-emerald-400/40 mb-2 w-fit">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                  <span>National Rural Enterprise Ecosystem</span>
+            </div>
+
+            {/* Clean Info Card Below */}
+            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 backdrop-blur-md space-y-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
+                <Sparkles className="w-4 h-4 text-amber-300" />
+                <span>National Rural Enterprise Ecosystem</span>
+              </div>
+              <h3 className="text-sm sm:text-base font-bold text-white leading-snug">
+                Transforming Local Agriculture into Profitable Rural Enterprises
+              </h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Unlock up to 90% concessional credit with bank-ready DPR blueprints and 6.5% - 8% p.a. interest rates.
+              </p>
+
+              <div className="grid grid-cols-2 gap-2.5 pt-1 text-xs">
+                <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
+                  <div className="font-extrabold text-emerald-400 text-sm">Up to 90%</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">Concessional Credit</div>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-black text-white leading-snug">
-                  Transforming Local Agriculture into Profitable Rural Enterprises
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-300 mt-2">
-                  10% Equity Margin unlocks up to 90% Concessional Credit with 6.5% - 8% p.a. interest rates & bank-ready DPR blueprints.
-                </p>
+                <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
+                  <div className="font-extrabold text-teal-400 text-sm">6.5% - 8% p.a.</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">Subsidized Interest</div>
+                </div>
               </div>
             </div>
           </div>
 
           {/* RIGHT COLUMN: Authentication Form Card */}
-          <div className="lg:col-span-6">
-            <div className="bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-8 backdrop-blur-xl relative">
+          <div className="lg:col-span-7">
+            <div className="bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-5 sm:p-7 backdrop-blur-xl relative">
               
               {/* Mode Switcher Buttons */}
-              <div className="flex bg-slate-950 p-1.5 rounded-2xl border border-slate-800/80 mb-6">
+              <div className="flex bg-slate-950 p-1.5 rounded-2xl border border-slate-800/80 mb-5">
                 <button
                   type="button"
                   onClick={() => {
@@ -262,13 +269,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     setErrorMessage(null);
                     setAvailableProfiles(null);
                   }}
-                  className={`flex-1 py-2.5 px-4 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`flex-1 py-2 px-3 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     mode === 'login'
                       ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/40'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                   }`}
                 >
-                  <Lock className="w-4 h-4" />
+                  <Lock className="w-3.5 h-3.5" />
                   <span>Sign In (लॉग इन)</span>
                 </button>
                 <button
@@ -278,24 +285,24 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     setErrorMessage(null);
                     setAvailableProfiles(null);
                   }}
-                  className={`flex-1 py-2.5 px-4 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`flex-1 py-2 px-3 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     mode === 'register'
                       ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/40'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                   }`}
                 >
-                  <User className="w-4 h-4" />
+                  <User className="w-3.5 h-3.5" />
                   <span>Register (नया पंजीकरण)</span>
                 </button>
               </div>
 
               {/* Form Title */}
-              <div className="mb-6">
-                <h3 className="text-xl font-extrabold text-white flex items-center gap-2">
+              <div className="mb-4">
+                <h3 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
                   <span>{mode === 'login' ? 'Welcome Back to AgriXora' : 'Register New Enterprise'}</span>
-                  <span className="text-lg">🌾</span>
+                  <span className="text-base">🌾</span>
                 </h3>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-slate-400 mt-0.5">
                   {mode === 'login'
                     ? 'Enter your registered mobile number to access your workspace.'
                     : 'Select your role and location to create your verified account.'}
@@ -304,8 +311,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
               {/* Error Notification Alert */}
               {errorMessage && (
-                <div className="mb-4 p-3.5 rounded-2xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs flex items-start gap-3 animate-shake">
-                  <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+                <div className="mb-4 p-3 rounded-2xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs flex items-start gap-3 animate-shake">
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <div className="font-bold text-rose-100">Action Required</div>
                     <div className="mt-0.5">{errorMessage}</div>
@@ -328,7 +335,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
               {/* Success Notification */}
               {successMessage && (
-                <div className="mb-4 p-3 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2.5">
+                <div className="mb-4 p-2.5 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>{successMessage}</span>
                 </div>
@@ -336,37 +343,37 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
               {/* Multi-Profile Selector or Standard Form */}
               {availableProfiles && availableProfiles.length > 0 ? (
-                <div className="space-y-4">
-                  <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30">
+                <div className="space-y-3.5">
+                  <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Multiple Profiles Detected</span>
-                    <h4 className="text-sm font-bold text-white mt-0.5">Select Role Profile to Open:</h4>
-                    <p className="text-xs text-slate-300 mt-1">
+                    <h4 className="text-xs sm:text-sm font-bold text-white mt-0.5">Select Role Profile to Open:</h4>
+                    <p className="text-xs text-slate-300 mt-0.5">
                       Choose which workspace you would like to enter for mobile +91 {phone}:
                     </p>
                   </div>
 
-                  <div className="space-y-2.5">
+                  <div className="space-y-2">
                     {availableProfiles.map(prof => (
                       <button
                         key={prof.id}
                         type="button"
                         onClick={() => handleSelectProfile(prof)}
-                        className="w-full p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/90 transition-all flex items-center justify-between group cursor-pointer text-left"
+                        className="w-full p-3.5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/90 transition-all flex items-center justify-between group cursor-pointer text-left"
                       >
-                        <div className="flex items-center gap-3.5">
-                          <span className="text-2xl p-2 rounded-xl bg-slate-950 border border-slate-800">{ROLE_ICONS[prof.role] || '🌾'}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl p-2 rounded-xl bg-slate-950 border border-slate-800">{ROLE_ICONS[prof.role] || '🌾'}</span>
                           <div>
-                            <div className="text-xs font-black text-emerald-400 uppercase tracking-wider">{prof.roleLabel}</div>
-                            <h4 className="text-sm font-bold text-white group-hover:text-emerald-300">{prof.name}</h4>
+                            <div className="text-[10px] font-black text-emerald-400 uppercase tracking-wider">{prof.roleLabel}</div>
+                            <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300">{prof.name}</h4>
                             <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1">
                               <MapPin className="w-3 h-3 text-slate-500" />
                               {prof.location}
                             </p>
                           </div>
                         </div>
-                        <div className="px-3 py-1.5 rounded-xl bg-emerald-600/20 text-emerald-300 text-xs font-bold border border-emerald-500/30 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-1">
+                        <div className="px-2.5 py-1 rounded-xl bg-emerald-600/20 text-emerald-300 text-xs font-bold border border-emerald-500/30 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-1">
                           <span>Enter</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
+                          <ArrowRight className="w-3 h-3" />
                         </div>
                       </button>
                     ))}
@@ -378,108 +385,137 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                       setAvailableProfiles(null);
                       setSuccessMessage(null);
                     }}
-                    className="w-full py-2.5 text-xs text-slate-400 hover:text-white font-semibold transition-colors cursor-pointer"
+                    className="w-full py-2 text-xs text-slate-400 hover:text-white font-semibold transition-colors cursor-pointer"
                   >
                     ← Sign in with a different mobile number
                   </button>
                 </div>
               ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} autoComplete="off" className="space-y-3.5">
                 
-                {/* Role Selector (Registration Only) */}
+                {/* Mode: REGISTER */}
                 {mode === 'register' && (
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Select Your Role / Category (अपनी भूमिका चुनें)
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setRole('entrepreneur')}
-                        className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                          role === 'entrepreneur'
-                            ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
-                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="font-bold flex items-center gap-1.5">
-                          <Wheat className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Rural Entrepreneur</span>
-                        </div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">Individual Beneficiary</div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setRole('fpo_manager')}
-                        className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                          role === 'fpo_manager'
-                            ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
-                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="font-bold flex items-center gap-1.5">
-                          <Building2 className="w-3.5 h-3.5 text-teal-400" />
-                          <span>FPO / SHG Leader</span>
-                        </div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">Farmer Collective Unit</div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setRole('bank_officer')}
-                        className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                          role === 'bank_officer'
-                            ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
-                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="font-bold flex items-center gap-1.5">
-                          <Coins className="w-3.5 h-3.5 text-amber-400" />
-                          <span>Bank Branch Officer</span>
-                        </div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">Loan Credit Appraisal</div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setRole('institutional_buyer')}
-                        className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                          role === 'institutional_buyer'
-                            ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
-                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="font-bold flex items-center gap-1.5">
-                          <Building2 className="w-3.5 h-3.5 text-blue-400" />
-                          <span>Agri-Buyer / Trader</span>
-                        </div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">Off-taker Contract Desk</div>
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Registration Only Fields: Name & Location */}
-                {mode === 'register' && (
-                  <div className="space-y-4">
+                  <>
+                    {/* Role Selector */}
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">
-                        Full Name / Business Name (पूरा नाम)
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Select Your Role / Category (अपनी भूमिका चुनें)
                       </label>
-                      <div className="relative">
-                        <User className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
-                        <input
-                          type="text"
-                          required
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          placeholder="e.g. Ramesh Kumar Patel"
-                          className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500"
-                        />
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setRole('entrepreneur')}
+                          className={`p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                            role === 'entrepreneur'
+                              ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
+                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                          }`}
+                        >
+                          <div className="font-bold flex items-center gap-1.5 text-xs">
+                            <Wheat className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span className="truncate">Rural Entrepreneur</span>
+                          </div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">Individual Beneficiary</div>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setRole('fpo_manager')}
+                          className={`p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                            role === 'fpo_manager'
+                              ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
+                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                          }`}
+                        >
+                          <div className="font-bold flex items-center gap-1.5 text-xs">
+                            <Building2 className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                            <span className="truncate">FPO / SHG Leader</span>
+                          </div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">Farmer Collective Unit</div>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setRole('bank_officer')}
+                          className={`p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                            role === 'bank_officer'
+                              ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
+                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                          }`}
+                        >
+                          <div className="font-bold flex items-center gap-1.5 text-xs">
+                            <Coins className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                            <span className="truncate">Bank Branch Officer</span>
+                          </div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">Loan Credit Appraisal</div>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setRole('institutional_buyer')}
+                          className={`p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                            role === 'institutional_buyer'
+                              ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
+                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                          }`}
+                        >
+                          <div className="font-bold flex items-center gap-1.5 text-xs">
+                            <Building2 className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                            <span className="truncate">Agri-Buyer / Trader</span>
+                          </div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">Off-taker Contract Desk</div>
+                        </button>
                       </div>
                     </div>
 
+                    {/* Name & Phone */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label htmlFor="regName" className="block text-xs font-semibold text-slate-300 mb-1">
+                          Full Name (पूरा नाम)
+                        </label>
+                        <div className="relative">
+                          <User className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+                          <input
+                            type="text"
+                            id="regName"
+                            name="regName"
+                            autoComplete="off"
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="e.g. Ramesh Kumar"
+                            className="w-full pl-9 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label htmlFor="regPhone" className="block text-xs font-semibold text-slate-300 mb-1">
+                          Mobile Number (मोबाइल)
+                        </label>
+                        <div className="relative flex items-center">
+                          <div className="absolute left-2.5 text-slate-400 font-bold text-xs flex items-center gap-1 pointer-events-none">
+                            <Phone className="w-3 h-3 text-emerald-400" />
+                            <span>+91</span>
+                          </div>
+                          <input
+                            type="tel"
+                            id="regPhone"
+                            name="regPhone"
+                            autoComplete="off"
+                            maxLength={10}
+                            required
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder="10-digit number"
+                            className="w-full pl-12 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* State & District */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs font-semibold text-slate-300 mb-1">
@@ -488,7 +524,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         <select
                           value={selectedState}
                           onChange={(e) => handleStateChange(e.target.value)}
-                          className="w-full px-3 py-2.5 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white cursor-pointer"
+                          className="w-full px-2.5 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white cursor-pointer"
                         >
                           {STATES_DATA.map((s) => (
                             <option key={s.state} value={s.state} className="bg-slate-900 text-white">
@@ -505,7 +541,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         <select
                           value={selectedDistrict}
                           onChange={(e) => setSelectedDistrict(e.target.value)}
-                          className="w-full px-3 py-2.5 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white cursor-pointer"
+                          className="w-full px-2.5 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white cursor-pointer"
                         >
                           {districtList.map((d) => (
                             <option key={d} value={d} className="bg-slate-900 text-white">
@@ -516,13 +552,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                       </div>
                     </div>
 
+                    {/* Margin Capital (if applicable) */}
                     {(role === 'entrepreneur' || role === 'fpo_manager') && (
-                      <div>
+                      <div className="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
                         <div className="flex items-center justify-between mb-1">
                           <label className="text-xs font-semibold text-slate-300">
-                            Available Margin Capital (₹)
+                            Available Margin Capital (₹ मार्जिन पूंजी)
                           </label>
-                          <span className="text-[11px] text-emerald-400 font-bold font-mono">
+                          <span className="text-xs text-emerald-400 font-bold font-mono">
                             ₹{marginCapital.toLocaleString('en-IN')}
                           </span>
                         </div>
@@ -533,84 +570,115 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           step="5000"
                           value={marginCapital}
                           onChange={(e) => setMarginCapital(Number(e.target.value))}
-                          className="w-full accent-emerald-500 cursor-pointer"
+                          className="w-full accent-emerald-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg appearance-none"
                         />
                       </div>
                     )}
 
+                    {/* Password / PIN */}
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">
-                        Create Password / PIN (वैकल्पिक सुरक्षा पिन)
+                      <label htmlFor="regPassword" className="block text-xs font-semibold text-slate-300 mb-1">
+                        Security PIN / Password (सुरक्षा पिन)
                       </label>
                       <div className="relative">
-                        <Lock className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                        <Lock className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
                         <input
                           type="password"
+                          id="regPassword"
+                          name="regPassword"
+                          autoComplete="new-password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Create 6-digit PIN or password"
-                          className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                          placeholder="Create 6-digit security PIN"
+                          className="w-full pl-9 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                         />
                       </div>
                     </div>
-                  </div>
+                  </>
                 )}
 
-                {/* Mobile Number Field */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Mobile Number (मोबाइल नंबर)
-                  </label>
-                  <div className="relative flex items-center">
-                    <div className="absolute left-3 text-slate-400 font-bold text-xs flex items-center gap-1 pointer-events-none">
-                      <Phone className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>+91</span>
+                {/* Mode: LOGIN */}
+                {mode === 'login' && (
+                  <>
+                    {/* Mobile Number Field */}
+                    <div>
+                      <label htmlFor="loginPhone" className="block text-xs font-semibold text-slate-300 mb-1">
+                        Mobile Number (पंजीकृत मोबाइल नंबर)
+                      </label>
+                      <div className="relative flex items-center">
+                        <div className="absolute left-3 text-slate-400 font-bold text-xs flex items-center gap-1 pointer-events-none">
+                          <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>+91</span>
+                        </div>
+                        <input
+                          type="tel"
+                          id="loginPhone"
+                          name="loginPhone"
+                          autoComplete="off"
+                          maxLength={10}
+                          required
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="Enter 10-digit mobile number"
+                          className="w-full pl-14 pr-4 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                        />
+                      </div>
                     </div>
-                    <input
-                      type="tel"
-                      maxLength={10}
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Enter 10-digit mobile number"
-                      className="w-full pl-14 pr-4 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
-                    />
-                  </div>
-                </div>
 
-                {/* OTP Verification Field */}
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="text-xs font-semibold text-slate-300">
-                      6-Digit OTP Verification
-                    </label>
-                    <button
-                      type="button"
-                      onClick={handleSendOtp}
-                      className="text-[11px] font-bold text-emerald-400 hover:text-emerald-300 cursor-pointer"
-                    >
-                      {otpSent ? 'Resend OTP' : 'Get OTP'}
-                    </button>
-                  </div>
+                    {/* Password / PIN Field */}
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <label htmlFor="loginPassword" className="text-xs font-semibold text-slate-300">
+                          Password / PIN (पासवर्ड / सुरक्षा पिन)
+                        </label>
+                      </div>
 
-                  <div className="relative">
-                    <Lock className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
-                    <input
-                      type="text"
-                      maxLength={6}
-                      value={otpValue}
-                      onChange={(e) => setOtpValue(e.target.value)}
-                      placeholder="Enter 4 or 6 digit OTP (e.g. 4892)"
-                      className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono tracking-widest"
-                    />
-                  </div>
-                </div>
+                      <div className="relative flex items-center">
+                        <Lock className="w-3.5 h-3.5 absolute left-3.5 top-3 text-slate-400" />
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          id="loginPassword"
+                          name="loginPassword"
+                          autoComplete="current-password"
+                          required
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="Enter your 6-digit PIN or password"
+                          className="w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 text-slate-400 hover:text-slate-200 cursor-pointer p-1"
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Quick Demo Helper Row */}
+                    <div className="flex items-center justify-between text-[11px] text-slate-400 bg-slate-950/70 p-2 rounded-xl border border-slate-800/80">
+                      <span>Default Demo Mobile: <strong className="text-emerald-400 font-mono">9876543210</strong></span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPhone('9876543210');
+                          setPassword('password123');
+                          setErrorMessage(null);
+                        }}
+                        className="text-xs text-emerald-400 hover:text-emerald-300 font-bold underline cursor-pointer"
+                      >
+                        Auto-fill Krish Bhardwaj
+                      </button>
+                    </div>
+                  </>
+                )}
 
                 {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-950/60 transition-all flex items-center justify-center gap-2 cursor-pointer group mt-2"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-950/60 transition-all flex items-center justify-center gap-2 cursor-pointer group mt-2"
                 >
                   {isLoading ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -627,7 +695,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               )}
 
               {/* Bottom Security Disclosures */}
-              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+              <div className="mt-5 pt-3.5 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
                 <div className="flex items-center gap-1.5 text-emerald-400">
                   <ShieldCheck className="w-4 h-4" />
                   <span>Aadhaar e-KYC & MSME Compliant</span>
@@ -635,6 +703,32 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 <div className="text-slate-500 font-mono text-[10px]">
                   256-Bit SSL Encrypted
                 </div>
+              </div>
+
+              {/* System Admin Quick Launcher */}
+              <div className="mt-4 p-3 rounded-2xl bg-gradient-to-r from-slate-950 via-indigo-950/30 to-slate-950 border border-indigo-500/25 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
+                    <Database className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                      <span>Administrator Console</span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 uppercase">
+                        Turso Cloud
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-slate-400">Live User Ops, Buyer Demands & libSQL Query Studio</div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('admin')}
+                  className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-950 flex items-center gap-1 transition-all cursor-pointer shrink-0"
+                >
+                  <span>Open Admin</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
 
             </div>
@@ -651,3 +745,4 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     </div>
   );
 };
+

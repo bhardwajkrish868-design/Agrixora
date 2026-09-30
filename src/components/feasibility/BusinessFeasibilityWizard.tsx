@@ -40,6 +40,7 @@ interface BusinessFeasibilityWizardProps {
   onNavigateToFinancials?: () => void;
   onNavigateToMarketplace?: () => void;
   onNavigateToDPR?: () => void;
+  userRole?: string;
 }
 
 export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps> = ({
@@ -56,6 +57,7 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
   onNavigateToFinancials,
   onNavigateToMarketplace,
   onNavigateToDPR,
+  userRole
 }) => {
   // Internal state if parent doesn't provide external state management
   const [internalFormData, setInternalFormData] = useState<UserInputForm>(DEMO_PRESETS[0].formData);
@@ -198,6 +200,9 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
     window.speechSynthesis.speak(utterance);
   };
 
+  const role = (userRole || '').toLowerCase();
+  const isFPO = role.includes('fpo') || role.includes('shg') || role === 'fpo_manager';
+
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* HEADER BAR */}
@@ -205,13 +210,15 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
         <div>
           <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider mb-1">
             <Sparkles className="w-4 h-4" />
-            <span>PS 26091 • Hyper-Local Feasibility Intelligence</span>
+            <span>{isFPO ? 'FPO Cluster Infrastructure & Processing' : 'Business Intelligence & Feasibility'}</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-            5–10 km Catchment Feasibility & Scheme Router
+            {isFPO ? 'Cluster Processing Unit & Cold Chain Feasibility' : 'Project Feasibility & 10:90 Loan Scheme Check'}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Evaluate raw material availability, consumer density, local competition, and 10:90 loan structuring.
+            {isFPO
+              ? 'Evaluate collective crop pooling capacity, packhouse/cold chain viability, and Agriculture Infrastructure Fund (AIF) subsidy.'
+              : 'Evaluate raw material availability, local market competition, customer demand, and 10:90 loan structuring.'}
           </p>
         </div>
 
@@ -245,7 +252,7 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
         </div>
       </div>
 
-      {/* STEP 1: GEOGRAPHIC CATCHMENT */}
+      {/* STEP 1: GEOGRAPHIC LOCATION & MARKET */}
       {currentStep === 1 && (
         <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-sm space-y-6 animate-in fade-in">
           <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-700 pb-4">
@@ -254,10 +261,12 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-                Step 1: Define Hyper-Local Catchment (5–10 km Radius)
+                {isFPO ? 'Step 1: Farmer Aggregation Cluster & Processing Location' : 'Step 1: Project Location & Target Market Area'}
               </h2>
               <p className="text-xs text-slate-500">
-                Identify the village, gram panchayat, block, and target consumer boundary.
+                {isFPO
+                  ? 'Define the primary village cluster, gram panchayats, and target crop collection radius.'
+                  : 'Identify the village, gram panchayat, block, and target customer boundary.'}
               </p>
             </div>
           </div>
@@ -328,7 +337,7 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
               <label className="block text-xs font-bold text-emerald-900 dark:text-emerald-300 mb-1">
-                Catchment Radius: {activeFormData.location.catchmentRadiusKm} km
+                {isFPO ? `Farmer Aggregation Radius: ${activeFormData.location.catchmentRadiusKm} km` : `Local Market Radius: ${activeFormData.location.catchmentRadiusKm} km`}
               </label>
               <input
                 type="range"
@@ -343,15 +352,15 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
                 className="w-full accent-emerald-600 cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-emerald-700 dark:text-emerald-400 mt-1 font-semibold">
-                <span>3 km (Immediate Village)</span>
-                <span>7 km (Cluster)</span>
-                <span>15 km (Semi-Urban Hub)</span>
+                <span>{isFPO ? '3 km (Primary Village)' : '3 km (Immediate Village)'}</span>
+                <span>{isFPO ? '7 km (FPO Cluster)' : '7 km (Cluster)'}</span>
+                <span>{isFPO ? '15 km (Multi-Block Federation)' : '15 km (Semi-Urban Hub)'}</span>
               </div>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Estimated Catchment Consumer Population
+                {isFPO ? 'Target Farmer Member Base / Cluster Capacity' : 'Estimated Local Consumer Population'}
               </label>
               <input
                 type="number"
@@ -363,7 +372,9 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
                 className="w-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none"
               />
               <p className="text-[11px] text-slate-500 mt-1">
-                Derived from Census 2011 + regional growth extrapolation.
+                {isFPO
+                  ? 'Total registered member farmers and village producer groups pooled.'
+                  : 'Derived from Census 2011 + regional growth extrapolation.'}
               </p>
             </div>
           </div>
@@ -373,7 +384,7 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
               onClick={() => setCurrentStep(2)}
               className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 cursor-pointer transition-all"
             >
-              <span>Next: Select Business Sector</span>
+              <span>{isFPO ? 'Next: Select Cluster Processing Unit' : 'Next: Select Business Sector'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -389,10 +400,12 @@ export const BusinessFeasibilityWizard: React.FC<BusinessFeasibilityWizardProps>
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-                Step 2: Choose Enterprise Activity & Category
+                {isFPO ? 'Step 2: Choose Cluster Processing & Post-Harvest Facility' : 'Step 2: Choose Enterprise Activity & Category'}
               </h2>
               <p className="text-xs text-slate-500">
-                Pick from 13 verified rural & semi-urban micro-enterprise archetypes.
+                {isFPO
+                  ? 'Select from multi-crop cold storages, dal mills, oil expellers, and packhouse facilities.'
+                  : 'Pick from 13 verified rural & semi-urban micro-enterprise archetypes.'}
               </p>
             </div>
           </div>

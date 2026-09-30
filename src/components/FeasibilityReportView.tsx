@@ -42,7 +42,7 @@ export const FeasibilityReportView: React.FC<FeasibilityReportViewProps> = ({
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-              Module 1: Hyper-Local Feasibility Intelligence
+              Business Feasibility Intelligence
             </span>
             <span className="text-xs text-slate-400">ID: {report.id}</span>
           </div>
@@ -79,7 +79,7 @@ export const FeasibilityReportView: React.FC<FeasibilityReportViewProps> = ({
         </div>
       </div>
 
-      {/* 1. MARKET REACH (5-10 km Radius Catchment) */}
+      {/* 1. MARKET REACH & CONSUMER BASE */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-md p-6">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-5 pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2.5">
@@ -88,10 +88,10 @@ export const FeasibilityReportView: React.FC<FeasibilityReportViewProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900">
-                1. Market Reach & Consumer Catchment
+                1. Local Market Reach & Consumer Base
               </h3>
               <p className="text-xs text-slate-500">
-                Estimated consumer base within a {report.marketReach.radiusKm} km radius of {report.location.village}
+                Estimated customer base within a {report.marketReach.radiusKm} km radius of {report.location.village}
               </p>
             </div>
           </div>

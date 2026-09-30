@@ -15,6 +15,7 @@ interface AgriXoraAIAdvisorProps {
   financials: FinancialRoadmap | null;
   currentLanguage: Language;
   location?: LocationCatchment;
+  userName?: string;
 }
 
 interface ChatMessage {
@@ -27,17 +28,19 @@ interface ChatMessage {
 export const AgriXoraAIAdvisor: React.FC<AgriXoraAIAdvisorProps> = ({
   report,
   financials,
-  currentLanguage
+  currentLanguage,
+  userName
 }) => {
+  const greetingName = userName ? `${userName} ji` : '';
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'msg_welcome',
       sender: 'bot',
       text: currentLanguage === 'hi'
-        ? `नमस्ते! मैं आपका **AgriXora AI सलाहकार (KisanBiz AI)** हूँ। आपके 10% मार्जिन, 90% बैंक ऋण, योजना चयन, FSSAI लाइसेंस या थोक खरीदार ऑर्डर के बारे में कोई भी प्रश्न हिन्दी, English या Hinglish में पूछें।`
+        ? `नमस्ते ${greetingName}! मैं आपका **AgriXora AI सलाहकार (KisanBiz AI)** हूँ। आपके 10% मार्जिन, 90% बैंक ऋण, योजना चयन, FSSAI लाइसेंस या थोक खरीदार ऑर्डर के बारे में कोई भी प्रश्न हिन्दी, English या Hinglish में पूछें।`
         : currentLanguage === 'hinglish'
-        ? `Namaste! Main aapka **AgriXora AI Advisor (KisanBiz AI)** hoon. Apne 10% margin, 90% bank loan, scheme selection, FSSAI licenses ya bulk buyer orders ke baare me koi bhi sawaal puchein!`
-        : `Namaste! I am your **AgriXora AI Advisor (KisanBiz AI)**. Ask me anything about your 10% margin, 90% scheme loan, moratorium period, FSSAI/Udyam licenses, or institutional buyer contracts!`,
+        ? `Namaste ${greetingName}! Main aapka **AgriXora AI Advisor (KisanBiz AI)** hoon. Apne 10% margin, 90% bank loan, scheme selection, FSSAI licenses ya bulk buyer orders ke baare me koi bhi sawaal puchein!`
+        : `Namaste ${greetingName ? greetingName : ''}! I am your **AgriXora AI Advisor (KisanBiz AI)**. Ask me anything about your 10% margin, 90% scheme loan, moratorium period, FSSAI/Udyam licenses, or institutional buyer contracts!`,
       timestamp: 'Just now'
     }
   ]);

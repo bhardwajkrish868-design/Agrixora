@@ -14,7 +14,8 @@ export type ActiveView =
   | 'profile'
   | 'settings'
   | 'login'
-  | 'register';
+  | 'register'
+  | 'admin';
 
 export type NavigationTab = ActiveView;
 

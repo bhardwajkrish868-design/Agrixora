@@ -39,8 +39,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeOrdersCount = 8,
   isMobileMenuOpen = false,
   onCloseMobileMenu,
-  userRole,
-  userName
+  userRole
 }) => {
   const currentActive = activeTab || activeView || 'dashboard';
 
@@ -80,14 +79,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           icon: <FileSpreadsheet className="w-4 h-4" />,
           badge: 'Audit',
           badgeColor: 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-        },
-        {
-          id: 'feasibility' as NavigationTab,
-          label: 'Catchment Viability Check',
-          labelHi: 'क्षेत्र व्यवहार्यता सत्यापन',
-          icon: <MapPin className="w-4 h-4" />,
-          badge: '10km',
-          badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
         },
         {
           id: 'intelligence' as NavigationTab,
@@ -215,16 +206,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
         badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
       },
       {
+        id: 'opportunities' as NavigationTab,
+        label: 'Top Business Ideas',
+        labelHi: 'सर्वश्रेष्ठ बिजनेस विचार',
+        icon: <Radar className="w-4 h-4" />,
+        badge: 'Radar',
+        badgeColor: 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+      },
+      {
         id: 'feasibility' as NavigationTab,
-        label: 'Business Feasibility',
-        labelHi: 'व्यवसाय व्यवहार्यता',
+        label: 'Project Feasibility Check',
+        labelHi: 'व्यवसाय व्यवहार्यता जांच',
         icon: <MapPin className="w-4 h-4" />,
-        badge: '10km Geo',
+        badge: 'AI Viability',
         badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
       },
       {
         id: 'financials' as NavigationTab,
-        label: '10:90 Loan Calculator',
+        label: '10:90 Govt Loan Calculator',
         labelHi: '10:90 स्मार्ट ऋण कैलकुलेटर',
         icon: <Calculator className="w-4 h-4" />,
         badge: '10:90',
@@ -240,18 +239,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
       },
       {
         id: 'marketplace' as NavigationTab,
-        label: 'Buyer Demands (Pledge Supply)',
-        labelHi: 'खरीदार मांग (सप्लाई कमिट)',
+        label: 'Institutional Buyer Orders',
+        labelHi: 'खरीदार मांग व अनुबंध',
         icon: <ShoppingBag className="w-4 h-4" />,
         badge: `${activeOrdersCount} Orders`,
         badgeColor: 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
       },
       {
+        id: 'intelligence' as NavigationTab,
+        label: 'Live Mandi Wholesale Prices',
+        labelHi: 'लाइव मंडी थोक भाव',
+        icon: <BarChart3 className="w-4 h-4" />,
+        badge: 'eNAM',
+        badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+      },
+      {
         id: 'advisor' as NavigationTab,
-        label: 'AI Advisor Sathi',
-        labelHi: 'AI सलाहकार साथी',
+        label: 'AI Udyami Sathi (Advisor)',
+        labelHi: 'AI उद्यमी साथी (सलाहकार)',
         icon: <Bot className="w-4 h-4" />,
-        badge: 'Live',
+        badge: '24/7 AI',
         badgeColor: 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
       }
     ];
@@ -286,7 +293,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </span>
               </div>
               <p className="text-[10px] text-slate-400 font-mono tracking-wide truncate max-w-[130px]">
-                {userName || 'Enterprise OS'}
+                Rural Enterprise OS
               </p>
             </div>
           </div>
@@ -305,7 +312,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             <span className="text-[11px] font-bold text-slate-300 truncate max-w-[170px]">
-              {userRole || 'Rural Entrepreneur'}
+              {userRole === 'fpo_manager'
+                ? 'FPO Federation Leader'
+                : userRole === 'institutional_buyer'
+                ? 'Institutional Buyer'
+                : userRole === 'bank_officer'
+                ? 'Bank Appraisal Officer'
+                : 'Rural Entrepreneur'}
             </span>
           </div>
         </div>

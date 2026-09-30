@@ -31,7 +31,9 @@ export const BusinessPlanGeneratorView: React.FC<BusinessPlanGeneratorViewProps>
   const activeRadius = location?.catchmentRadiusKm || formData.location.catchmentRadiusKm || 10;
 
   const handlePrint = () => {
-    window.print();
+    import('../../services/printService').then(m => {
+      m.printTargetElement('comprehensive-dpr-document', `AgriXora_Comprehensive_DPR_${report?.id || 'Dossier'}`);
+    });
   };
 
   const SECTIONS = [
@@ -91,7 +93,7 @@ export const BusinessPlanGeneratorView: React.FC<BusinessPlanGeneratorViewProps>
       </div>
 
       {/* 15-Section Printable Document Dossier */}
-      <div className="bg-white text-slate-950 rounded-3xl border border-slate-300 p-8 sm:p-12 shadow-xl space-y-8 font-serif">
+      <div id="comprehensive-dpr-document" className="bg-white text-slate-950 rounded-3xl border border-slate-300 p-8 sm:p-12 shadow-xl space-y-8 font-serif">
         
         {/* Document Header & Seal */}
         <div className="border-b-2 border-slate-900 pb-6 flex items-start justify-between">

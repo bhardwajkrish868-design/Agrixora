@@ -83,21 +83,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 {isBankOfficer
                   ? 'Bank Credit Appraisal & Risk Assessment Desk'
                   : isBuyer
-                  ? 'Institutional Off-taker Procurement & Sourcing Hub'
+                  ? 'Institutional Off-taker Procurement Hub'
                   : isFPO
-                  ? 'FPO / SHG Federation Cluster Command Center'
-                  : 'Unified Agri-FinTech & Business Intelligence Command Center'}
+                  ? 'FPO Cluster Infrastructure & Procurement Command'
+                  : 'Rural Enterprise & 10:90 Loan Command Center'}
               </span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              {userName ? `${userName} • ` : ''}
               {isBankOfficer
-                ? `Loan Credit Appraisal Desk (${activeDistrict})`
+                ? `Loan Credit Appraisal Desk • ${userName || activeDistrict}`
                 : isBuyer
-                ? `Direct Sourcing & Procurement (${activeState})`
+                ? `Direct Sourcing & Procurement Desk • ${userName || activeState}`
                 : isFPO
-                ? `FPO Farmer Aggregation Hub (${activeDistrict})`
+                ? `FPO Farmer Aggregation Hub • ${userName || activeDistrict}`
+                : userName 
+                ? `Namaste, ${userName}! Ready to Scale Your Enterprise?` 
                 : 'Turn Your Local Idea Into a Fundable Business'}
             </h1>
 
@@ -525,14 +526,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {isBankOfficer ? <FileSpreadsheet className="w-5 h-5" /> : isBuyer ? <ShoppingBag className="w-5 h-5" /> : <MapPin className="w-5 h-5" />}
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              {isBankOfficer ? 'DPR Project Report Appraisal' : isBuyer ? 'Post Commodity Demand' : '10km Hyper-Local Feasibility'}
+              {isBankOfficer ? 'DPR Project Report Appraisal' : isBuyer ? 'Post Commodity Demand' : isFPO ? 'Cluster Cold Chain & Processing' : 'Project Feasibility Check'}
             </h3>
             <p className="text-xs text-slate-500 mt-1">
               {isBankOfficer
                 ? 'Assess detailed project cost, debt service ratio and machinery invoices submitted by entrepreneurs.'
                 : isBuyer
                 ? 'Publish bulk commodity requirements with guaranteed price settlement for regional producers.'
-                : 'Evaluate raw material catchment radius, local demand, and production equipment specifications.'}
+                : isFPO
+                ? 'Check collective crop pooling, cold storage capacity, and AIF subsidy feasibility for farmer clusters.'
+                : 'Evaluate raw material availability, local market competition, and target customer demand.'}
             </p>
           </div>
           <div className="text-xs font-bold text-emerald-600 flex items-center gap-1">
@@ -550,10 +553,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <Landmark className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              10:90 Concessional Scheme Engine
+              10:90 Govt Loan Calculator
             </h3>
             <p className="text-xs text-slate-500 mt-1">
-              Calculate quarterly amortized principal, 6.5% - 8% interest rates, moratorium grace periods, and debt service coverage.
+              Calculate 90% loan amount against 10% own equity with subsidized 6.5% - 8% interest rates, moratorium periods, and PMEGP/Mudra schemes.
             </p>
           </div>
           <div className="text-xs font-bold text-blue-600 flex items-center gap-1">
@@ -571,10 +574,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <Bot className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              AgriXora AI Advisory Sathi
+              AI Udyami Sathi (24/7 Advisor)
             </h3>
             <p className="text-xs text-slate-500 mt-1">
-              Real-time voice and text guidance tailored to {activeState}'s agrarian agro-climatic zones and state subsidy frameworks.
+              Instant voice and text guidance tailored to {activeState}'s agro-processing hubs, machinery suppliers, and state subsidy frameworks.
             </p>
           </div>
           <div className="text-xs font-bold text-teal-600 flex items-center gap-1">

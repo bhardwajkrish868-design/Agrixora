@@ -25,27 +25,32 @@ import { OpportunityRadarView } from './components/opportunities/OpportunityRada
 import { MarketIntelligenceView } from './components/intelligence/MarketIntelligenceView';
 import { BusinessPlanGeneratorView } from './components/businessplan/BusinessPlanGeneratorView';
 import { AgriXoraAIAdvisor } from './components/advisor/AgriXoraAIAdvisor';
+import { AdminConsoleView } from './components/admin/AdminConsoleView';
 import { LoginPage } from './components/auth/LoginPage';
 
 // Modals
-import { AuthModal } from './components/modals/AuthModal';
 import { UserProfileModal } from './components/modals/UserProfileModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { SchemeRulesModal } from './components/SchemeRulesModal';
-import { getSessionUser, clearSessionUser } from './services/authService';
+import { getSessionUser, clearSessionUser, type RegisteredUser } from './services/authService';
 
 export function App() {
   // User & Auth State (Persistent session)
-  const [user, setUser] = useState<{ name: string; role: string; location: string; state?: string; district?: string } | null>(() => {
+  const [user, setUser] = useState<RegisteredUser | null>(() => {
     return getSessionUser();
   });
 
   // Navigation & View State (Keeps active tab on refresh if logged in; opens login if not)
   const [activeTab, setActiveTab] = useState<NavigationTab>(() => {
+    if (typeof window !== 'undefined') {
+      if (window.location.search.includes('admin') || window.location.hash.includes('admin')) {
+        return 'admin';
+      }
+    }
     const sessionUser = getSessionUser();
     if (!sessionUser) return 'login';
     const savedTab = (typeof window !== 'undefined' ? localStorage.getItem('AGRIXORA_ACTIVE_TAB') : null) as NavigationTab;
-    if (savedTab && savedTab !== 'login') return savedTab;
+    if (savedTab && savedTab !== 'login' && savedTab !== 'admin') return savedTab;
     return 'dashboard';
   });
 
@@ -106,7 +111,6 @@ export function App() {
   const [selectedOpportunity, setSelectedOpportunity] = useState<OpportunityItem | null>(null);
 
   // Active Modals State
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState<boolean>(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
   const [isSchemeModalOpen, setIsSchemeModalOpen] = useState<boolean>(false);
@@ -127,11 +131,15 @@ export function App() {
     name: string;
     role: string;
     location: string;
+    id?: string;
+    phone?: string;
+    roleLabel?: string;
     state?: string;
     district?: string;
     marginCapital?: number;
+    avatar?: string;
+    registeredAt?: string;
   }) => {
-    setUser(userData);
     let state = userData.state;
     let district = userData.district;
 
@@ -142,6 +150,21 @@ export function App() {
     }
     state = state || 'Maharashtra';
     district = district || 'Nashik';
+
+    const fullUser: RegisteredUser = {
+      id: userData.id || `usr_${Date.now()}`,
+      name: userData.name,
+      phone: userData.phone || '9876543210',
+      role: (userData.role || 'entrepreneur') as any,
+      roleLabel: userData.roleLabel || userData.role,
+      state: state,
+      district: district,
+      location: `${district}, ${state}`,
+      marginCapital: userData.marginCapital || 50000,
+      avatar: userData.avatar,
+      registeredAt: userData.registeredAt || new Date().toISOString()
+    };
+    setUser(fullUser);
 
     const newLoc = buildLocationCatchment(state, district);
     setSelectedLocation(newLoc);
@@ -241,6 +264,43 @@ export function App() {
     );
   }
 
+  // Dedicated Full-Screen Standalone Admin Console Portal (Completely separated from user app)
+  if (activeTab === 'admin') {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+        {toastMessage && (
+          <div className="fixed top-6 right-6 z-50 animate-bounce max-w-sm bg-slate-900 text-white border border-emerald-500/30 rounded-2xl p-4 shadow-2xl flex items-start gap-3 backdrop-blur-md">
+            <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 font-bold">
+              ✓
+            </div>
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400">{toastMessage.title}</h4>
+              <p className="text-xs text-slate-300 mt-0.5">{toastMessage.desc}</p>
+            </div>
+          </div>
+        )}
+        <div className="p-4 sm:p-6 lg:p-8 flex-1">
+          <AdminConsoleView
+            currentLanguage={currentLanguage}
+            onSwitchUser={(targetUser) => {
+              syncLocationAndReportForUser(targetUser);
+              setActiveTab('dashboard');
+              showToast('Admin Impersonation Active', `Switched session to ${targetUser.name} (${targetUser.role}).`);
+            }}
+            onExit={() => {
+              // Clear admin query param from url if present
+              if (typeof window !== 'undefined' && window.location.search.includes('admin')) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+              }
+              setActiveTab('dashboard');
+            }}
+            onToast={showToast}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 ${isDarkMode ? 'dark' : ''}`}>
       
@@ -258,46 +318,46 @@ export function App() {
       )}
 
       {/* Top Navigation Bar */}
-      <TopNavbar
-        activeTab={activeTab}
-        onNavigate={setActiveTab}
-        currentLanguage={currentLanguage}
-        onLanguageChange={setCurrentLanguage}
-        selectedLocation={selectedLocation}
-        onLocationChange={handleLocationChange}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
-        onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        onOpenUserProfile={() => setIsUserProfileModalOpen(true)}
-        onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
-        onOpenSchemeModal={() => setIsSchemeModalOpen(true)}
-        onToggleAICoach={() => setIsAICoachFloatingOpen(!isAICoachFloatingOpen)}
-        onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        onLogout={() => {
-          clearSessionUser();
-          localStorage.removeItem('AGRIXORA_ACTIVE_TAB');
-          setUser(null);
-          setActiveTab('login');
-          showToast('Signed Out', 'You have been signed out. Welcome to log in or register anytime.', 'info');
-        }}
-        user={user}
-      />
+      <div className="no-print">
+        <TopNavbar
+          activeTab={activeTab}
+          onNavigate={setActiveTab}
+          currentLanguage={currentLanguage}
+          onLanguageChange={setCurrentLanguage}
+          selectedLocation={selectedLocation}
+          onLocationChange={handleLocationChange}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+          onOpenUserProfile={() => setIsUserProfileModalOpen(true)}
+          onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          onLogout={() => {
+            clearSessionUser();
+            localStorage.removeItem('AGRIXORA_ACTIVE_TAB');
+            setUser(null);
+            setActiveTab('login');
+            showToast('Signed Out', 'You have been signed out. Welcome to log in or register anytime.', 'info');
+          }}
+          user={user}
+        />
+      </div>
 
       <div className="flex-1 flex max-w-[1600px] w-full mx-auto">
         {/* Left Navigation Sidebar */}
-        <Sidebar
-          activeTab={activeTab}
-          onNavigate={(tab) => {
-            setActiveTab(tab);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          currentLanguage={currentLanguage}
-          onOpenSchemeModal={() => setIsSchemeModalOpen(true)}
-          isMobileMenuOpen={isMobileMenuOpen}
-          onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
-          userRole={user?.role}
-          userName={user?.name}
-        />
+        <div className="no-print shrink-0">
+          <Sidebar
+            activeTab={activeTab}
+            onNavigate={(tab) => {
+              setActiveTab(tab);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            currentLanguage={currentLanguage}
+            onOpenSchemeModal={() => setIsSchemeModalOpen(true)}
+            isMobileMenuOpen={isMobileMenuOpen}
+            onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
+            userRole={user?.role}
+            userName={user?.name}
+          />
+        </div>
 
         {/* Main Content Area */}
         <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 overflow-x-hidden min-h-[calc(100vh-4rem)]">
@@ -325,6 +385,7 @@ export function App() {
               currentLanguage={currentLanguage}
               activeLocation={selectedLocation}
               prefilledOpportunity={selectedOpportunity}
+              userRole={user?.role}
               onReportGenerated={(report, financials) => {
                 setCurrentReport(report);
                 setCurrentFinancials(financials);
@@ -353,6 +414,8 @@ export function App() {
             <BuyerDemandMarketplace
               currentLanguage={currentLanguage}
               activeLocation={selectedLocation}
+              userRole={user?.role}
+              userName={user?.name}
               onPledgeCreated={(pledge) => {
                 showToast(
                   'Supply Pledge Submitted',
@@ -396,6 +459,7 @@ export function App() {
               location={selectedLocation}
               report={currentReport}
               financials={currentFinancials}
+              userName={user?.name}
             />
           )}
 
@@ -489,6 +553,7 @@ export function App() {
               location={selectedLocation}
               report={currentReport}
               financials={currentFinancials}
+              userName={user?.name}
             />
           </div>
         </div>
@@ -500,6 +565,13 @@ export function App() {
         onClose={() => setIsUserProfileModalOpen(false)}
         user={user}
         selectedLocation={selectedLocation}
+        onUpdateUser={(updatedUser) => {
+          setUser(updatedUser);
+          if (updatedUser.state && updatedUser.district) {
+            setSelectedLocation(buildLocationCatchment(updatedUser.state, updatedUser.district));
+          }
+          showToast('Profile Updated', 'Your profile details and custom avatar have been saved successfully!');
+        }}
         onLogout={() => {
           setIsUserProfileModalOpen(false);
           clearSessionUser();
@@ -509,19 +581,8 @@ export function App() {
           showToast('Signed Out', 'You have been signed out. Welcome to log in or register anytime.', 'info');
         }}
         onSwitchAccount={() => {
-          setIsUserProfileModalOpen(false);
-          setIsAuthModalOpen(true);
+          // Handled internally in UserProfileModal
         }}
-      />
-
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onLoginSuccess={(userData) => {
-          syncLocationAndReportForUser(userData);
-          showToast('Welcome to AgriXora', `Logged in as ${userData.name} (${userData.role}). State data synchronized!`);
-        }}
-        currentLang={currentLanguage}
       />
 
       <ApiKeyModal

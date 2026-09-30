@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { 
   Search, 
-  MapPin, 
   Globe, 
   Bell, 
   Sun, 
   Moon, 
   Menu,
-  Bot,
-  Key,
-  Landmark,
   LogOut
 } from 'lucide-react';
 import type { NavigationTab, Language, LocationCatchment } from '../../types';
@@ -24,26 +20,19 @@ interface TopNavbarProps {
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
   onOpenAuthModal?: () => void;
-  onOpenApiKeyModal?: () => void;
-  onOpenSchemeModal?: () => void;
-  onToggleAICoach?: () => void;
   onToggleMobileMenu?: () => void;
   onLogout?: () => void;
   onOpenUserProfile?: () => void;
-  user?: { name: string; role: string; location: string } | null;
+  user?: { name: string; role: string; location: string; avatar?: string } | null;
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   onNavigate,
   currentLanguage,
   onLanguageChange,
-  selectedLocation,
   isDarkMode,
   onToggleDarkMode,
   onOpenAuthModal,
-  onOpenApiKeyModal,
-  onOpenSchemeModal,
-  onToggleAICoach,
   onToggleMobileMenu,
   onLogout,
   onOpenUserProfile,
@@ -111,54 +100,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
         {/* Center/Right Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
-          
-          {/* Active Geographic Catchment Badge */}
-          {selectedLocation && (
-            <button
-              onClick={() => onNavigate && onNavigate('feasibility')}
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold hover:border-emerald-400 transition-all cursor-pointer"
-              title="Active Geographic Catchment"
-            >
-              <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span className="truncate max-w-[140px]">{selectedLocation.panchayat || selectedLocation.block}, {selectedLocation.district}</span>
-              <span className="text-[10px] bg-emerald-200 dark:bg-emerald-800 px-1.5 py-0.5 rounded font-mono">
-                {selectedLocation.catchmentRadiusKm}km
-              </span>
-            </button>
-          )}
-
-          {/* Scheme Modal Trigger */}
-          {onOpenSchemeModal && (
-            <button
-              onClick={onOpenSchemeModal}
-              className="hidden md:flex p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              title="Government Scheme Policy Matrix"
-            >
-              <Landmark className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            </button>
-          )}
-
-          {/* API Key Modal Trigger */}
-          {onOpenApiKeyModal && (
-            <button
-              onClick={onOpenApiKeyModal}
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              title="Configure Gemini API Key"
-            >
-              <Key className="w-4 h-4 text-amber-500" />
-            </button>
-          )}
-
-          {/* AI Advisor Floating Trigger */}
-          {onToggleAICoach && (
-            <button
-              onClick={onToggleAICoach}
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              title="AgriXora AI Coach"
-            >
-              <Bot className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-            </button>
-          )}
 
           {/* Language Selector */}
           <div className="relative">
@@ -240,14 +181,32 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               <button
                 onClick={onOpenUserProfile || onOpenAuthModal}
                 className="flex items-center gap-2 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
-                title={`${user.name} (${user.role}) - Click to view details`}
+                title={`${user.name} (${user.role}) - Click to view or edit profile`}
               >
-                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
-                  👤
+                <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center overflow-hidden shrink-0 text-xs border border-white/30">
+                  {user.avatar ? (
+                    user.avatar.startsWith('data:') || user.avatar.startsWith('http') ? (
+                      <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <span>{user.avatar}</span>
+                    )
+                  ) : (
+                    <span>👨‍🌾</span>
+                  )}
                 </div>
                 <div className="hidden sm:block text-left">
-                  <div className="leading-tight font-bold truncate max-w-[110px]">{user.name.split(' ')[0]}</div>
-                  <div className="text-[9px] text-emerald-200 leading-none">{user.location.split(',')[0]}</div>
+                  <div className="leading-tight font-bold truncate max-w-[140px] text-white text-xs">
+                    {user.name}
+                  </div>
+                  <div className="text-[10px] text-emerald-100/90 leading-none truncate max-w-[140px]">
+                    {user.role === 'fpo_manager'
+                      ? 'FPO Federation Leader'
+                      : user.role === 'institutional_buyer'
+                      ? 'Institutional Buyer'
+                      : user.role === 'bank_officer'
+                      ? 'Bank Appraisal Officer'
+                      : 'Rural Entrepreneur'}
+                  </div>
                 </div>
               </button>
 

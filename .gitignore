@@ -16,7 +16,10 @@ dist-ssr
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
+# Environment variables
+.env
+.env*.local
+test_turso.mjs
 *.suo
 *.ntvs*
 *.njsproj

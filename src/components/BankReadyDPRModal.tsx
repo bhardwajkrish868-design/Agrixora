@@ -20,7 +20,9 @@ export const BankReadyDPRModal: React.FC<BankReadyDPRModalProps> = ({
   if (!isOpen) return null;
 
   const handlePrint = () => {
-    window.print();
+    import('../services/printService').then(m => {
+      m.printTargetElement('bank-dpr-modal-document', `Bank_Appraisal_DPR_${report.id}`);
+    });
   };
 
   return (
@@ -51,7 +53,7 @@ export const BankReadyDPRModal: React.FC<BankReadyDPRModalProps> = ({
         </div>
 
         {/* Printable DPR Document Container */}
-        <div className="flex-1 overflow-y-auto p-6 sm:p-10 bg-white text-slate-900 font-serif leading-normal space-y-6">
+        <div id="bank-dpr-modal-document" className="flex-1 overflow-y-auto p-6 sm:p-10 bg-white text-slate-900 font-serif leading-normal space-y-6">
           
           {/* Header & Letterhead */}
           <div className="border-b-2 border-slate-900 pb-4 flex items-start justify-between">
