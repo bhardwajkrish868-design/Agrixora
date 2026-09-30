@@ -223,41 +223,41 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       </header>
 
       {/* Main Container */}
-      <main className="relative z-10 flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 flex items-center justify-center min-h-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-7 w-full items-center">
+      <main className="relative z-10 flex-1 max-w-6xl mx-auto w-full px-3 sm:px-5 lg:px-6 py-1.5 sm:py-2 flex items-center justify-center min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 lg:gap-6 w-full items-center">
 
           {/* LEFT COLUMN: Clean Branded Hero */}
-          <div className="lg:col-span-5 space-y-2.5">
+          <div className="lg:col-span-5 space-y-2">
             {/* Normal Clean Image */}
             <div className="rounded-2xl overflow-hidden border border-emerald-500/30 shadow-xl shadow-emerald-950/40 bg-slate-900">
               <img
                 src="/assets/agrixora_hero.jpg"
                 alt="Agrixora - Cultivating a Brighter Tomorrow"
-                className="w-full aspect-[16/8.5] max-h-[185px] sm:max-h-[210px] object-cover object-center transition-transform duration-500 hover:scale-[1.02]"
+                className="w-full aspect-[16/8] max-h-[145px] sm:max-h-[165px] object-cover object-center transition-transform duration-500 hover:scale-[1.02]"
               />
             </div>
 
             {/* Clean Info Card Below */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3 sm:p-3.5 backdrop-blur-md space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-2.5 sm:p-3 backdrop-blur-md space-y-1.5">
+              <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-400">
+                <Sparkles className="w-3 h-3 text-amber-300" />
                 <span>{t.heroBadge}</span>
               </div>
               <h3 className="text-xs sm:text-sm font-bold text-white leading-snug">
                 {t.heroTitle}
               </h3>
-              <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-2">
+              <p className="text-[10px] sm:text-[11px] text-slate-400 leading-relaxed line-clamp-2">
                 {t.heroDesc}
               </p>
 
-              <div className="grid grid-cols-2 gap-2 pt-0.5 text-xs">
-                <div className="p-2 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
+              <div className="grid grid-cols-2 gap-1.5 pt-0.5 text-xs">
+                <div className="p-1.5 sm:p-2 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
                   <div className="font-extrabold text-emerald-400 text-xs sm:text-sm">{t.statCreditVal}</div>
-                  <div className="text-[9px] text-slate-400 mt-0.5">{t.statCreditLabel}</div>
+                  <div className="text-[8.5px] text-slate-400 mt-0.5">{t.statCreditLabel}</div>
                 </div>
-                <div className="p-2 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
+                <div className="p-1.5 sm:p-2 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
                   <div className="font-extrabold text-teal-400 text-xs sm:text-sm">{t.statInterestVal}</div>
-                  <div className="text-[9px] text-slate-400 mt-0.5">{t.statInterestLabel}</div>
+                  <div className="text-[8.5px] text-slate-400 mt-0.5">{t.statInterestLabel}</div>
                 </div>
               </div>
             </div>
@@ -265,10 +265,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
           {/* RIGHT COLUMN: Authentication Form Card */}
           <div className="lg:col-span-7">
-            <div className="bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-4 sm:p-5 backdrop-blur-xl relative max-h-[calc(100vh-80px)] overflow-y-auto lg:overflow-visible">
+            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl sm:rounded-3xl shadow-2xl p-3 sm:p-4 backdrop-blur-xl relative max-h-[calc(100vh-80px)] overflow-y-auto lg:overflow-visible">
               
               {/* Mode Switcher Buttons */}
-              <div className="flex bg-slate-950 p-1 rounded-2xl border border-slate-800/80 mb-3">
+              <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800/80 mb-2">
                 <button
                   type="button"
                   onClick={() => {
@@ -276,7 +276,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     setErrorMessage(null);
                     setAvailableProfiles(null);
                   }}
-                  className={`flex-1 py-1.5 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 py-1.5 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     mode === 'login'
                       ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/40'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
@@ -292,7 +292,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     setErrorMessage(null);
                     setAvailableProfiles(null);
                   }}
-                  className={`flex-1 py-1.5 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 py-1.5 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     mode === 'register'
                       ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/40'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
@@ -304,23 +304,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               </div>
 
               {/* Form Title */}
-              <div className="mb-3">
-                <h3 className="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+              <div className="mb-2">
+                <h3 className="text-sm sm:text-base font-extrabold text-white flex items-center gap-1.5">
                   <span>{mode === 'login' ? t.welcomeLoginTitle : t.welcomeRegisterTitle}</span>
-                  <span className="text-sm">🌾</span>
+                  <span className="text-xs">🌾</span>
                 </h3>
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-[10px] sm:text-[11px] text-slate-400">
                   {mode === 'login' ? t.welcomeLoginDesc : t.welcomeRegisterDesc}
                 </p>
               </div>
 
               {/* Error Notification Alert */}
               {errorMessage && (
-                <div className="mb-4 p-3 rounded-2xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs flex items-start gap-3 animate-shake">
+                <div className="mb-3 p-2.5 rounded-xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs flex items-start gap-2.5 animate-shake">
                   <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
                   <div className="flex-1">
-                    <div className="font-bold text-rose-100">Action Required</div>
-                    <div className="mt-0.5">{errorMessage}</div>
+                    <div className="font-bold text-rose-100 text-xs">Action Required</div>
+                    <div className="mt-0.5 text-[11px]">{errorMessage}</div>
                     {mode === 'login' && (
                       <button
                         type="button"
@@ -328,9 +328,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           setMode('register');
                           setErrorMessage(null);
                         }}
-                        className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-900/80 hover:bg-rose-800 text-white font-bold text-[11px] cursor-pointer"
+                        className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-rose-900/80 hover:bg-rose-800 text-white font-bold text-[10px] cursor-pointer"
                       >
-                        <UserPlus className="w-3.5 h-3.5" />
+                        <UserPlus className="w-3 h-3" />
                         <span>Switch to Register Tab (पंजीकरण करें)</span>
                       </button>
                     )}
@@ -340,52 +340,52 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
               {/* Success Notification */}
               {successMessage && (
-                <div className="mb-2 p-2 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2">
+                <div className="mb-2 p-1.5 rounded-lg bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span className="text-[11px] truncate">{successMessage}</span>
+                  <span className="text-[10px] truncate">{successMessage}</span>
                 </div>
               )}
 
               {/* Multi-Profile Selector or Standard Form */}
               {availableProfiles && availableProfiles.length > 0 ? (
-                <div className="space-y-2.5">
-                  <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
+                <div className="space-y-2">
+                  <div className="p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
                     <div>
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Multiple Profiles Detected</div>
+                      <div className="text-[9px] font-bold uppercase tracking-wider text-emerald-400">Multiple Profiles Detected</div>
                       <h4 className="text-xs font-bold text-white">Select Role Profile for +91 {phone}:</h4>
                     </div>
-                    <span className="text-xs bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
+                    <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
                       {availableProfiles.length} Accounts
                     </span>
                   </div>
 
                   {/* 2x2 Compact Grid of Profiles */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                     {availableProfiles.map(prof => (
                       <button
                         key={prof.id}
                         type="button"
                         onClick={() => handleSelectProfile(prof)}
-                        className="p-2 sm:p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/90 transition-all flex items-center justify-between group cursor-pointer text-left shadow-sm"
+                        className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/90 transition-all flex items-center justify-between group cursor-pointer text-left shadow-sm"
                       >
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-base p-1 rounded-lg bg-slate-950 border border-slate-800 shrink-0">
+                          <span className="text-sm p-1 rounded-lg bg-slate-950 border border-slate-800 shrink-0">
                             {ROLE_ICONS[prof.role] || '🌾'}
                           </span>
                           <div className="min-w-0">
-                            <div className="text-[9px] font-extrabold text-emerald-400 uppercase tracking-wider truncate">
+                            <div className="text-[8.5px] font-extrabold text-emerald-400 uppercase tracking-wider truncate">
                               {prof.roleLabel.replace(' / Beneficiary', '').replace(' Federation', '')}
                             </div>
-                            <h4 className="text-xs font-bold text-white group-hover:text-emerald-300 truncate">
+                            <h4 className="text-[11px] font-bold text-white group-hover:text-emerald-300 truncate">
                               {prof.name}
                             </h4>
-                            <p className="text-[10px] text-slate-400 truncate flex items-center gap-1">
+                            <p className="text-[9.5px] text-slate-400 truncate flex items-center gap-1">
                               <MapPin className="w-2.5 h-2.5 text-slate-500 shrink-0" />
                               <span className="truncate">{prof.location}</span>
                             </p>
                           </div>
                         </div>
-                        <div className="px-2 py-0.5 rounded-lg bg-emerald-600/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-0.5 shrink-0 ml-1.5">
+                        <div className="px-2 py-0.5 rounded-lg bg-emerald-600/20 text-emerald-300 text-[9px] font-bold border border-emerald-500/30 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-0.5 shrink-0 ml-1">
                           <span>Enter</span>
                           <ArrowRight className="w-2.5 h-2.5" />
                         </div>
@@ -399,97 +399,97 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                       setAvailableProfiles(null);
                       setSuccessMessage(null);
                     }}
-                    className="w-full py-1 text-[11px] text-slate-400 hover:text-white font-semibold transition-colors cursor-pointer"
+                    className="w-full py-0.5 text-[10px] text-slate-400 hover:text-white font-semibold transition-colors cursor-pointer"
                   >
                     ← Sign in with a different mobile number
                   </button>
                 </div>
               ) : (
-              <form onSubmit={handleSubmit} autoComplete="off" className="space-y-3.5">
+              <form onSubmit={handleSubmit} autoComplete="off" className="space-y-2.5">
                 
                 {/* Mode: REGISTER */}
                 {mode === 'register' && (
                   <>
                     {/* Role Selector */}
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      <label className="block text-[11px] font-semibold text-slate-300 mb-1">
                         Select Your Role / Category (अपनी भूमिका चुनें)
                       </label>
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-2 gap-1.5">
                         <button
                           type="button"
                           onClick={() => setRole('entrepreneur')}
-                          className={`p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                          className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                             role === 'entrepreneur'
                               ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
                               : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
                           }`}
                         >
                           <div className="font-bold flex items-center gap-1.5 text-xs">
-                            <Wheat className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <Wheat className="w-3 h-3 text-emerald-400 shrink-0" />
                             <span className="truncate">Rural Entrepreneur</span>
                           </div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">Individual Beneficiary</div>
+                          <div className="text-[9px] text-slate-400 mt-0.5">Individual Beneficiary</div>
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setRole('fpo_manager')}
-                          className={`p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                          className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                             role === 'fpo_manager'
                               ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
                               : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
                           }`}
                         >
                           <div className="font-bold flex items-center gap-1.5 text-xs">
-                            <Building2 className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                            <Building2 className="w-3 h-3 text-teal-400 shrink-0" />
                             <span className="truncate">FPO / SHG Leader</span>
                           </div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">Farmer Collective Unit</div>
+                          <div className="text-[9px] text-slate-400 mt-0.5">Farmer Collective Unit</div>
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setRole('bank_officer')}
-                          className={`p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                          className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                             role === 'bank_officer'
                               ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
                               : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
                           }`}
                         >
                           <div className="font-bold flex items-center gap-1.5 text-xs">
-                            <Coins className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                            <Coins className="w-3 h-3 text-amber-400 shrink-0" />
                             <span className="truncate">Bank Branch Officer</span>
                           </div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">Loan Credit Appraisal</div>
+                          <div className="text-[9px] text-slate-400 mt-0.5">Loan Credit Appraisal</div>
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setRole('institutional_buyer')}
-                          className={`p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                          className={`p-1.5 sm:p-2 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                             role === 'institutional_buyer'
                               ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 shadow-xs'
                               : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
                           }`}
                         >
                           <div className="font-bold flex items-center gap-1.5 text-xs">
-                            <Building2 className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                            <Building2 className="w-3 h-3 text-blue-400 shrink-0" />
                             <span className="truncate">Agri-Buyer / Trader</span>
                           </div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">Off-taker Contract Desk</div>
+                          <div className="text-[9px] text-slate-400 mt-0.5">Off-taker Contract Desk</div>
                         </button>
                       </div>
                     </div>
 
                     {/* Name & Phone */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <div>
-                        <label htmlFor="regName" className="block text-xs font-semibold text-slate-300 mb-1">
+                        <label htmlFor="regName" className="block text-[11px] font-semibold text-slate-300 mb-0.5">
                           Full Name (पूरा नाम)
                         </label>
                         <div className="relative">
-                          <User className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+                          <User className="w-3 h-3 absolute left-2.5 top-2 text-slate-400" />
                           <input
                             type="text"
                             id="regName"
@@ -499,17 +499,17 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder="e.g. Ramesh Kumar"
-                            className="w-full pl-9 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500"
+                            className="w-full pl-8 pr-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label htmlFor="regPhone" className="block text-xs font-semibold text-slate-300 mb-1">
+                        <label htmlFor="regPhone" className="block text-[11px] font-semibold text-slate-300 mb-0.5">
                           Mobile Number (मोबाइल)
                         </label>
                         <div className="relative flex items-center">
-                          <div className="absolute left-2.5 text-slate-400 font-bold text-xs flex items-center gap-1 pointer-events-none">
+                          <div className="absolute left-2 text-slate-400 font-bold text-xs flex items-center gap-0.5 pointer-events-none">
                             <Phone className="w-3 h-3 text-emerald-400" />
                             <span>+91</span>
                           </div>
@@ -523,22 +523,22 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             placeholder="10-digit number"
-                            className="w-full pl-12 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                            className="w-full pl-11 pr-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                           />
                         </div>
                       </div>
                     </div>
 
                     {/* State & District */}
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        <label className="block text-[11px] font-semibold text-slate-300 mb-0.5">
                           State (राज्य)
                         </label>
                         <select
                           value={selectedState}
                           onChange={(e) => handleStateChange(e.target.value)}
-                          className="w-full px-2.5 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white cursor-pointer"
+                          className="w-full px-2 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg focus:ring-1 focus:ring-emerald-500 text-white cursor-pointer"
                         >
                           {STATES_DATA.map((s) => (
                             <option key={s.state} value={s.state} className="bg-slate-900 text-white">
@@ -549,13 +549,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        <label className="block text-[11px] font-semibold text-slate-300 mb-0.5">
                           District (ज़िला)
                         </label>
                         <select
                           value={selectedDistrict}
                           onChange={(e) => setSelectedDistrict(e.target.value)}
-                          className="w-full px-2.5 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-white cursor-pointer"
+                          className="w-full px-2 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg focus:ring-1 focus:ring-emerald-500 text-white cursor-pointer"
                         >
                           {districtList.map((d) => (
                             <option key={d} value={d} className="bg-slate-900 text-white">
@@ -568,12 +568,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
                     {/* Margin Capital (if applicable) */}
                     {(role === 'entrepreneur' || role === 'fpo_manager') && (
-                      <div className="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                        <div className="flex items-center justify-between mb-1">
-                          <label className="text-xs font-semibold text-slate-300">
+                      <div className="bg-slate-950/60 p-2 rounded-lg border border-slate-800">
+                        <div className="flex items-center justify-between mb-0.5">
+                          <label className="text-[11px] font-semibold text-slate-300">
                             Available Margin Capital (₹ मार्जिन पूंजी)
                           </label>
-                          <span className="text-xs text-emerald-400 font-bold font-mono">
+                          <span className="text-[11px] text-emerald-400 font-bold font-mono">
                             ₹{marginCapital.toLocaleString('en-IN')}
                           </span>
                         </div>
@@ -591,11 +591,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
                     {/* Password / PIN */}
                     <div>
-                      <label htmlFor="regPassword" className="block text-xs font-semibold text-slate-300 mb-1">
+                      <label htmlFor="regPassword" className="block text-[11px] font-semibold text-slate-300 mb-0.5">
                         Security PIN / Password (सुरक्षा पिन)
                       </label>
                       <div className="relative">
-                        <Lock className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+                        <Lock className="w-3 h-3 absolute left-2.5 top-2 text-slate-400" />
                         <input
                           type="password"
                           id="regPassword"
@@ -604,7 +604,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Create 6-digit security PIN"
-                          className="w-full pl-9 pr-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                          className="w-full pl-8 pr-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                         />
                       </div>
                     </div>
@@ -616,12 +616,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   <>
                     {/* Mobile Number Field */}
                     <div>
-                      <label htmlFor="loginPhone" className="block text-[11px] font-semibold text-slate-300 mb-1">
+                      <label htmlFor="loginPhone" className="block text-[11px] font-semibold text-slate-300 mb-0.5">
                         {t.mobileLabel}
                       </label>
                       <div className="relative flex items-center">
-                        <div className="absolute left-3 text-slate-400 font-bold text-xs flex items-center gap-1 pointer-events-none">
-                          <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                        <div className="absolute left-2.5 text-slate-400 font-bold text-xs flex items-center gap-0.5 pointer-events-none">
+                          <Phone className="w-3 h-3 text-emerald-400" />
                           <span>+91</span>
                         </div>
                         <input
@@ -634,21 +634,21 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder={t.mobilePlaceholder}
-                          className="w-full pl-14 pr-4 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                          className="w-full pl-12 pr-3 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                         />
                       </div>
                     </div>
 
                     {/* Password / PIN Field */}
                     <div>
-                      <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center justify-between mb-0.5">
                         <label htmlFor="loginPassword" className="text-[11px] font-semibold text-slate-300">
                           {t.passwordLabel}
                         </label>
                       </div>
 
                       <div className="relative flex items-center">
-                        <Lock className="w-3.5 h-3.5 absolute left-3.5 top-2.5 text-slate-400" />
+                        <Lock className="w-3 h-3 absolute left-2.5 top-2 text-slate-400" />
                         <input
                           type={showPassword ? 'text' : 'password'}
                           id="loginPassword"
@@ -658,14 +658,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder={t.passwordPlaceholder}
-                          className="w-full pl-10 pr-10 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                          className="w-full pl-8 pr-8 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 text-slate-400 hover:text-slate-200 cursor-pointer p-1"
+                          className="absolute right-2 text-slate-400 hover:text-slate-200 cursor-pointer p-1"
                         >
-                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                         </button>
                       </div>
                     </div>
@@ -676,16 +676,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-950/60 transition-all flex items-center justify-center gap-2 cursor-pointer group mt-1.5"
+                  className="w-full py-2 px-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm rounded-lg shadow-md shadow-emerald-950/60 transition-all flex items-center justify-center gap-1.5 cursor-pointer group mt-1"
                 >
                   {isLoading ? (
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
                     <>
                       <span>
                         {mode === 'login' ? t.submitLogin : t.submitRegister}
                       </span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </button>
@@ -693,39 +693,39 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               )}
 
               {/* Bottom Security Disclosures */}
-              <div className="mt-3 pt-2.5 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
-                <div className="flex items-center gap-1.5 text-emerald-400">
-                  <ShieldCheck className="w-3.5 h-3.5" />
+              <div className="mt-2.5 pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
+                <div className="flex items-center gap-1 text-emerald-400">
+                  <ShieldCheck className="w-3 h-3" />
                   <span>{t.compliance}</span>
                 </div>
-                <div className="text-slate-500 font-mono text-[10px]">
+                <div className="text-slate-500 font-mono text-[9px]">
                   256-Bit SSL Encrypted
                 </div>
               </div>
 
               {/* System Admin Quick Launcher */}
-              <div className="mt-2.5 p-2 sm:p-2.5 rounded-2xl bg-gradient-to-r from-slate-950 via-indigo-950/30 to-slate-950 border border-indigo-500/25 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
-                    <Database className="w-3.5 h-3.5" />
+              <div className="mt-2 p-1.5 sm:p-2 rounded-xl bg-gradient-to-r from-slate-950 via-indigo-950/30 to-slate-950 border border-indigo-500/25 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-6 h-6 rounded-md bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
+                    <Database className="w-3 h-3" />
                   </div>
                   <div>
-                    <div className="text-[11px] sm:text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                    <div className="text-[10px] sm:text-[11px] font-bold text-slate-200 flex items-center gap-1">
                       <span>{t.adminTitle}</span>
-                      <span className="text-[8px] font-bold px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 uppercase">
+                      <span className="text-[7.5px] font-bold px-1 py-0.1 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 uppercase">
                         Turso Cloud
                       </span>
                     </div>
-                    <div className="text-[9px] sm:text-[10px] text-slate-400">{t.adminDesc}</div>
+                    <div className="text-[8.5px] sm:text-[9.5px] text-slate-400">{t.adminDesc}</div>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => onNavigate('admin')}
-                  className="px-2.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] sm:text-xs shadow-md shadow-indigo-950 flex items-center gap-1 transition-all cursor-pointer shrink-0"
+                  className="px-2 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[10px] shadow-sm shadow-indigo-950 flex items-center gap-1 transition-all cursor-pointer shrink-0"
                 >
                   <span>{t.openAdmin}</span>
-                  <ArrowRight className="w-3 h-3" />
+                  <ArrowRight className="w-2.5 h-2.5" />
                 </button>
               </div>
 
@@ -736,7 +736,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       </main>
 
       {/* Footer Bar */}
-      <footer className="relative z-10 border-t border-slate-800/80 bg-slate-900/60 backdrop-blur-md px-4 py-1.5 text-center text-[10px] sm:text-[11px] text-slate-400 max-w-7xl mx-auto w-full shrink-0">
+      <footer className="relative z-10 border-t border-slate-800/80 bg-slate-900/60 backdrop-blur-md px-4 py-1 text-center text-[9.5px] sm:text-[10px] text-slate-400 max-w-7xl mx-auto w-full shrink-0">
         {t.footerText}
       </footer>
 
