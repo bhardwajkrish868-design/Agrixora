@@ -160,7 +160,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-emerald-500 selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen lg:h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-emerald-500 selection:text-white relative lg:overflow-hidden">
       
       {/* Dynamic Background Glows */}
       <div className="absolute -top-40 -left-40 w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none" />
@@ -168,28 +168,28 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Header Bar */}
-      <header className="relative z-20 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+      <header className="relative z-20 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md px-4 sm:px-6 py-2.5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20 flex items-center justify-center">
-            <span className="text-xl">🌾</span>
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20 flex items-center justify-center">
+            <span className="text-lg">🌾</span>
           </div>
           <div>
-            <div className="font-extrabold text-lg text-white tracking-tight flex items-center gap-1.5">
+            <div className="font-extrabold text-base sm:text-lg text-white tracking-tight flex items-center gap-1.5">
               <span>AGRIXORA</span>
               <span className="text-[10px] uppercase font-bold bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
                 Official Portal
               </span>
             </div>
-            <div className="text-[11px] text-slate-400">Rural Enterprise & 90% Loan Feasibility Engine</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400">Rural Enterprise & 90% Loan Feasibility Engine</div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           {/* Admin Console Entry Button */}
           <button
             type="button"
             onClick={() => onNavigate('admin')}
-            className="flex items-center gap-1.5 bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 hover:border-indigo-400 text-indigo-200 hover:text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-950/50 cursor-pointer group"
+            className="flex items-center gap-1.5 bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 hover:border-indigo-400 text-indigo-200 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-950/50 cursor-pointer group"
             title="Open Admin Console & Turso Cloud Database Studio"
           >
             <ShieldAlert className="w-3.5 h-3.5 text-indigo-400 group-hover:scale-110 transition-transform" />
@@ -216,41 +216,41 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       </header>
 
       {/* Main Container */}
-      <main className="relative z-10 flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 w-full items-start">
+      <main className="relative z-10 flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 flex items-center justify-center min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-7 w-full items-center">
 
           {/* LEFT COLUMN: Clean Branded Hero */}
-          <div className="lg:col-span-5 lg:sticky lg:top-6 space-y-4">
+          <div className="lg:col-span-5 space-y-2.5">
             {/* Normal Clean Image */}
-            <div className="rounded-3xl overflow-hidden border border-emerald-500/30 shadow-2xl shadow-emerald-950/40 bg-slate-900">
+            <div className="rounded-2xl overflow-hidden border border-emerald-500/30 shadow-xl shadow-emerald-950/40 bg-slate-900">
               <img
                 src="/assets/agrixora_hero.jpg"
                 alt="Agrixora - Cultivating a Brighter Tomorrow"
-                className="w-full aspect-[16/9] object-cover object-center transition-transform duration-500 hover:scale-[1.02]"
+                className="w-full aspect-[16/8.5] max-h-[185px] sm:max-h-[210px] object-cover object-center transition-transform duration-500 hover:scale-[1.02]"
               />
             </div>
 
             {/* Clean Info Card Below */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 backdrop-blur-md space-y-3">
+            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3 sm:p-3.5 backdrop-blur-md space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
-                <Sparkles className="w-4 h-4 text-amber-300" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 <span>National Rural Enterprise Ecosystem</span>
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white leading-snug">
+              <h3 className="text-xs sm:text-sm font-bold text-white leading-snug">
                 Transforming Local Agriculture into Profitable Rural Enterprises
               </h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-2">
                 Unlock up to 90% concessional credit with bank-ready DPR blueprints and 6.5% - 8% p.a. interest rates.
               </p>
 
-              <div className="grid grid-cols-2 gap-2.5 pt-1 text-xs">
-                <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
-                  <div className="font-extrabold text-emerald-400 text-sm">Up to 90%</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">Concessional Credit</div>
+              <div className="grid grid-cols-2 gap-2 pt-0.5 text-xs">
+                <div className="p-2 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
+                  <div className="font-extrabold text-emerald-400 text-xs sm:text-sm">Up to 90%</div>
+                  <div className="text-[9px] text-slate-400 mt-0.5">Concessional Credit</div>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
-                  <div className="font-extrabold text-teal-400 text-sm">6.5% - 8% p.a.</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">Subsidized Interest</div>
+                <div className="p-2 rounded-xl bg-slate-950/80 border border-slate-800/80 text-slate-300">
+                  <div className="font-extrabold text-teal-400 text-xs sm:text-sm">6.5% - 8% p.a.</div>
+                  <div className="text-[9px] text-slate-400 mt-0.5">Subsidized Interest</div>
                 </div>
               </div>
             </div>
@@ -258,10 +258,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
           {/* RIGHT COLUMN: Authentication Form Card */}
           <div className="lg:col-span-7">
-            <div className="bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-5 sm:p-7 backdrop-blur-xl relative">
+            <div className="bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-4 sm:p-5 backdrop-blur-xl relative max-h-[calc(100vh-80px)] overflow-y-auto lg:overflow-visible">
               
               {/* Mode Switcher Buttons */}
-              <div className="flex bg-slate-950 p-1.5 rounded-2xl border border-slate-800/80 mb-5">
+              <div className="flex bg-slate-950 p-1 rounded-2xl border border-slate-800/80 mb-3">
                 <button
                   type="button"
                   onClick={() => {
@@ -269,7 +269,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     setErrorMessage(null);
                     setAvailableProfiles(null);
                   }}
-                  className={`flex-1 py-2 px-3 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`flex-1 py-1.5 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     mode === 'login'
                       ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/40'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
@@ -285,7 +285,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     setErrorMessage(null);
                     setAvailableProfiles(null);
                   }}
-                  className={`flex-1 py-2 px-3 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`flex-1 py-1.5 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     mode === 'register'
                       ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/40'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
@@ -297,12 +297,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               </div>
 
               {/* Form Title */}
-              <div className="mb-4">
-                <h3 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
+              <div className="mb-3">
+                <h3 className="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
                   <span>{mode === 'login' ? 'Welcome Back to AgriXora' : 'Register New Enterprise'}</span>
-                  <span className="text-base">🌾</span>
+                  <span className="text-sm">🌾</span>
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-[11px] text-slate-400 mt-0.5">
                   {mode === 'login'
                     ? 'Enter your registered mobile number to access your workspace.'
                     : 'Select your role and location to create your verified account.'}
@@ -602,7 +602,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   <>
                     {/* Mobile Number Field */}
                     <div>
-                      <label htmlFor="loginPhone" className="block text-xs font-semibold text-slate-300 mb-1">
+                      <label htmlFor="loginPhone" className="block text-[11px] font-semibold text-slate-300 mb-1">
                         Mobile Number (पंजीकृत मोबाइल नंबर)
                       </label>
                       <div className="relative flex items-center">
@@ -620,7 +620,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="Enter 10-digit mobile number"
-                          className="w-full pl-14 pr-4 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                          className="w-full pl-14 pr-4 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                         />
                       </div>
                     </div>
@@ -628,13 +628,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     {/* Password / PIN Field */}
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label htmlFor="loginPassword" className="text-xs font-semibold text-slate-300">
+                        <label htmlFor="loginPassword" className="text-[11px] font-semibold text-slate-300">
                           Password / PIN (पासवर्ड / सुरक्षा पिन)
                         </label>
                       </div>
 
                       <div className="relative flex items-center">
-                        <Lock className="w-3.5 h-3.5 absolute left-3.5 top-3 text-slate-400" />
+                        <Lock className="w-3.5 h-3.5 absolute left-3.5 top-2.5 text-slate-400" />
                         <input
                           type={showPassword ? 'text' : 'password'}
                           id="loginPassword"
@@ -644,7 +644,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Enter your 6-digit PIN or password"
-                          className="w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
+                          className="w-full pl-10 pr-10 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-white placeholder-slate-500 font-mono"
                         />
                         <button
                           type="button"
@@ -662,10 +662,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-950/60 transition-all flex items-center justify-center gap-2 cursor-pointer group mt-2"
+                  className="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-950/60 transition-all flex items-center justify-center gap-2 cursor-pointer group mt-1.5"
                 >
                   {isLoading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
                     <>
                       <span>
@@ -679,9 +679,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               )}
 
               {/* Bottom Security Disclosures */}
-              <div className="mt-5 pt-3.5 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+              <div className="mt-3 pt-2.5 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
                 <div className="flex items-center gap-1.5 text-emerald-400">
-                  <ShieldCheck className="w-4 h-4" />
+                  <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Aadhaar e-KYC & MSME Compliant</span>
                 </div>
                 <div className="text-slate-500 font-mono text-[10px]">
@@ -690,28 +690,28 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               </div>
 
               {/* System Admin Quick Launcher */}
-              <div className="mt-4 p-3 rounded-2xl bg-gradient-to-r from-slate-950 via-indigo-950/30 to-slate-950 border border-indigo-500/25 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
-                    <Database className="w-4 h-4" />
+              <div className="mt-2.5 p-2 sm:p-2.5 rounded-2xl bg-gradient-to-r from-slate-950 via-indigo-950/30 to-slate-950 border border-indigo-500/25 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
+                    <Database className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                    <div className="text-[11px] sm:text-xs font-bold text-slate-200 flex items-center gap-1.5">
                       <span>Administrator Console</span>
-                      <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 uppercase">
+                      <span className="text-[8px] font-bold px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 uppercase">
                         Turso Cloud
                       </span>
                     </div>
-                    <div className="text-[10px] text-slate-400">Live User Ops, Buyer Demands & libSQL Query Studio</div>
+                    <div className="text-[9px] sm:text-[10px] text-slate-400">Live User Ops, Buyer Demands & libSQL Studio</div>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => onNavigate('admin')}
-                  className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-950 flex items-center gap-1 transition-all cursor-pointer shrink-0"
+                  className="px-2.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] sm:text-xs shadow-md shadow-indigo-950 flex items-center gap-1 transition-all cursor-pointer shrink-0"
                 >
                   <span>Open Admin</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
 
@@ -722,7 +722,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       </main>
 
       {/* Footer Bar */}
-      <footer className="relative z-10 border-t border-slate-800/80 bg-slate-900/60 backdrop-blur-md px-6 py-3 text-center text-xs text-slate-400 max-w-7xl mx-auto w-full">
+      <footer className="relative z-10 border-t border-slate-800/80 bg-slate-900/60 backdrop-blur-md px-4 py-1.5 text-center text-[10px] sm:text-[11px] text-slate-400 max-w-7xl mx-auto w-full shrink-0">
         &copy; 2026 AGRIXORA — Ministry of Rural Development & MSME Aligned Framework
       </footer>
 
