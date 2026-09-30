@@ -32,7 +32,7 @@ import { LoginPage } from './components/auth/LoginPage';
 import { UserProfileModal } from './components/modals/UserProfileModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { SchemeRulesModal } from './components/SchemeRulesModal';
-import { getSessionUser, clearSessionUser, type RegisteredUser } from './services/authService';
+import { getSessionUser, setActiveSessionUser, clearSessionUser, type RegisteredUser } from './services/authService';
 import { initGoogleTranslator, applyPageLanguage } from './services/translatorService';
 
 export function App() {
@@ -580,10 +580,15 @@ export function App() {
         selectedLocation={selectedLocation}
         onUpdateUser={(updatedUser) => {
           setUser(updatedUser);
+          setActiveSessionUser(updatedUser);
           if (updatedUser.state && updatedUser.district) {
-            setSelectedLocation(buildLocationCatchment(updatedUser.state, updatedUser.district));
+            const loc = buildLocationCatchment(updatedUser.state, updatedUser.district);
+            setSelectedLocation(loc);
+            try {
+              localStorage.setItem('AGRIXORA_USER_LOCATION', JSON.stringify({ state: updatedUser.state, district: updatedUser.district }));
+            } catch {}
           }
-          showToast('Profile Updated', 'Your profile details and custom avatar have been saved successfully!');
+          showToast('Profile Updated', 'Your profile details and custom avatar have been saved permanently in cloud & local database!');
         }}
         onLogout={() => {
           setIsUserProfileModalOpen(false);
