@@ -126,6 +126,73 @@ async function main() {
   // 2. Upload Users
   console.log('👤 2/6 Uploading User Profiles...');
   const users = [
+    // Krish Bhardwaj (9631359486)
+    {
+      id: 'usr_krish_9631359486_entrepreneur',
+      name: 'Krish Bhardwaj',
+      phone: '9631359486',
+      role: 'entrepreneur',
+      role_label: 'Rural Entrepreneur',
+      location: 'Nashik, Maharashtra',
+      state: 'Maharashtra',
+      district: 'Nashik',
+      village: 'Janori Gram Panchayat',
+      enterprise_name: 'Bhardwaj Organic Cold-Press Agro',
+      email: 'krish.bhardwaj@agrixora.in',
+      margin_capital: 50000,
+      avatar: '👨‍🌾',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'usr_krish_9631359486_fpo',
+      name: 'Krish Bhardwaj',
+      phone: '9631359486',
+      role: 'fpo_manager',
+      role_label: 'FPO / SHG Leader',
+      location: 'Nashik, Maharashtra',
+      state: 'Maharashtra',
+      district: 'Nashik',
+      village: 'Dindori',
+      enterprise_name: 'Sahyadri Krishak FPO Producer Co.',
+      email: 'krish.fpo@agrixora.in',
+      margin_capital: 200000,
+      avatar: '🏢',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'usr_krish_9631359486_bank',
+      name: 'Krish Bhardwaj',
+      phone: '9631359486',
+      role: 'bank_officer',
+      role_label: 'Lead District Bank Officer',
+      location: 'Nashik, Maharashtra',
+      state: 'Maharashtra',
+      district: 'Nashik',
+      village: 'Nashik Lead Office',
+      enterprise_name: 'State Bank Credit Appraisal Cell',
+      email: 'krish.appraisal@sbi.co.in',
+      margin_capital: 500000,
+      avatar: '🏦',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'usr_krish_9631359486_buyer',
+      name: 'Krish Bhardwaj',
+      phone: '9631359486',
+      role: 'institutional_buyer',
+      role_label: 'Institutional Off-taker',
+      location: 'Mumbai, Maharashtra',
+      state: 'Maharashtra',
+      district: 'Mumbai',
+      village: 'Vashi APMC Hub',
+      enterprise_name: 'Krish Agro Wholesale Mega Network',
+      email: 'krish.procure@agrixora.in',
+      margin_capital: 1000000,
+      avatar: '💼',
+      created_at: new Date().toISOString()
+    },
+
+    // 9876543210 profiles
     {
       id: 'usr_krish_entrepreneur',
       name: 'Krish Bhardwaj',

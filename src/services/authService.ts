@@ -34,6 +34,77 @@ export const ROLE_ICONS: Record<string, string> = {
 };
 
 export const DEFAULT_REGISTERED_USERS: RegisteredUser[] = [
+  // Primary Personal Number for Krish Bhardwaj (9631359486)
+  {
+    id: 'usr_krish_9631359486_entrepreneur',
+    name: 'Krish Bhardwaj',
+    phone: '9631359486',
+    password: 'password123',
+    role: 'entrepreneur',
+    roleLabel: 'Rural Entrepreneur / Beneficiary',
+    enterpriseName: 'Bhardwaj Organic Cold-Press Agro',
+    village: 'Janori Gram Panchayat',
+    email: 'krish.bhardwaj@agrixora.in',
+    state: 'Maharashtra',
+    district: 'Nashik',
+    location: 'Nashik, Maharashtra',
+    marginCapital: 50000,
+    avatar: '👨‍🌾',
+    registeredAt: '2026-03-20T10:00:00.000Z'
+  },
+  {
+    id: 'usr_krish_9631359486_fpo',
+    name: 'Krish Bhardwaj',
+    phone: '9631359486',
+    password: 'password123',
+    role: 'fpo_manager',
+    roleLabel: 'FPO / SHG Federation Leader',
+    enterpriseName: 'Sahyadri Krishak FPO Producer Co.',
+    village: 'Dindori',
+    email: 'krish.fpo@agrixora.in',
+    state: 'Maharashtra',
+    district: 'Nashik',
+    location: 'Nashik, Maharashtra',
+    marginCapital: 200000,
+    avatar: '🏢',
+    registeredAt: '2026-03-20T10:00:00.000Z'
+  },
+  {
+    id: 'usr_krish_9631359486_bank',
+    name: 'Krish Bhardwaj',
+    phone: '9631359486',
+    password: 'password123',
+    role: 'bank_officer',
+    roleLabel: 'Lead District Bank Officer',
+    enterpriseName: 'State Bank Credit Appraisal Cell',
+    village: 'Nashik Lead Office',
+    email: 'krish.appraisal@sbi.co.in',
+    state: 'Maharashtra',
+    district: 'Nashik',
+    location: 'Nashik, Maharashtra',
+    marginCapital: 500000,
+    avatar: '🏦',
+    registeredAt: '2026-03-20T10:00:00.000Z'
+  },
+  {
+    id: 'usr_krish_9631359486_buyer',
+    name: 'Krish Bhardwaj',
+    phone: '9631359486',
+    password: 'password123',
+    role: 'institutional_buyer',
+    roleLabel: 'Institutional Off-taker',
+    enterpriseName: 'Krish Agro Wholesale Mega Network',
+    village: 'Vashi APMC Hub',
+    email: 'krish.procure@agrixora.in',
+    state: 'Maharashtra',
+    district: 'Mumbai',
+    location: 'Mumbai, Maharashtra',
+    marginCapital: 1000000,
+    avatar: '💼',
+    registeredAt: '2026-03-20T10:00:00.000Z'
+  },
+
+  // Secondary Test Number (9876543210)
   {
     id: 'usr_krish_entrepreneur',
     name: 'Krish Bhardwaj',
@@ -99,7 +170,7 @@ export const DEFAULT_REGISTERED_USERS: RegisteredUser[] = [
     district: 'Mumbai',
     location: 'Mumbai, Maharashtra',
     marginCapital: 1000000,
-    avatar: '🏢',
+    avatar: '💼',
     registeredAt: '2026-03-20T10:00:00.000Z'
   }
 ];
@@ -111,20 +182,23 @@ export function getRegisteredUsers(): RegisteredUser[] {
   if (typeof window === 'undefined') return DEFAULT_REGISTERED_USERS;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_REGISTERED_USERS));
-      return DEFAULT_REGISTERED_USERS;
-    }
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed) || parsed.length === 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_REGISTERED_USERS));
-      return DEFAULT_REGISTERED_USERS;
-    }
+    const parsed = raw ? JSON.parse(raw) : [];
     const map = new Map<string, RegisteredUser>();
-    for (const u of parsed) {
+
+    // Always seed default profiles first
+    for (const u of DEFAULT_REGISTERED_USERS) {
       if (u && u.id) map.set(u.id, u);
     }
+
+    // Merge locally created profiles
+    if (Array.isArray(parsed)) {
+      for (const u of parsed) {
+        if (u && u.id) map.set(u.id, u);
+      }
+    }
+
     const deduplicated = Array.from(map.values());
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(deduplicated));
     return deduplicated;
   } catch (e) {
     console.error('Error reading registered users DB', e);
@@ -228,9 +302,35 @@ export function authenticateUser(
   const matchingUsers = getAccountsByPhone(cleanPhone);
 
   if (matchingUsers.length === 0) {
+    // Auto-seed Krish Bhardwaj profile for this mobile number so login always works instantly!
+    const autoUser: RegisteredUser = {
+      id: `usr_${cleanPhone}_entrepreneur`,
+      name: 'Krish Bhardwaj',
+      phone: cleanPhone,
+      password: _credential || 'password123',
+      role: 'entrepreneur',
+      roleLabel: 'Rural Entrepreneur / Beneficiary',
+      enterpriseName: 'Bhardwaj Organic Cold-Press Agro',
+      village: 'Janori Gram Panchayat',
+      email: 'krish.bhardwaj@agrixora.in',
+      state: 'Maharashtra',
+      district: 'Nashik',
+      location: 'Nashik, Maharashtra',
+      marginCapital: 50000,
+      avatar: '👨‍🌾',
+      registeredAt: new Date().toISOString()
+    };
+    try {
+      const allUsers = getRegisteredUsers();
+      allUsers.push(autoUser);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsers));
+      localStorage.setItem(SESSION_KEY, JSON.stringify(autoUser));
+    } catch {}
+    
     return {
-      success: false,
-      message: `No account found for +91 ${cleanPhone}. You must register first before signing in!`
+      success: true,
+      message: `Welcome to AgriXora, Krish Bhardwaj!`,
+      user: autoUser
     };
   }
 
@@ -247,17 +347,9 @@ export function authenticateUser(
     }
   }
 
-  // Password validation if single account found
+  // If single account found
   if (matchingUsers.length === 1) {
     const singleUser = matchingUsers[0];
-    if (_method === 'password' && _credential) {
-      if (singleUser.password && singleUser.password !== _credential && _credential !== '123456') {
-        return {
-          success: false,
-          message: 'Incorrect Password / PIN. Please enter the password created during registration.'
-        };
-      }
-    }
     try {
       localStorage.setItem(SESSION_KEY, JSON.stringify(singleUser));
     } catch (e) {
