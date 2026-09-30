@@ -102,76 +102,6 @@ export const DEFAULT_REGISTERED_USERS: RegisteredUser[] = [
     marginCapital: 1000000,
     avatar: '💼',
     registeredAt: '2026-03-20T10:00:00.000Z'
-  },
-
-  // Secondary Test Number (9876543210)
-  {
-    id: 'usr_krish_entrepreneur',
-    name: 'Krish Bhardwaj',
-    phone: '9876543210',
-    password: 'password123',
-    role: 'entrepreneur',
-    roleLabel: 'Rural Entrepreneur / Beneficiary',
-    enterpriseName: 'Bhardwaj Agro Processing Unit',
-    village: 'Janori Gram Panchayat',
-    email: 'krish.bhardwaj@agrixora.in',
-    state: 'Maharashtra',
-    district: 'Nashik',
-    location: 'Nashik, Maharashtra',
-    marginCapital: 50000,
-    avatar: '👨‍🌾',
-    registeredAt: '2026-03-20T10:00:00.000Z'
-  },
-  {
-    id: 'usr_krish_fpo',
-    name: 'Krish Bhardwaj',
-    phone: '9876543210',
-    password: 'password123',
-    role: 'fpo_manager',
-    roleLabel: 'FPO / SHG Federation Leader',
-    enterpriseName: 'Nashik Krishak Producer Co. Ltd.',
-    village: 'Dindori',
-    email: 'krish.fpo@agrixora.in',
-    state: 'Maharashtra',
-    district: 'Nashik',
-    location: 'Nashik, Maharashtra',
-    marginCapital: 200000,
-    avatar: '🏢',
-    registeredAt: '2026-03-20T10:00:00.000Z'
-  },
-  {
-    id: 'usr_krish_bank',
-    name: 'Krish Bhardwaj',
-    phone: '9876543210',
-    password: 'password123',
-    role: 'bank_officer',
-    roleLabel: 'Lead District Bank Officer',
-    enterpriseName: 'State Bank Credit Appraisal Cell',
-    village: 'Nashik Lead Office',
-    email: 'krish.appraisal@sbi.co.in',
-    state: 'Maharashtra',
-    district: 'Nashik',
-    location: 'Nashik, Maharashtra',
-    marginCapital: 500000,
-    avatar: '🏦',
-    registeredAt: '2026-03-20T10:00:00.000Z'
-  },
-  {
-    id: 'usr_krish_buyer',
-    name: 'Krish Bhardwaj',
-    phone: '9876543210',
-    password: 'password123',
-    role: 'institutional_buyer',
-    roleLabel: 'Institutional Off-taker',
-    enterpriseName: 'Bhardwaj Agri Supply Chain Ltd.',
-    village: 'Vashi APMC Hub',
-    email: 'krish.procure@agrixora.in',
-    state: 'Maharashtra',
-    district: 'Mumbai',
-    location: 'Mumbai, Maharashtra',
-    marginCapital: 1000000,
-    avatar: '💼',
-    registeredAt: '2026-03-20T10:00:00.000Z'
   }
 ];
 
@@ -302,35 +232,9 @@ export function authenticateUser(
   const matchingUsers = getAccountsByPhone(cleanPhone);
 
   if (matchingUsers.length === 0) {
-    // Auto-seed Krish Bhardwaj profile for this mobile number so login always works instantly!
-    const autoUser: RegisteredUser = {
-      id: `usr_${cleanPhone}_entrepreneur`,
-      name: 'Krish Bhardwaj',
-      phone: cleanPhone,
-      password: _credential || 'password123',
-      role: 'entrepreneur',
-      roleLabel: 'Rural Entrepreneur / Beneficiary',
-      enterpriseName: 'Bhardwaj Organic Cold-Press Agro',
-      village: 'Janori Gram Panchayat',
-      email: 'krish.bhardwaj@agrixora.in',
-      state: 'Maharashtra',
-      district: 'Nashik',
-      location: 'Nashik, Maharashtra',
-      marginCapital: 50000,
-      avatar: '👨‍🌾',
-      registeredAt: new Date().toISOString()
-    };
-    try {
-      const allUsers = getRegisteredUsers();
-      allUsers.push(autoUser);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsers));
-      localStorage.setItem(SESSION_KEY, JSON.stringify(autoUser));
-    } catch {}
-    
     return {
-      success: true,
-      message: `Welcome to AgriXora, Krish Bhardwaj!`,
-      user: autoUser
+      success: false,
+      message: `No registered account found for +91 ${cleanPhone}. Please switch to the "Register" tab to create your new enterprise profile with your name.`
     };
   }
 
