@@ -385,7 +385,7 @@ export const AdminConsoleView: React.FC<AdminConsoleViewProps> = ({
                     setAuthError(null);
                   }}
                   autoFocus
-                  placeholder="Enter Master PIN (e.g. 998877)"
+                  placeholder="Enter Master PIN / Passkey"
                   className="w-full pl-10 pr-10 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none font-mono placeholder:text-slate-600"
                 />
                 <button
@@ -396,18 +396,6 @@ export const AdminConsoleView: React.FC<AdminConsoleViewProps> = ({
                   {showPasscode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-            </div>
-
-            {/* Quick Master PIN Hint */}
-            <div className="flex items-center justify-between text-[11px] text-slate-400 bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
-              <span>Default Master PIN: <strong className="text-indigo-300 font-mono">998877</strong></span>
-              <button
-                type="button"
-                onClick={() => setPasscode('998877')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-bold underline cursor-pointer"
-              >
-                Auto-fill PIN
-              </button>
             </div>
 
             {/* Error Message */}

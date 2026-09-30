@@ -655,22 +655,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         </button>
                       </div>
                     </div>
-
-                    {/* Quick Demo Helper Row */}
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 bg-slate-950/70 p-2 rounded-xl border border-slate-800/80">
-                      <span>Default Demo Mobile: <strong className="text-emerald-400 font-mono">9876543210</strong></span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPhone('9876543210');
-                          setPassword('password123');
-                          setErrorMessage(null);
-                        }}
-                        className="text-xs text-emerald-400 hover:text-emerald-300 font-bold underline cursor-pointer"
-                      >
-                        Auto-fill Krish Bhardwaj
-                      </button>
-                    </div>
                   </>
                 )}
 
