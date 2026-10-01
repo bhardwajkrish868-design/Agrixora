@@ -53,7 +53,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     e.preventDefault();
     if (!searchQuery.trim()) return;
     const q = searchQuery.toLowerCase();
-    if (q.includes('loan') || q.includes('scheme') || q.includes('emi') || q.includes('interest')) {
+    if (q.includes('roadmap') || q.includes('guide') || q.includes('process') || q.includes('utiliz') || q.includes('step')) {
+      if (onNavigate) onNavigate('loanroadmap');
+    } else if (q.includes('loan') || q.includes('scheme') || q.includes('emi') || q.includes('interest')) {
       if (onNavigate) onNavigate('financials');
     } else if (q.includes('buyer') || q.includes('order') || q.includes('demand') || q.includes('tomato') || q.includes('mustard')) {
       if (onNavigate) onNavigate('marketplace');

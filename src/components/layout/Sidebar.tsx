@@ -73,6 +73,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
           badgeColor: 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
         },
         {
+          id: 'loanroadmap' as NavigationTab,
+          label: 'Sanction & Fund Audit Rules',
+          labelHi: 'ऋण स्वीकृति व ऑडिट नियम',
+          icon: <Landmark className="w-4 h-4" />,
+          badge: 'Policy',
+          badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+        },
+        {
           id: 'businessplan' as NavigationTab,
           label: 'Applicant DPR Audit',
           labelHi: 'DPR सत्यापन व ऑडिट',
@@ -228,6 +236,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         icon: <Calculator className="w-4 h-4" />,
         badge: '10:90',
         badgeColor: 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+      },
+      {
+        id: 'loanroadmap' as NavigationTab,
+        label: 'Loan Process & Fund Usage',
+        labelHi: 'लोन प्रक्रिया व फंड उपयोग',
+        icon: <Landmark className="w-4 h-4" />,
+        badge: 'New Guide',
+        badgeColor: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
       },
       {
         id: 'businessplan' as NavigationTab,

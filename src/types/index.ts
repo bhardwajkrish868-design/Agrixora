@@ -5,6 +5,7 @@ export type ActiveView =
   | 'dashboard'
   | 'feasibility'
   | 'financials'
+  | 'loanroadmap'
   | 'marketplace'
   | 'opportunities'
   | 'intelligence'

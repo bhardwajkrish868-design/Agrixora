@@ -175,11 +175,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <span>Start Business Analysis</span>
                 </button>
                 <button
+                  onClick={() => navigateTo('loanroadmap')}
+                  className="px-4 py-2.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200 font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
+                  title="View 10:90 Loan Process and Fund Utilization Guide"
+                >
+                  <Landmark className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Loan & Fund Guide</span>
+                </button>
+                <button
                   onClick={() => navigateTo('advisor')}
                   className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <Bot className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Talk to AI Advisor</span>
+                  <span>AI Advisor</span>
                 </button>
               </>
             )}

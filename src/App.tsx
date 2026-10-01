@@ -20,6 +20,7 @@ import { LandingPage } from './components/landing/LandingPage';
 import { DashboardView } from './components/dashboard/DashboardView';
 import { BusinessFeasibilityWizard } from './components/feasibility/BusinessFeasibilityWizard';
 import { FinancialCalculatorView } from './components/financials/FinancialCalculatorView';
+import { LoanRoadmapView } from './components/loans/LoanRoadmapView';
 import { BuyerDemandMarketplace } from './components/marketplace/BuyerDemandMarketplace';
 import { OpportunityRadarView } from './components/opportunities/OpportunityRadarView';
 import { MarketIntelligenceView } from './components/intelligence/MarketIntelligenceView';
@@ -420,6 +421,16 @@ export function App() {
               initialReport={currentReport}
               onOpenSchemeModal={() => setIsSchemeModalOpen(true)}
               onNavigateToDPR={() => setActiveTab('businessplan')}
+            />
+          )}
+
+          {activeTab === 'loanroadmap' && (
+            <LoanRoadmapView
+              currentLanguage={currentLanguage}
+              onNavigate={setActiveTab}
+              userMargin={user?.marginCapital}
+              userState={user?.state || selectedLocation?.state}
+              userDistrict={user?.district || selectedLocation?.district}
             />
           )}
 
